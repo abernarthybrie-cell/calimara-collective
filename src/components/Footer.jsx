@@ -16,7 +16,7 @@ export default function Footer() {
           <LogoMark size={64} rotate={-3} className="mb-3" />
           <p className="font-heading text-3xl">CĂLIMARA</p>
           <p className="label-mono text-paper/60 mt-2">BUCHAREST · EST. {year}</p>
-          <p className="text-xl text-paper/70 mt-4 max-w-sm leading-snug [font-family:'Playfair_Display',_serif] font-normal">A magazine made by young people who have something to say.
+          <p className="text-xl text-paper/70 mt-4 max-w-sm leading-snug font-normal [font-family:'Caveat',_system-ui]">A magazine made by young people who have something to say.
 
           </p>
         </div>
