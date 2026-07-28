@@ -26,6 +26,8 @@ module.exports = {
   			'dusty-yellow': 'hsl(var(--dusty-yellow))',
   			forest: 'hsl(var(--forest))',
   			'faded-red': 'hsl(var(--faded-red))',
+			olive: 'hsl(var(--olive))',
+			gold: 'hsl(var(--gold))',
   			archive: {
   				bg: 'hsl(var(--archive-bg))',
 				bg2: 'hsl(var(--archive-bg-2))',

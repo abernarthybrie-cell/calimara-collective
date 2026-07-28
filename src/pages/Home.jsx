@@ -11,6 +11,9 @@ import LogoMark from '@/components/LogoMark';
 import PhysicalObject from '@/components/PhysicalObject';
 import Reveal from '@/components/Reveal';
 import ObjectModal from '@/components/ObjectModal';
+import FilmStrip from '@/components/FilmStrip';
+import LaceTrim from '@/components/LaceTrim';
+import Bow from '@/components/Bow';
 
 export default function Home() {
   const { settings } = useSettingsSafe();
@@ -79,10 +82,7 @@ export default function Home() {
           {/* film strip */}
           <PhysicalObject depth={0.15} rotate={-4} tilt={4} outerClassName="pointer-events-auto"
             style={{ position: 'absolute', top: '44%', left: '38%', width: '16rem' }}>
-            <div className="bg-ink p-2 flex gap-1 shadow-lg">
-              {[0,1,2,3].map((i) => <div key={i} className="flex-1 aspect-square bg-paper-deep" />)}
-            </div>
-            <p className="font-hand text-sm text-ink-soft mt-1">frames 7–12 · launch night</p>
+            <FilmStrip frames={people.slice(0,4).map(p => p.polaroid_photo)} label="frames 7–12 · launch night" />
           </PhysicalObject>
 
           {/* archive stamp block */}
@@ -163,6 +163,7 @@ export default function Home() {
             <Reveal>
               <div className="relative" style={{ perspective: 800 }}>
                 <Tape className="absolute -top-3 left-8 z-10" />
+                <Bow className="absolute -bottom-4 -right-4 z-20" color="hsl(var(--faded-red))" />
                 <PhysicalObject to={issueLink} depth={0.3} rotate={-2} tilt={8} hoverLabel="OPEN THIS ISSUE" className="block"
                   style={{ width: '100%', maxWidth: '20rem', margin: '0 auto' }}>
                   <ScanImage src={newest.cover_image} alt={newest.title} objectNumber={`ISSUE ${String(newest.number).padStart(2,'0')}`} className="aspect-[3/4] w-full shadow-2xl" />
@@ -191,6 +192,7 @@ export default function Home() {
           </Reveal>
 
           {/* mobile grid / desktop scatter */}
+          <LaceTrim className="mb-10 opacity-70" />
           <div className="grid grid-cols-2 gap-6 md:block md:h-[760px]">
             {/* stack of papers → Archive */}
             <PhysicalObject to="/archive" depth={0.4} rotate={-4} tilt={8} hoverLabel="ENTER THE ARCHIVE"
