@@ -45,6 +45,30 @@
     },
     "notion_url": {
       "type": "string"
+    },
+    "submit_intro": {
+      "type": "string"
+    },
+    "submit_guidelines": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "submission_types": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "numbers_countries_reached": {
+      "type": "number"
+    },
+    "numbers_years_active": {
+      "type": "number"
+    },
+    "manual_pages_printed": {
+      "type": "number"
     }
   },
   "required": []

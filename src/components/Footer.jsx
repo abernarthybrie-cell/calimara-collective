@@ -25,10 +25,18 @@ export default function Footer() {
           <p className="label-mono text-paper/50 mb-3">Index</p>
           <ul className="space-y-2 font-ui text-sm">
             <li><Link to="/archive" className="hover:text-dusty-yellow">Archive</Link></li>
+            <li><Link to="/reading-room" className="hover:text-dusty-yellow">Reading Room</Link></li>
             <li><Link to="/people" className="hover:text-dusty-yellow">People</Link></li>
             <li><Link to="/timeline" className="hover:text-dusty-yellow">Timeline</Link></li>
             <li><Link to="/join" className="hover:text-dusty-yellow">Join Us</Link></li>
             <li><Link to="/shop" className="hover:text-dusty-yellow">Shop</Link></li>
+          </ul>
+          <p className="label-mono text-paper/40 mt-5 mb-2">Also</p>
+          <ul className="space-y-2 font-ui text-sm">
+            <li><Link to="/shelf" className="hover:text-dusty-yellow">Călimara Recommends</Link></li>
+            <li><Link to="/numbers" className="hover:text-dusty-yellow">Călimara in Numbers</Link></li>
+            <li><Link to="/submit" className="hover:text-dusty-yellow">Submit Your Work</Link></li>
+            <li><Link to="/qa" className="hover:text-dusty-yellow">Q&amp;A</Link></li>
           </ul>
         </div>
 

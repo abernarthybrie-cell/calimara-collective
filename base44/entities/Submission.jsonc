@@ -1,0 +1,93 @@
+{
+  "name": "Submission",
+  "type": "object",
+  "properties": {
+    "submitter_name": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "age": {
+      "type": "string"
+    },
+    "school": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "file_url": {
+      "type": "string"
+    },
+    "portfolio_link": {
+      "type": "string"
+    },
+    "instagram": {
+      "type": "string"
+    },
+    "note": {
+      "type": "string"
+    },
+    "date_submitted": {
+      "type": "string",
+      "format": "date"
+    },
+    "issue_number": {
+      "type": "number"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "new",
+        "under_review",
+        "shortlisted",
+        "accepted",
+        "needs_editing",
+        "rejected",
+        "withdrawn"
+      ],
+      "default": "new"
+    },
+    "assigned_editor": {
+      "type": "string"
+    },
+    "internal_notes": {
+      "type": "string"
+    },
+    "consent": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "submitter_name",
+    "email",
+    "title",
+    "category"
+  ],
+  "rls": {
+    "create": {},
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

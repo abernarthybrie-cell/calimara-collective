@@ -17,6 +17,11 @@ import Timeline from '@/pages/Timeline';
 import JoinUs from '@/pages/JoinUs';
 import Shop from '@/pages/Shop';
 import QA from '@/pages/QA';
+import ReadingRoom from '@/pages/ReadingRoom';
+import Shelf from '@/pages/Shelf';
+import ShelfDetail from '@/pages/ShelfDetail';
+import Numbers from '@/pages/Numbers';
+import Submit from '@/pages/Submit';
 import Login from '@/pages/Login';
 import ForgotPassword from '@/pages/ForgotPassword';
 import ResetPassword from '@/pages/ResetPassword';
@@ -71,6 +76,11 @@ const AuthenticatedApp = () => {
         <Route path="/join" element={<JoinUs />} />
         <Route path="/qa" element={<QA />} />
         <Route path="/shop" element={<Shop />} />
+        <Route path="/reading-room" element={<ReadingRoom />} />
+        <Route path="/shelf" element={<Shelf />} />
+        <Route path="/shelf/:slug" element={<ShelfDetail />} />
+        <Route path="/numbers" element={<Numbers />} />
+        <Route path="/submit" element={<Submit />} />
       </Route>
 
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login?returnTo=/members" replace />} />}>

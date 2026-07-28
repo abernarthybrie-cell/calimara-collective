@@ -53,6 +53,24 @@
         "type": "string"
       }
     },
+    "mood_tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "topic_tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "form": {
+      "type": "string"
+    },
+    "reading_time_min": {
+      "type": "number"
+    },
     "publication_date": {
       "type": "string",
       "format": "date"

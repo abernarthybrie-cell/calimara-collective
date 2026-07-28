@@ -171,11 +171,12 @@ export default function Home() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-px bg-ink/15">
             {[
               { to: '/archive', n: '01', t: 'Archive', d: 'Browse the issues as physical objects on a shelf.' },
-              { to: '/people', n: '02', t: 'People', d: 'Meet the contributors. They are the magazine.' },
-              { to: '/timeline', n: '03', t: 'Timeline', d: 'A film strip of everything that has happened.' },
-              { to: '/join', n: '04', t: 'Join Us', d: 'Applications are open. Make something with us.' },
-              { to: '/shop', n: '05', t: 'Shop', d: 'Print, paper, and small objects. By mail.' },
-              { to: '#drawer', n: '06', t: 'The Drawer', d: 'Open a random fragment from the archive.', onClick: openDrawer },
+              { to: '/reading-room', n: '02', t: 'Reading Room', d: 'Find something to read right now — by mood, topic, or time.' },
+              { to: '/shelf', n: '03', t: 'The Shelf', d: 'What the people behind Călimara are reading & watching.' },
+              { to: '/people', n: '04', t: 'People', d: 'Meet the contributors. They are the magazine.' },
+              { to: '/numbers', n: '05', t: 'In Numbers', d: 'How much has happened — counted from the live archive.' },
+              { to: '/submit', n: '06', t: 'Submit', d: 'Send us your work. We read everything.' },
+              { to: '#drawer', n: '07', t: 'The Drawer', d: 'Open a random fragment from the archive.', onClick: openDrawer },
             ].map((c) => (
               c.onClick ? (
                 <button key={c.n} onClick={c.onClick} className="text-left bg-paper p-7 hover:bg-paper-deep transition-colors group focus-ring">

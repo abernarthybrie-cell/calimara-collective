@@ -1,0 +1,64 @@
+{
+  "name": "OpenCall",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "issue_number": {
+      "type": "number"
+    },
+    "theme": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "deadline": {
+      "type": "string",
+      "format": "date"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "open",
+        "closing_soon",
+        "closed",
+        "upcoming"
+      ],
+      "default": "open"
+    },
+    "accepted_formats": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "eligibility": {
+      "type": "string"
+    },
+    "submission_link": {
+      "type": "string"
+    },
+    "submission_method": {
+      "type": "string",
+      "enum": [
+        "internal",
+        "external"
+      ],
+      "default": "internal"
+    },
+    "featured": {
+      "type": "boolean",
+      "default": false
+    },
+    "order": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "title",
+    "status"
+  ]
+}

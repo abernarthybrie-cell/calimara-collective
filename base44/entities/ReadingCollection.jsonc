@@ -1,0 +1,58 @@
+{
+  "name": "ReadingCollection",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "cover_image": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "default": "curated"
+    },
+    "mood": {
+      "type": "string"
+    },
+    "topic": {
+      "type": "string"
+    },
+    "story_slugs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "illustration_slugs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "contributor_slugs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "featured": {
+      "type": "boolean",
+      "default": false
+    },
+    "order": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "title",
+    "slug"
+  ]
+}

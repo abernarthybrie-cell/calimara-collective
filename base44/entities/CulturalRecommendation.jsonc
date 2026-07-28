@@ -1,0 +1,59 @@
+{
+  "name": "CulturalRecommendation",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string"
+    },
+    "creator": {
+      "type": "string"
+    },
+    "cover_image": {
+      "type": "string"
+    },
+    "year": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "recommendation_text": {
+      "type": "string"
+    },
+    "recommended_by_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "recommended_by_names": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "related_issue_number": {
+      "type": "number"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "order": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "title",
+    "type"
+  ]
+}

@@ -6,6 +6,7 @@ import { useSettings } from '@/lib/calimara';
 const LINKS = [
   { to: '/', label: 'Călimara' },
   { to: '/archive', label: 'Archive' },
+  { to: '/reading-room', label: 'Reading Room' },
   { to: '/people', label: 'People' },
   { to: '/timeline', label: 'Timeline' },
   { to: '/join', label: 'Join Us' },
