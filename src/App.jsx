@@ -6,7 +6,16 @@ import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import ScrollToTop from './components/ScrollToTop';
-// Add page imports here
+import Layout from '@/components/Layout';
+import Home from '@/pages/Home';
+import Archive from '@/pages/Archive';
+import IssueDetail from '@/pages/IssueDetail';
+import StoryDetail from '@/pages/StoryDetail';
+import People from '@/pages/People';
+import PersonDetail from '@/pages/PersonDetail';
+import Timeline from '@/pages/Timeline';
+import JoinUs from '@/pages/JoinUs';
+import Shop from '@/pages/Shop';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -34,8 +43,18 @@ const AuthenticatedApp = () => {
   // Render the main app
   return (
     <Routes>
-      {/* Add your page Route elements here */}
-      <Route path="*" element={<PageNotFound />} />
+      <Route element={<Layout />}>
+        <Route path="/" element={<Home />} />
+        <Route path="/archive" element={<Archive />} />
+        <Route path="/archive/issue/:issueSlug" element={<IssueDetail />} />
+        <Route path="/archive/issue/:issueSlug/story/:slug" element={<StoryDetail />} />
+        <Route path="/people" element={<People />} />
+        <Route path="/people/:id" element={<PersonDetail />} />
+        <Route path="/timeline" element={<Timeline />} />
+        <Route path="/join" element={<JoinUs />} />
+        <Route path="/shop" element={<Shop />} />
+        <Route path="*" element={<PageNotFound />} />
+      </Route>
     </Routes>
   );
 };
