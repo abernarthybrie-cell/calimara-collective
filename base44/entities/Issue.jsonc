@@ -60,6 +60,16 @@
       "items": {
         "type": "string"
       }
+    },
+    "google_doc_url": {
+      "type": "string"
+    },
+    "editorial_instructions": {
+      "type": "string"
+    },
+    "current_issue": {
+      "type": "boolean",
+      "default": false
     }
   },
   "required": [

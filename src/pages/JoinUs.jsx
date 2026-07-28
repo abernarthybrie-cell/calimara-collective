@@ -135,6 +135,18 @@ export default function JoinUs() {
         </div>
       </section>
 
+      {/* Q&A */}
+      <section className="py-16 bg-ink text-paper grain">
+        <div className="mx-auto max-w-[1100px] px-6 lg:px-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div>
+            <p className="label-mono text-dusty-yellow mb-3">— QUESTIONS? —</p>
+            <h2 className="font-heading text-4xl md:text-6xl leading-[0.95]">Before you join</h2>
+            <p className="font-body text-paper/70 mt-3 max-w-lg">Everything you might want to know before you raise your hand.</p>
+          </div>
+          <Link to="/qa" className="inline-flex items-center gap-2 border border-paper/30 px-6 py-3 label-mono text-paper hover:bg-paper hover:text-ink transition-colors focus-ring">READ THE Q&A <ArrowRight size={14}/></Link>
+        </div>
+      </section>
+
       {/* contact */}
       <section className="py-16 bg-paper-deep grain-light">
         <div className="mx-auto max-w-[1100px] px-6 lg:px-10 grid md:grid-cols-2 gap-10">

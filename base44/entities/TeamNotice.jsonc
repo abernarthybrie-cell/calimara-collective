@@ -1,0 +1,36 @@
+{
+  "name": "TeamNotice",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "author": {
+      "type": "string"
+    },
+    "content": {
+      "type": "string"
+    },
+    "related_issue_number": {
+      "type": "number"
+    },
+    "importance": {
+      "type": "string",
+      "enum": [
+        "normal",
+        "important",
+        "urgent"
+      ],
+      "default": "normal"
+    }
+  },
+  "required": [
+    "title",
+    "content",
+    "date"
+  ]
+}

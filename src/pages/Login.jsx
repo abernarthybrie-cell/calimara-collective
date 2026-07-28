@@ -39,18 +39,10 @@ export default function Login() {
   return (
     <AuthLayout
       icon={LogIn}
-      title="Welcome back"
-      subtitle="Log in to your account"
+      title="Welcome back."
+      subtitle="The public archive is out front. The editorial room is back here."
       footer={
-        <>
-          Don't have an account?{" "}
-          <Link
-            to={"/register" + (returnTo !== "/" ? "?returnTo=" + encodeURIComponent(returnTo) : "")}
-            className="text-primary font-medium hover:underline"
-          >
-            Create one
-          </Link>
-        </>
+        <span className="label-mono">ARE YOU NEW HERE? <Link to="/join" className="text-primary font-medium hover:underline">JOIN CĂLIMARA →</Link></span>
       }
     >
       <Button
@@ -123,7 +115,7 @@ export default function Login() {
               Logging in...
             </>
           ) : (
-            "Log in"
+            "Sign in"
           )}
         </Button>
       </form>

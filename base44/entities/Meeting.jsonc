@@ -1,0 +1,40 @@
+{
+  "name": "Meeting",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "time": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string"
+    },
+    "online_link": {
+      "type": "string"
+    },
+    "agenda": {
+      "type": "string"
+    },
+    "related_issue_number": {
+      "type": "number"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "upcoming",
+        "past"
+      ],
+      "default": "upcoming"
+    }
+  },
+  "required": [
+    "title",
+    "date"
+  ]
+}

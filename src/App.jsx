@@ -1,7 +1,7 @@
 import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
@@ -16,6 +16,19 @@ import PersonDetail from '@/pages/PersonDetail';
 import Timeline from '@/pages/Timeline';
 import JoinUs from '@/pages/JoinUs';
 import Shop from '@/pages/Shop';
+import QA from '@/pages/QA';
+import Login from '@/pages/Login';
+import ForgotPassword from '@/pages/ForgotPassword';
+import ResetPassword from '@/pages/ResetPassword';
+import ProtectedRoute from '@/components/ProtectedRoute';
+import MembersLayout from '@/components/MembersLayout';
+import Dashboard from '@/pages/members/Dashboard';
+import Deadlines from '@/pages/members/Deadlines';
+import Meetings from '@/pages/members/Meetings';
+import Notices from '@/pages/members/Notices';
+import Directory from '@/pages/members/Directory';
+import Chat from '@/pages/members/Chat';
+import IssueWorkspace from '@/pages/members/IssueWorkspace';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -43,6 +56,10 @@ const AuthenticatedApp = () => {
   // Render the main app
   return (
     <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
+
       <Route element={<Layout />}>
         <Route path="/" element={<Home />} />
         <Route path="/archive" element={<Archive />} />
@@ -52,9 +69,23 @@ const AuthenticatedApp = () => {
         <Route path="/people/:id" element={<PersonDetail />} />
         <Route path="/timeline" element={<Timeline />} />
         <Route path="/join" element={<JoinUs />} />
+        <Route path="/qa" element={<QA />} />
         <Route path="/shop" element={<Shop />} />
-        <Route path="*" element={<PageNotFound />} />
       </Route>
+
+      <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login?returnTo=/members" replace />} />}>
+        <Route element={<MembersLayout />}>
+          <Route path="/members" element={<Dashboard />} />
+          <Route path="/members/deadlines" element={<Deadlines />} />
+          <Route path="/members/meetings" element={<Meetings />} />
+          <Route path="/members/notices" element={<Notices />} />
+          <Route path="/members/directory" element={<Directory />} />
+          <Route path="/members/chat" element={<Chat />} />
+          <Route path="/members/issue/:issueSlug" element={<IssueWorkspace />} />
+        </Route>
+      </Route>
+
+      <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
 };

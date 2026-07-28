@@ -42,6 +42,10 @@
     "shipping_price": {
       "type": "number",
       "default": 15
+    },
+    "notion_url": {
+      "type": "string"
     }
-  }
+  },
+  "required": []
 }

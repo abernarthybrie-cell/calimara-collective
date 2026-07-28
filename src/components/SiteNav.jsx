@@ -52,6 +52,7 @@ export default function SiteNav({ onOpenSearch }) {
           <button onClick={onOpenSearch} aria-label="Search the archive" className="nav-link focus-ring text-ink hover:text-burgundy flex items-center gap-1">
             <Search size={13} /> Search
           </button>
+          <Link to="/members" className="nav-link focus-ring border border-ink/30 px-3 py-1.5 text-ink hover:bg-ink hover:text-paper transition-colors">Members</Link>
         </nav>
 
         {/* Mobile toggle */}
@@ -79,6 +80,7 @@ export default function SiteNav({ onOpenSearch }) {
                 {l.label}
               </Link>
             ))}
+            <Link to="/members" className="font-heading text-4xl py-3 border-b border-ink/10 text-burgundy">Members</Link>
             <button onClick={() => { setOpen(false); onOpenSearch?.(); }} className="font-heading text-4xl py-3 text-left text-burgundy flex items-center gap-2">
               <Search size={22} /> Search
             </button>

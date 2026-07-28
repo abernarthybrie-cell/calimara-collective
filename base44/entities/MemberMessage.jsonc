@@ -1,0 +1,18 @@
+{
+  "name": "MemberMessage",
+  "type": "object",
+  "properties": {
+    "text": {
+      "type": "string"
+    },
+    "author_name": {
+      "type": "string"
+    },
+    "author_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "text"
+  ]
+}

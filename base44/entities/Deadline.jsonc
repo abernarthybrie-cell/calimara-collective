@@ -1,0 +1,49 @@
+{
+  "name": "Deadline",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "issue_number": {
+      "type": "number"
+    },
+    "task": {
+      "type": "string"
+    },
+    "responsible_person": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "upcoming",
+        "due_soon",
+        "submitted",
+        "completed"
+      ],
+      "default": "upcoming"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "normal",
+        "high",
+        "urgent"
+      ],
+      "default": "normal"
+    },
+    "source": {
+      "type": "string",
+      "default": "C\u0103limara"
+    }
+  },
+  "required": [
+    "title",
+    "date"
+  ]
+}
