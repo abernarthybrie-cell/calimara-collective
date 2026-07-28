@@ -6,29 +6,29 @@
 
 @layer base {
   :root {
-    /* Paper surfaces — cream/vanilla base */
-    --paper: 44 38% 88%;
-    --paper-deep: 42 40% 83%;
-    --paper-shadow: 40 38% 74%;
-    --ink: 13 21% 23%;
-    --ink-soft: 20 10% 38%;
+    /* Paper surfaces — bone / cream (#ebe2da) */
+    --paper: 28 30% 89%;
+    --paper-deep: 30 24% 81%;
+    --paper-shadow: 32 18% 70%;
+    --ink: 18 34% 40%;
+    --ink-soft: 18 22% 48%;
 
-    /* Archival accents — mustard gold, sage, espresso */
-    --burgundy: 42 41% 53%;
-    --cyanotype: 131 9% 39%;
-    --dusty-yellow: 42 41% 53%;
-    --forest: 131 14% 28%;
-    --faded-red: 10 28% 44%;
+    /* Archival accents — russet, blue smoke, mineral green, cape palliser */
+    --burgundy: 170 16% 29%;
+    --cyanotype: 152 10% 47%;
+    --dusty-yellow: 38 34% 44%;
+    --forest: 170 16% 22%;
+    --faded-red: 12 19% 41%;
 
-    /* Dark archive surfaces — espresso */
-    --archive-bg: 13 18% 14%;
-    --archive-bg-2: 13 16% 17%;
-    --archive-fg: 44 30% 84%;
-    --archive-muted: 40 10% 56%;
-    --archive-line: 30 12% 28%;
+    /* Dark archive surfaces — deep mineral */
+    --archive-bg: 170 14% 14%;
+    --archive-bg-2: 170 12% 18%;
+    --archive-fg: 28 26% 86%;
+    --archive-muted: 38 12% 58%;
+    --archive-line: 160 10% 26%;
 
     /* Tape */
-    --tape: 46 40% 80%;
+    --tape: 38 30% 75%;
 
     --radius: 0px;
     --font-heading: 'Cormorant Garamond', Georgia, serif;
@@ -52,21 +52,21 @@
     --secondary-foreground: 40 28% 86%;
     --muted: 30 8% 18%;
     --muted-foreground: 38 12% 58%;
-    --accent: 42 41% 53%;
-    --accent-foreground: 40 28% 86%;
+    --accent: 38 34% 44%;
+    --accent-foreground: 28 30% 89%;
     --destructive: 0 62% 40%;
     --destructive-foreground: 40 28% 86%;
     --border: 40 12% 28%;
     --input: 40 12% 28%;
-    --ring: 42 41% 53%;
+    --ring: 152 10% 47%;
     --sidebar-background: 30 8% 10%;
     --sidebar-foreground: 40 28% 86%;
-    --sidebar-primary: 42 41% 53%;
-    --sidebar-primary-foreground: 40 28% 86%;
+    --sidebar-primary: 170 16% 29%;
+    --sidebar-primary-foreground: 28 30% 89%;
     --sidebar-accent: 30 8% 16%;
     --sidebar-accent-foreground: 40 28% 86%;
     --sidebar-border: 40 12% 28%;
-    --sidebar-ring: 42 41% 53%;
+    --sidebar-ring: 152 10% 47%;
   }
 }
 
