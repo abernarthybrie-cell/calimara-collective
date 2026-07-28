@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Caveat:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -35,12 +35,15 @@
     --gold: 43 58% 52%;
 
     --radius: 0px;
-    --font-heading: 'Cormorant Garamond', Georgia, serif;
-    --font-body: 'Cormorant Garamond', Georgia, serif;
-    --font-display: 'Cormorant Garamond', Georgia, serif;
-    --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
-    --font-ui: 'Space Grotesk', system-ui, sans-serif;
-    --font-hand: 'Caveat', cursive;
+    /* Călimara four-font system: EB Garamond (literary), TAN Giok (display),
+       Marline (expressive), 29LT Makina (experimental/labels). The three
+       non-Google fonts fall back gracefully until their files are provided. */
+    --font-heading: 'EB Garamond', Georgia, serif;
+    --font-body: 'EB Garamond', Georgia, serif;
+    --font-display: 'TAN Giok', 'EB Garamond', Georgia, serif;
+    --font-mono: '29LT Makina', ui-monospace, 'Courier New', monospace;
+    --font-ui: '29LT Makina', ui-monospace, 'Courier New', monospace;
+    --font-hand: 'Marline', cursive;
   }
 
   .dark {
@@ -82,8 +85,8 @@
     background-color: hsl(var(--paper));
     color: hsl(var(--ink));
     font-family: var(--font-body);
-    font-size: 1.125rem;
-    line-height: 1.6;
+    font-size: 1.1875rem;
+    line-height: 1.7;
     -webkit-font-smoothing: antialiased;
   }
   ::selection {

@@ -91,7 +91,7 @@ export default function SiteNav({ onOpenSearch, onOpenDrawer }) {
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <p className="label-mono text-burgundy">— INDEX —</p>
-                  <h2 className="font-heading text-5xl md:text-6xl leading-none mt-1">Călimara</h2>
+                  <h2 className="font-display text-5xl md:text-6xl leading-none mt-1">Călimara</h2>
                   <p className="label-mono text-ink-soft mt-1">{city} · EST. {year} · INDEPENDENT STUDENT MAGAZINE</p>
                 </div>
                 <button onClick={() => setOpen(false)} className="stamp text-burgundy hover:text-ink focus-ring whitespace-nowrap" aria-label="Close index">CLOSE ✕</button>
