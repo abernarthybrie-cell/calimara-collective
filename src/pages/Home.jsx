@@ -10,7 +10,7 @@ import Stamp from '@/components/Stamp';
 import ScanImage from '@/components/ScanImage';
 import { Image } from '@/components/ui/image';
 
-const L_EMBLEM = 'https://media.base44.com/images/public/6a68e00e568a670980669b9d/120d00c9f_TheNewLazarus-ISSUEI2.png';
+const L_EMBLEM = 'https://media.base44.com/images/public/6a68e00e568a670980669b9d/9e580afcc_Designfrtitlu.png';
 import LogoMark from '@/components/LogoMark';
 
 export default function Home() {

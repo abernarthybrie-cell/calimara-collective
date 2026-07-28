@@ -1,7 +1,7 @@
 import React from 'react';
 import { Image } from '@/components/ui/image';
 
-const LOGO = 'https://media.base44.com/images/public/6a68e00e568a670980669b9d/120d00c9f_TheNewLazarus-ISSUEI2.png';
+const LOGO = 'https://media.base44.com/images/public/6a68e00e568a670980669b9d/9e580afcc_Designfrtitlu.png';
 
 export default function LogoMark({ className = '', size = 96, rotate = -2 }) {
   return (
