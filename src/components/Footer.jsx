@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Instagram, Mail } from 'lucide-react';
 import { useSettings, useReducedMotion } from '@/lib/calimara';
+import LogoMark from '@/components/LogoMark';
 
 export default function Footer() {
   const { settings } = useSettings();
@@ -12,6 +13,7 @@ export default function Footer() {
     <footer className="bg-ink text-paper mt-24 border-t border-ink">
       <div className="mx-auto max-w-[1400px] px-6 lg:px-10 py-14 grid gap-10 md:grid-cols-12">
         <div className="md:col-span-5">
+          <LogoMark size={64} rotate={-3} className="mb-3" />
           <p className="font-heading text-3xl">CĂLIMARA</p>
           <p className="label-mono text-paper/60 mt-2">BUCHAREST · EST. {year}</p>
           <p className="font-hand text-xl text-paper/70 mt-4 max-w-sm leading-snug">

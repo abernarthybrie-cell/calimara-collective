@@ -8,6 +8,7 @@ import Polaroid from '@/components/Polaroid';
 import Tape from '@/components/Tape';
 import Stamp from '@/components/Stamp';
 import ScanImage from '@/components/ScanImage';
+import LogoMark from '@/components/LogoMark';
 
 export default function Home() {
   const { settings, loading } = useSettingsSafe();
@@ -43,6 +44,9 @@ export default function Home() {
         <div className="absolute inset-0 bg-paper" />
         {/* decorative collage — desktop only */}
         <div className="hidden md:block absolute inset-0 pointer-events-none">
+            <div data-depth="0.5" className="absolute top-[9%] left-[43%] w-24">
+              <LogoMark size={104} rotate={5} />
+            </div>
             <div data-depth="0.6" data-base-transform="rotate(3deg)" className="absolute top-[18%] left-[6%] w-44 rotate-3">
               <Polaroid src={people[0]?.polaroid_photo} objectNumber="P-01" alt="Contributor" caption={people[0]?.name || 'a contributor'} />
             </div>

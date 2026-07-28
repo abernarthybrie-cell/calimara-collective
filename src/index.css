@@ -6,29 +6,29 @@
 
 @layer base {
   :root {
-    /* Paper surfaces */
-    --paper: 40 27% 93%;
-    --paper-deep: 38 28% 89%;
-    --paper-shadow: 36 22% 82%;
-    --ink: 30 6% 11%;
-    --ink-soft: 30 5% 30%;
+    /* Paper surfaces — cream/vanilla base */
+    --paper: 44 38% 88%;
+    --paper-deep: 42 40% 83%;
+    --paper-shadow: 40 38% 74%;
+    --ink: 13 21% 23%;
+    --ink-soft: 20 10% 38%;
 
-    /* Archival accents */
-    --burgundy: 0 65% 33%;
-    --cyanotype: 205 34% 32%;
-    --dusty-yellow: 44 78% 58%;
-    --forest: 150 28% 22%;
-    --faded-red: 4 52% 42%;
+    /* Archival accents — mustard gold, sage, espresso */
+    --burgundy: 42 41% 53%;
+    --cyanotype: 131 9% 39%;
+    --dusty-yellow: 42 41% 53%;
+    --forest: 131 14% 28%;
+    --faded-red: 10 28% 44%;
 
-    /* Dark archive surfaces */
-    --archive-bg: 30 8% 10%;
-    --archive-bg-2: 30 8% 13%;
-    --archive-fg: 40 28% 86%;
-    --archive-muted: 38 12% 58%;
-    --archive-line: 40 12% 28%;
+    /* Dark archive surfaces — espresso */
+    --archive-bg: 13 18% 14%;
+    --archive-bg-2: 13 16% 17%;
+    --archive-fg: 44 30% 84%;
+    --archive-muted: 40 10% 56%;
+    --archive-line: 30 12% 28%;
 
     /* Tape */
-    --tape: 50 60% 85%;
+    --tape: 46 40% 80%;
 
     --radius: 0px;
     --font-heading: 'EB Garamond', Georgia, serif;
@@ -52,21 +52,21 @@
     --secondary-foreground: 40 28% 86%;
     --muted: 30 8% 18%;
     --muted-foreground: 38 12% 58%;
-    --accent: 0 65% 33%;
+    --accent: 42 41% 53%;
     --accent-foreground: 40 28% 86%;
     --destructive: 0 62% 40%;
     --destructive-foreground: 40 28% 86%;
     --border: 40 12% 28%;
     --input: 40 12% 28%;
-    --ring: 0 65% 33%;
+    --ring: 42 41% 53%;
     --sidebar-background: 30 8% 10%;
     --sidebar-foreground: 40 28% 86%;
-    --sidebar-primary: 0 65% 33%;
+    --sidebar-primary: 42 41% 53%;
     --sidebar-primary-foreground: 40 28% 86%;
     --sidebar-accent: 30 8% 16%;
     --sidebar-accent-foreground: 40 28% 86%;
     --sidebar-border: 40 12% 28%;
-    --sidebar-ring: 0 65% 33%;
+    --sidebar-ring: 42 41% 53%;
   }
 }
 
