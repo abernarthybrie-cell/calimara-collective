@@ -39,7 +39,7 @@ export default function Layout() {
     <SettingsProvider>
       <CartProvider>
         <div className="min-h-screen flex flex-col">
-          <SiteNav onOpenSearch={() => setSearchOpen(true)} />
+          <SiteNav onOpenSearch={() => setSearchOpen(true)} onOpenDrawer={() => setDrawerOpen(true)} />
           <main className="flex-1">
             <Outlet context={{ openDrawer: () => setDrawerOpen(true), openSearch: () => setSearchOpen(true) }} />
           </main>
