@@ -1,0 +1,91 @@
+{
+  "name": "Person",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "string"
+    },
+    "profile_photo": {
+      "type": "string"
+    },
+    "polaroid_photo": {
+      "type": "string"
+    },
+    "additional_photos": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "primary_role": {
+      "type": "string"
+    },
+    "roles": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "is_founder": {
+      "type": "boolean",
+      "default": false
+    },
+    "biography": {
+      "type": "string"
+    },
+    "founding_story": {
+      "type": "string"
+    },
+    "date_joined": {
+      "type": "string"
+    },
+    "why_joined": {
+      "type": "string"
+    },
+    "contribution": {
+      "type": "string"
+    },
+    "favorite_book": {
+      "type": "string"
+    },
+    "favorite_album": {
+      "type": "string"
+    },
+    "favorite_film": {
+      "type": "string"
+    },
+    "favorite_quote": {
+      "type": "string"
+    },
+    "favorite_artist": {
+      "type": "string"
+    },
+    "interests": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "issue_numbers": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "past"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "name",
+    "slug"
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "name": "Story",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "string"
+    },
+    "subtitle": {
+      "type": "string"
+    },
+    "author_name": {
+      "type": "string"
+    },
+    "issue_slug": {
+      "type": "string"
+    },
+    "issue_number": {
+      "type": "number"
+    },
+    "category": {
+      "type": "string"
+    },
+    "rubrica": {
+      "type": "string"
+    },
+    "page_number": {
+      "type": "number"
+    },
+    "full_text": {
+      "type": "string"
+    },
+    "excerpt": {
+      "type": "string"
+    },
+    "cover_image": {
+      "type": "string"
+    },
+    "page_scan": {
+      "type": "string"
+    },
+    "images": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "publication_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "inspiration": {
+      "type": "string"
+    },
+    "behind_the_scenes": {
+      "type": "string"
+    },
+    "editorial_note": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "title",
+    "slug"
+  ]
+}

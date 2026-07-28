@@ -1,0 +1,75 @@
+{
+  "name": "TimelineEvent",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "string"
+    },
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "milestone",
+        "meeting",
+        "launch",
+        "event",
+        "collaboration",
+        "interview"
+      ],
+      "default": "milestone"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "past",
+        "current",
+        "upcoming"
+      ],
+      "default": "past"
+    },
+    "description": {
+      "type": "string"
+    },
+    "images": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "location": {
+      "type": "string"
+    },
+    "related_issue_number": {
+      "type": "number"
+    },
+    "related_people": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "who_can_attend": {
+      "type": "string"
+    },
+    "registration_url": {
+      "type": "string"
+    },
+    "highlights": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "title",
+    "slug",
+    "date"
+  ]
+}

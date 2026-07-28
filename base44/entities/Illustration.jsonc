@@ -1,0 +1,49 @@
+{
+  "name": "Illustration",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "string"
+    },
+    "image": {
+      "type": "string"
+    },
+    "illustrator_name": {
+      "type": "string"
+    },
+    "issue_slug": {
+      "type": "string"
+    },
+    "issue_number": {
+      "type": "number"
+    },
+    "page_number": {
+      "type": "number"
+    },
+    "description": {
+      "type": "string"
+    },
+    "inspiration": {
+      "type": "string"
+    },
+    "process_images": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "behind_the_scenes": {
+      "type": "string"
+    },
+    "related_story_slug": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "title",
+    "slug"
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "name": "Product",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "string"
+    },
+    "object_number": {
+      "type": "string"
+    },
+    "images": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "description": {
+      "type": "string"
+    },
+    "price": {
+      "type": "number"
+    },
+    "currency": {
+      "type": "string",
+      "default": "RON"
+    },
+    "inventory": {
+      "type": "number"
+    },
+    "product_type": {
+      "type": "string"
+    },
+    "edition": {
+      "type": "string"
+    },
+    "printed_in": {
+      "type": "string",
+      "default": "Bucharest"
+    },
+    "related_issue_number": {
+      "type": "number"
+    },
+    "shopify_product_id": {
+      "type": "string"
+    },
+    "available": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "name",
+    "slug",
+    "price"
+  ]
+}

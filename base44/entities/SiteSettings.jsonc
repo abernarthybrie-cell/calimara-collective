@@ -1,0 +1,47 @@
+{
+  "name": "SiteSettings",
+  "type": "object",
+  "properties": {
+    "founded_year": {
+      "type": "string"
+    },
+    "city": {
+      "type": "string",
+      "default": "Bucharest"
+    },
+    "tagline": {
+      "type": "string"
+    },
+    "about_text": {
+      "type": "string"
+    },
+    "google_form_url": {
+      "type": "string"
+    },
+    "instagram_url": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "editor_email": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "join_steps": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "join_intro": {
+      "type": "string"
+    },
+    "shipping_price": {
+      "type": "number",
+      "default": 15
+    }
+  }
+}

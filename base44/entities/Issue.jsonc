@@ -1,0 +1,70 @@
+{
+  "name": "Issue",
+  "type": "object",
+  "properties": {
+    "number": {
+      "type": "number"
+    },
+    "slug": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "publication_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "cover_image": {
+      "type": "string"
+    },
+    "pdf_url": {
+      "type": "string"
+    },
+    "page_images": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "description": {
+      "type": "string"
+    },
+    "theme": {
+      "type": "string"
+    },
+    "page_count": {
+      "type": "number"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "published"
+      ],
+      "default": "published"
+    },
+    "featured": {
+      "type": "boolean",
+      "default": false
+    },
+    "allow_download": {
+      "type": "boolean",
+      "default": true
+    },
+    "editorial_note": {
+      "type": "string"
+    },
+    "contributor_names": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "number",
+    "slug",
+    "title"
+  ]
+}

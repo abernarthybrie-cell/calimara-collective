@@ -1,0 +1,44 @@
+{
+  "name": "Fragment",
+  "type": "object",
+  "properties": {
+    "object_number": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "image": {
+      "type": "string"
+    },
+    "text": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "date": {
+      "type": "string"
+    },
+    "contributor_name": {
+      "type": "string"
+    },
+    "issue_number": {
+      "type": "number"
+    },
+    "status": {
+      "type": "string",
+      "default": "Unpublished"
+    },
+    "fragment_type": {
+      "type": "string"
+    },
+    "related_story_slug": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "object_number",
+    "title"
+  ]
+}
