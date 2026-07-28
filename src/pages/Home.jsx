@@ -8,6 +8,9 @@ import Polaroid from '@/components/Polaroid';
 import Tape from '@/components/Tape';
 import Stamp from '@/components/Stamp';
 import ScanImage from '@/components/ScanImage';
+import { Image } from '@/components/ui/image';
+
+const L_EMBLEM = 'https://media.base44.com/images/public/6a68e00e568a670980669b9d/120d00c9f_TheNewLazarus-ISSUEI2.png';
 import LogoMark from '@/components/LogoMark';
 
 export default function Home() {
@@ -71,6 +74,10 @@ export default function Home() {
                 {[0,1,2,3].map(i => <div key={i} className="flex-1 aspect-square bg-paper-deep" />)}
               </div>
               <p className="font-hand text-sm text-ink-soft mt-1">frames 7–12 · launch night</p>
+            </div>
+            {/* the L emblem — decorative mark */}
+            <div data-depth="0.55" className="absolute top-[24%] right-[31%] w-24 lg:w-28 rotate-[5deg] shadow-2xl">
+              <Image src={L_EMBLEM} alt="Călimara — the L emblem" fittingType="fit" className="aspect-square w-full" />
             </div>
         </div>
 
