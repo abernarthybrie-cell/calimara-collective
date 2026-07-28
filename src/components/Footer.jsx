@@ -16,8 +16,8 @@ export default function Footer() {
           <LogoMark size={64} rotate={-3} className="mb-3" />
           <p className="font-heading text-3xl">CĂLIMARA</p>
           <p className="label-mono text-paper/60 mt-2">BUCHAREST · EST. {year}</p>
-          <p className="font-hand text-xl text-paper/70 mt-4 max-w-sm leading-snug">
-            A magazine made by young people who have something to say.
+          <p className="text-xl text-paper/70 mt-4 max-w-sm leading-snug [font-family:'Playfair_Display',_serif] font-normal">A magazine made by young people who have something to say.
+
           </p>
         </div>
 
@@ -42,19 +42,19 @@ export default function Footer() {
 
         <div className="md:col-span-4">
           <p className="label-mono text-paper/50 mb-3">Contact</p>
-          {settings?.email && (
-            <a href={`mailto:${settings.email}`} className="flex items-center gap-2 font-ui text-sm hover:text-dusty-yellow">
+          {settings?.email &&
+          <a href={`mailto:${settings.email}`} className="flex items-center gap-2 font-ui text-sm hover:text-dusty-yellow">
               <Mail size={14} /> {settings.email}
             </a>
-          )}
-          {settings?.instagram_url && (
-            <a href={settings.instagram_url} target="_blank" rel="noreferrer" className="flex items-center gap-2 font-ui text-sm mt-2 hover:text-dusty-yellow">
+          }
+          {settings?.instagram_url &&
+          <a href={settings.instagram_url} target="_blank" rel="noreferrer" className="flex items-center gap-2 font-ui text-sm mt-2 hover:text-dusty-yellow">
               <Instagram size={14} /> @calimara
             </a>
-          )}
-          {settings?.editor_email && (
-            <p className="font-mono-c text-xs text-paper/50 mt-3">editor · {settings.editor_email}</p>
-          )}
+          }
+          {settings?.editor_email &&
+          <p className="font-mono-c text-xs text-paper/50 mt-3">editor · {settings.editor_email}</p>
+          }
 
           <button onClick={toggle} className="mt-5 label-mono text-paper/60 hover:text-dusty-yellow focus-ring inline-block">
             {reduced ? '〇 reduced motion: on — turn off' : '〇 reduced motion: off — turn on'}
@@ -68,6 +68,6 @@ export default function Footer() {
           <span>PRINTED IN BUCHAREST · SET IN GARAMOND & IBM PLEX MONO</span>
         </div>
       </div>
-    </footer>
-  );
+    </footer>);
+
 }
