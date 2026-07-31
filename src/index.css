@@ -88,8 +88,8 @@
     --font-heading: 'EB Garamond', Georgia, serif;
     --font-body: 'EB Garamond', Georgia, serif;
     --font-display: 'TAN Giok', 'EB Garamond', Georgia, serif;
-    --font-mono: '29LT Makina', ui-monospace, 'Courier New', monospace;
-    --font-ui: '29LT Makina', ui-monospace, 'Courier New', monospace;
+    --font-mono: 'Punktype', ui-monospace, 'Courier New', monospace;
+    --font-ui: 'Punktype', ui-monospace, 'Courier New', monospace;
     --font-hand: 'Marline', cursive;
   }
 
