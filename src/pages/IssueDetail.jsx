@@ -175,6 +175,9 @@ function Page({ side, pageNo, image, story, illus, onAnnotate }) {
       ))}
 
       <span className="absolute bottom-2 right-3 label-mono text-ink-soft/40 text-[0.55rem]">p.{pageNo}</span>
+
+      {/* animated page-turn corner curl */}
+      <span className={`page-curl ${side === 'left' ? 'left' : ''}`} aria-hidden="true" />
     </div>
   );
 }

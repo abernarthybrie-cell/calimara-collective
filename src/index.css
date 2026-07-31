@@ -298,6 +298,39 @@
   .folder-photo { transform: rotate(var(--rot, 0deg)); transition: transform .5s cubic-bezier(.2,.8,.2,1), box-shadow .5s; }
   .group:hover .folder-photo { transform: rotate(var(--rot, 0deg)) translateY(var(--lift, -10px)) scale(1.04); box-shadow: 0 16px 26px rgba(0,0,0,.26); z-index: 40; }
 
+  /* Page-turn corner curl — a corner that lifts like a page being turned */
+  @keyframes page-curl {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    45%, 55% { transform: translate(-2px, -4px) rotate(-4deg); }
+  }
+  @keyframes page-curl-left {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    45%, 55% { transform: translate(2px, -4px) rotate(4deg); }
+  }
+  .page-curl {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 30px;
+    height: 30px;
+    background: linear-gradient(135deg, #fdfaf2 0%, hsl(var(--paper-deep)) 100%);
+    clip-path: polygon(100% 0, 100% 100%, 0 100%);
+    box-shadow: -2px -3px 6px rgba(0,0,0,0.18);
+    transform-origin: bottom right;
+    animation: page-curl 4.5s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 5;
+  }
+  .page-curl.left {
+    right: auto;
+    left: 0;
+    clip-path: polygon(0 0, 100% 100%, 0 100%);
+    box-shadow: 2px -3px 6px rgba(0,0,0,0.18);
+    transform-origin: bottom left;
+    animation: page-curl-left 4.5s ease-in-out infinite;
+    animation-delay: 2.2s;
+  }
+
   /* Underline like a pen mark */
   .ink-underline {
     background-image: linear-gradient(transparent 62%, hsl(var(--burgundy) / 0.35) 62%, hsl(var(--burgundy) / 0.35) 92%, transparent 92%);
