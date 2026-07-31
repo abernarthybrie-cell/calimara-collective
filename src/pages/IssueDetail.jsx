@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Download } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
-import { formatDate } from '@/lib/calimara';
+import { formatMonthYear } from '@/lib/calimara';
 import ScanImage from '@/components/ScanImage';
 import PageZoom from '@/components/PageZoom';
 
@@ -102,7 +102,7 @@ export default function IssueDetail() {
           <Link to="/archive" className="label-mono text-dusty-yellow hover:text-paper">← BACK TO THE FOLDERS</Link>
           <div className="mt-4 flex items-end justify-between gap-4 flex-wrap">
             <div>
-              <p className="label-mono text-dusty-yellow">ISSUE {num} · {formatDate(issue.publication_date)}</p>
+              <p className="label-mono text-dusty-yellow">ISSUE {num} · {formatMonthYear(issue.publication_date)}</p>
               <h1 className="font-heading text-4xl md:text-6xl mt-2">{issue.title}</h1>
               <p className="label-mono text-archive-fg/60 mt-2">THEME · {issue.theme} · {issue.page_count} PAGES</p>
             </div>

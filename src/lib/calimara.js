@@ -14,6 +14,12 @@ export const formatDate = (d) => {
     return new Date(d).toLocaleDateString('ro-RO', { day: '2-digit', month: 'long', year: 'numeric' });
   } catch { return d; }
 };
+export const formatMonthYear = (d) => {
+  if (!d) return '—';
+  try {
+    return new Date(d).toLocaleDateString('ro-RO', { month: 'long', year: 'numeric' });
+  } catch { return d; }
+};
 export const formatDateShort = (d) => {
   if (!d) return '—';
   try {
