@@ -10,6 +10,7 @@ const PRIMARY = [
 
 
 const SECONDARY = [
+{ to: '/contents', label: 'Contents' },
 { to: '/reading-room', label: 'Reading Room' },
 { to: '/shelf', label: 'Călimara Recommends' },
 { to: '/timeline', label: 'Timeline' },

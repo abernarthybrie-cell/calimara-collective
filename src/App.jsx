@@ -22,6 +22,7 @@ import Shelf from '@/pages/Shelf';
 import ShelfDetail from '@/pages/ShelfDetail';
 import Numbers from '@/pages/Numbers';
 import Submit from '@/pages/Submit';
+import Contents from '@/pages/Contents';
 import Login from '@/pages/Login';
 import ForgotPassword from '@/pages/ForgotPassword';
 import ResetPassword from '@/pages/ResetPassword';
@@ -81,6 +82,7 @@ const AuthenticatedApp = () => {
         <Route path="/shelf/:slug" element={<ShelfDetail />} />
         <Route path="/numbers" element={<Numbers />} />
         <Route path="/submit" element={<Submit />} />
+        <Route path="/contents" element={<Contents />} />
       </Route>
 
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login?returnTo=/members" replace />} />}>
