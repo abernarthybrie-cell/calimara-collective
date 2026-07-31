@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import ScanImage from '@/components/ScanImage';
+import Polaroid from '@/components/Polaroid';
 
 // bright palette colors — cycled per issue
 const FOLDER_COLORS = [
@@ -12,24 +13,27 @@ const FOLDER_COLORS = [
   { bg: 'hsl(var(--deep-olive))', ink: 'hsl(var(--linen))',    dark: true }
 ];
 
-// two photos per folder — scattered to opposite sides with space between
+// five photos per folder — two portrait up top, three landscape below, scattered with space between
 const PHOTO_SLOTS = [
-  { top: 8,  left: 2,  w: 160, rot: -3 },
-  { top: 16, left: 68, w: 140, rot: 4 }
+  { top: 5,  left: 2,  w: 150, rot: -3, aspect: '3/4' },
+  { top: 8,  left: 66, w: 130, rot: 4,  aspect: '4/6' },
+  { top: 28, left: 5,  w: 180, rot: -2, aspect: '4/3' },
+  { top: 46, left: 54, w: 170, rot: 3,  aspect: '3/2' },
+  { top: 64, left: 30, w: 160, rot: -3, aspect: '6/4' }
 ];
-
-// ratios cycle per issue so different pictures get different shapes
-const RATIO_SET = ['3/4', '4/6', '1/1', '3/6'];
 
 const ASPECT_CLASS = {
   '3/4': 'aspect-[3/4]',
   '1/1': 'aspect-square',
   '4/5': 'aspect-[4/5]',
   '4/6': 'aspect-[4/6]',
-  '3/6': 'aspect-[3/6]'
+  '3/6': 'aspect-[3/6]',
+  '4/3': 'aspect-[4/3]',
+  '3/2': 'aspect-[3/2]',
+  '6/4': 'aspect-[6/4]'
 };
 
-export default function IssueFolder({ issue, stories, illustrations, layout }) {
+export default function IssueFolder({ issue, stories, illustrations, layout, polaroid }) {
   const { top, left, width, height, rotate, z } = layout;
   const [hovered, setHovered] = useState(false);
   const color = FOLDER_COLORS[(issue.number || 0) % FOLDER_COLORS.length];
@@ -61,9 +65,9 @@ export default function IssueFolder({ issue, stories, illustrations, layout }) {
       }}
     >
       <div className="h-full flex flex-col transition-transform duration-500 group-hover:-translate-y-1.5 group-hover:scale-[1.02]">
-        {/* tab — left or right depending on the issue */}
+        {/* tab — left or right depending on the issue; rounded where it meets the body */}
         <div
-          className={`relative inline-block px-5 py-3 md:px-7 md:py-4 shadow-[0_8px_20px_rgba(0,0,0,0.25)] ${tabRight ? 'self-end' : 'self-start'}`}
+          className={`relative inline-block px-5 py-3 md:px-7 md:py-4 rounded-b-[12px] ${tabRight ? 'self-end' : 'self-start'}`}
           style={{ background: color.bg, color: color.ink, boxShadow: 'inset 0 -3px 6px rgba(0,0,0,0.12), 0 8px 20px rgba(0,0,0,0.25)' }}
         >
           <div className="flex items-baseline gap-3 md:gap-5 flex-wrap">
@@ -72,24 +76,41 @@ export default function IssueFolder({ issue, stories, illustrations, layout }) {
           </div>
         </div>
 
-        {/* body — scattered photos from this issue */}
+        {/* front cover — photos sit between this and the back cover */}
         <div
-          className="relative flex-1 shadow-[0_14px_34px_rgba(0,0,0,0.3)]"
+          className="relative flex-1 rounded-t-[12px] shadow-[0_14px_34px_rgba(0,0,0,0.3)]"
           style={{ background: color.bg, color: color.ink }}
         >
           {PHOTO_SLOTS.map((slot, i) => (
             <PhotoSlot
               key={i}
               {...slot}
-              aspect={RATIO_SET[(issue.number + i) % RATIO_SET.length]}
               src={pool[i] || null}
               alt={issue.title}
             />
           ))}
 
+          {/* polaroid — only on the top and bottom folder */}
+          {polaroid && (
+            <div
+              className="fragment absolute z-20"
+              style={{ top: '68%', left: '40%', width: 112, '--rot': '-2deg' }}
+            >
+              <Polaroid src={pool[PHOTO_SLOTS.length] || null} alt={issue.title} caption={issue.theme} objectNumber={`ISSUE ${num}`} />
+            </div>
+          )}
+
           {/* small theme tag + open hint */}
           <span className="absolute bottom-2 left-3 label-mono text-[0.55rem] opacity-60 z-30">{issue.page_count} pp</span>
           <span className="absolute bottom-2 right-3 label-mono text-[0.55rem] opacity-60 z-30">OPEN →</span>
+
+          {/* back cover — the other cover, peeks below the front cover */}
+          <div
+            className="absolute -left-2 -right-2 -bottom-2 h-3 rounded-b-[10px] z-0"
+            style={{ background: color.bg, boxShadow: '0 6px 14px rgba(0,0,0,0.22)' }}
+          />
+          {/* blank white page — the file inside, peeks below the back cover */}
+          <div className="absolute -left-1 -right-1 -bottom-5 h-3 bg-[#fdfaf2] rounded-b-[8px] z-0 shadow-md" />
         </div>
       </div>
     </Link>

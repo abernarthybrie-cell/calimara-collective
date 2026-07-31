@@ -109,6 +109,7 @@ export default function Archive() {
                   stories={storiesFor(it.slug)}
                   illustrations={illusFor(it.slug)}
                   layout={folders[i]}
+                  polaroid={i === 0 || i === issues.length - 1}
                 />
               ))}
             </div>
