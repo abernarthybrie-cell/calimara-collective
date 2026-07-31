@@ -38,27 +38,30 @@ export default function IssueDetail() {
   const pageCount = issue?.page_count || 1;
   const pageImages = issue?.page_images || [];
   const num = issue ? String(issue.number).padStart(2, '0') : '—';
-  const spreadCount = Math.max(1, Math.ceil(pageCount / 2));
+  // spread 1 is the cover alone (right page only); spreads 2+ are two-page spreads
+  const pagesForSpread = (s) => (s === 1 ? { left: null, right: 1 } : { left: (s - 1) * 2, right: (s - 1) * 2 + 1 });
+  const spreadCount = 1 + Math.max(0, Math.ceil((pageCount - 1) / 2));
 
-  // left page = first page of the spread, right page = second
-  const leftPageNo = spread * 2 - 1;
-  const rightPageNo = spread * 2;
-  const leftStory = stories.find((s) => s.page_number === leftPageNo);
-  const rightStory = stories.find((s) => s.page_number === rightPageNo);
-  const leftIllus = illus.filter((i) => i.page_number === leftPageNo);
-  const rightIllus = illus.filter((i) => i.page_number === rightPageNo);
+  const cap = (n) => (n && n <= pageCount ? n : null);
+  const { left: rawLeft, right: rawRight } = pagesForSpread(spread);
+  const leftPageNo = cap(rawLeft);
+  const rightPageNo = cap(rawRight);
 
-  const pageContent = (pageNo) => ({ pageNo, image: pageImages[pageNo - 1] });
+  const pageContent = (pageNo) => ({ pageNo, image: pageNo ? pageImages[pageNo - 1] : null });
 
   const goNext = () => {
     if (spread >= spreadCount || turn) return;
     const target = spread + 1;
-    setTurn({ dir: 1, target, side: 'right', front: pageContent(rightPageNo), back: pageContent(target * 2 - 1) });
+    const cur = pagesForSpread(spread);
+    const nxt = pagesForSpread(target);
+    setTurn({ dir: 1, target, side: 'right', front: pageContent(cur.right), back: pageContent(nxt.left) });
   };
   const goPrev = () => {
     if (spread <= 1 || turn) return;
     const target = spread - 1;
-    setTurn({ dir: -1, target, side: 'left', front: pageContent(leftPageNo), back: pageContent(target * 2) });
+    const cur = pagesForSpread(spread);
+    const prv = pagesForSpread(target);
+    setTurn({ dir: -1, target, side: 'left', front: pageContent(cur.left), back: pageContent(prv.right) });
   };
   const onTurnDone = () => {
     setSpread(turn.target);
@@ -68,8 +71,10 @@ export default function IssueDetail() {
   };
 
   const turning = !!turn;
-  const dispLeftNo = turning ? (turn.dir === 1 ? leftPageNo : turn.target * 2 - 1) : leftPageNo;
-  const dispRightNo = turning ? (turn.dir === 1 ? turn.target * 2 : rightPageNo) : rightPageNo;
+  const curPages = pagesForSpread(spread);
+  const turnPages = turning ? pagesForSpread(turn.target) : null;
+  const dispLeftNo = cap(turning ? (turn.dir === 1 ? curPages.left : turnPages.left) : curPages.left);
+  const dispRightNo = cap(turning ? (turn.dir === 1 ? turnPages.right : curPages.right) : curPages.right);
 
   if (loading) return <div className="pt-32 px-6 label-mono text-ink-soft">opening the issue…</div>;
   if (!issue) return <div className="pt-32 px-6 font-hand text-2xl">That issue isn't in the archive.</div>;
@@ -104,19 +109,23 @@ export default function IssueDetail() {
             {/* book spread */}
             <div className="relative mx-auto" style={{ perspective: 2200 }}>
               <div className="relative flex shadow-2xl" style={{ transformStyle: 'preserve-3d' }}>
-                <Page
-                  side="left"
-                  pageNo={dispLeftNo}
-                  image={pageImages[dispLeftNo - 1]}
-                  story={stories.find((s) => s.page_number === dispLeftNo)}
-                  illus={illus.filter((i) => i.page_number === dispLeftNo)}
-                  onAnnotate={setLeftMargin}
-                />
+                {dispLeftNo === null ? (
+                  <div className="w-[42vw] max-w-[400px] aspect-[3/4]" aria-hidden="true" />
+                ) : (
+                  <Page
+                    side="left"
+                    pageNo={dispLeftNo}
+                    image={pageImages[dispLeftNo - 1]}
+                    story={stories.find((s) => s.page_number === dispLeftNo)}
+                    illus={illus.filter((i) => i.page_number === dispLeftNo)}
+                    onAnnotate={setLeftMargin}
+                  />
+                )}
                 <div className="w-px bg-ink/30" style={{ boxShadow: '0 0 14px rgba(0,0,0,0.35)' }} />
                 <Page
                   side="right"
                   pageNo={dispRightNo}
-                  image={pageImages[dispRightNo - 1]}
+                  image={dispRightNo ? pageImages[dispRightNo - 1] : null}
                   story={stories.find((s) => s.page_number === dispRightNo)}
                   illus={illus.filter((i) => i.page_number === dispRightNo)}
                   onAnnotate={setRightMargin}
@@ -156,15 +165,16 @@ export default function IssueDetail() {
 }
 
 function Page({ side, pageNo, image, story, illus, onAnnotate }) {
+  const blank = pageNo === null;
   return (
     <div
-      className={`relative w-[42vw] max-w-[400px] aspect-[3/4] bg-white`}
+      className={`relative w-[42vw] max-w-[400px] aspect-[3/4] ${blank ? 'bg-archive-bg2' : 'bg-white'}`}
       style={{
-        boxShadow: side === 'left' ? 'inset -12px 0 22px -12px rgba(0,0,0,0.3)' : 'inset 12px 0 22px -12px rgba(0,0,0,0.3)'
+        boxShadow: blank ? 'none' : side === 'left' ? 'inset -12px 0 22px -12px rgba(0,0,0,0.3)' : 'inset 12px 0 22px -12px rgba(0,0,0,0.3)'
       }}
     >
-      {image ? (
-        <ScanImage src={image} alt={`page ${pageNo}`} className="w-full h-full" fittingType="fit" />
+      {blank ? null : image ? (
+        <ScanImage src={image} alt={`page ${pageNo}`} className="w-full h-full" fittingType={pageNo === 1 ? 'fill' : 'fit'} />
       ) : (
         <div className="w-full h-full scan-placeholder flex items-center justify-center">
           <span className="label-mono text-ink-soft/60">PAGE {pageNo}</span>
@@ -172,7 +182,7 @@ function Page({ side, pageNo, image, story, illus, onAnnotate }) {
       )}
 
       {/* interactive hotspots — wired to real data, ready for more */}
-      {story && (
+      {!blank && story && (
         <Hotspot
           x={68}
           y={28}
@@ -180,7 +190,7 @@ function Page({ side, pageNo, image, story, illus, onAnnotate }) {
           onClick={() => onAnnotate({ label: 'THE TEXT', title: story.title, meta: `written by ${story.author_name}`, text: story.excerpt || story.editorial_note || '' })}
         />
       )}
-      {illus.map((il, i) => (
+      {!blank && illus.map((il, i) => (
         <Hotspot
           key={il.id}
           x={28 + i * 12}
@@ -190,7 +200,7 @@ function Page({ side, pageNo, image, story, illus, onAnnotate }) {
         />
       ))}
 
-      <span className="absolute bottom-2 right-3 label-mono text-ink-soft/40 text-[0.55rem]">p.{pageNo}</span>
+      {!blank && <span className="absolute bottom-2 right-3 label-mono text-ink-soft/40 text-[0.55rem]">p.{pageNo}</span>}
     </div>
   );
 }
@@ -199,7 +209,7 @@ function PageFace({ pageNo, image }) {
   return (
     <div className="relative w-full h-full bg-white">
       {image ? (
-        <ScanImage src={image} alt={`page ${pageNo}`} className="w-full h-full" fittingType="fit" />
+        <ScanImage src={image} alt={`page ${pageNo}`} className="w-full h-full" fittingType={pageNo === 1 ? 'fill' : 'fit'} />
       ) : (
         <div className="w-full h-full scan-placeholder flex items-center justify-center">
           <span className="label-mono text-ink-soft/60">PAGE {pageNo}</span>
