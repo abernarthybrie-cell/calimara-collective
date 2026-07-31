@@ -73,6 +73,18 @@ export default function IssueDetail() {
   };
   const openZoom = (pageNo, image) => setZoom({ pageNo, image, title: issue?.title });
 
+  useEffect(() => {
+    const onKey = (e) => {
+      if (zoom) return;
+      const tag = e.target?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+      if (e.key === 'ArrowRight') goNext();
+      else if (e.key === 'ArrowLeft') goPrev();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [spread, spreadCount, turn, zoom]);
+
   const turning = !!turn;
   const curPages = pagesForSpread(spread);
   const turnPages = turning ? pagesForSpread(turn.target) : null;
