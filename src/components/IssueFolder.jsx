@@ -12,25 +12,21 @@ const FOLDER_COLORS = [
   { bg: 'hsl(var(--deep-olive))', ink: 'hsl(var(--linen))',    dark: true }
 ];
 
-// six photo slots per folder — varied position, size, aspect, rotation
+// two photos per folder — scattered to opposite sides with space between
 const PHOTO_SLOTS = [
-  { top: 4,  left: 3,  w: 140, rot: -3, aspect: '3/4', caption: true },
-  { top: 6,  left: 58, w: 110, rot: 5,  aspect: '1/1', caption: false },
-  { top: 28, left: 30, w: 90,  rot: 2,  aspect: '3/4', caption: false },
-  { top: 46, left: 5,  w: 120, rot: -2, aspect: '4/5', caption: false },
-  { top: 48, left: 64, w: 100, rot: 4,  aspect: '1/1', caption: false },
-  { top: 70, left: 36, w: 85,  rot: -4, aspect: '3/4', caption: false }
+  { top: 8,  left: 2,  w: 160, rot: -3 },
+  { top: 16, left: 68, w: 140, rot: 4 }
 ];
 
-const HIDDEN_SLOTS = [
-  { top: 88, left: 20, w: 90, rot: 6, aspect: '3/4' },
-  { top: 90, left: 60, w: 80, rot: -5, aspect: '1/1' }
-];
+// ratios cycle per issue so different pictures get different shapes
+const RATIO_SET = ['3/4', '4/6', '1/1', '3/6'];
 
 const ASPECT_CLASS = {
   '3/4': 'aspect-[3/4]',
   '1/1': 'aspect-square',
-  '4/5': 'aspect-[4/5]'
+  '4/5': 'aspect-[4/5]',
+  '4/6': 'aspect-[4/6]',
+  '3/6': 'aspect-[3/6]'
 };
 
 export default function IssueFolder({ issue, stories, illustrations, layout }) {
@@ -85,22 +81,10 @@ export default function IssueFolder({ issue, stories, illustrations, layout }) {
             <PhotoSlot
               key={i}
               {...slot}
+              aspect={RATIO_SET[(issue.number + i) % RATIO_SET.length]}
               src={pool[i] || null}
               alt={issue.title}
-              caption={slot.caption ? issue.theme : null}
-              ink={color.ink}
             />
-          ))}
-
-          {/* hidden photos — emerge from behind on hover */}
-          {HIDDEN_SLOTS.map((slot, i) => (
-            <div
-              key={`h-${i}`}
-              className="folder-hidden absolute bg-white p-1 pb-4 shadow-lg"
-              style={{ top: `${slot.top}%`, left: `${slot.left}%`, width: slot.w, zIndex: 10, '--rot': `${slot.rot}deg` }}
-            >
-              <ScanImage src={pool[PHOTO_SLOTS.length + i] || null} alt={issue.title} className={`${ASPECT_CLASS[slot.aspect] || 'aspect-[3/4]'} w-full`} />
-            </div>
           ))}
 
           {/* small theme tag + open hint */}
@@ -112,16 +96,13 @@ export default function IssueFolder({ issue, stories, illustrations, layout }) {
   );
 }
 
-function PhotoSlot({ top, left, w, rot, aspect, caption, src, alt, ink }) {
+function PhotoSlot({ top, left, w, rot, aspect, src, alt }) {
   return (
     <div
       className="fragment absolute z-20"
       style={{ top: `${top}%`, left: `${left}%`, width: w, '--rot': `${rot}deg` }}
     >
-      <div className="bg-white p-1 pb-4 shadow-lg">
-        <ScanImage src={src} alt={alt} className={`${ASPECT_CLASS[aspect] || 'aspect-[3/4]'} w-full`} />
-        {caption && <p className="font-hand text-[0.7rem] mt-1 text-center leading-tight" style={{ color: ink }}>{caption}</p>}
-      </div>
+      <ScanImage src={src} alt={alt} className={`${ASPECT_CLASS[aspect] || 'aspect-[3/4]'} w-full shadow-lg`} />
     </div>
   );
 }
