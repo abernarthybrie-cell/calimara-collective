@@ -100,7 +100,7 @@ export default function Contents() {
                         className="group flex items-baseline gap-3 py-2 hover:bg-paper-deep/60 transition-colors focus-ring px-1">
                         
                             <span className="text-lg leading-tight group-hover:text-burgundy transition-colors [font-family:'Impact_Label',_sans-serif] font-normal">{s.title}</span>
-                            {s.author_name && <span className="font-hand text-base text-ink-soft/70 whitespace-nowrap">{s.author_name}</span>}
+                            {s.author_name && <span className="text-base text-ink-soft/70 whitespace-nowrap [font-family:'Impact_Label',_sans-serif] font-normal">{s.author_name}</span>}
                             <span className="flex-1 border-b border-dotted border-ink/20 mb-[3px] min-w-[20px]" />
                             {meta && <span className="label-mono text-ink-soft/70 whitespace-nowrap">{meta}</span>}
                           </Link>
