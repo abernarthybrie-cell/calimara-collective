@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Paperclip } from 'lucide-react';
 import ScanImage from '@/components/ScanImage';
@@ -12,21 +12,35 @@ const FOLDER_COLORS = [
   { bg: 'hsl(34 34% 76%)', tab: 'hsl(34 34% 70%)', ink: 'hsl(28 30% 22%)' }
 ];
 
-export default function IssueFolder({ issue, stories, illustrations, index }) {
-  const color = FOLDER_COLORS[index % FOLDER_COLORS.length];
+export default function IssueFolder({ issue, stories, illustrations, layout }) {
+  const { top, left, width, height, rotate, z } = layout;
+  const [hovered, setHovered] = useState(false);
+  const color = FOLDER_COLORS[(issue.number || 0) % FOLDER_COLORS.length];
   const num = String(issue.number).padStart(2, '0');
   const illus = illustrations.slice(0, 3);
   const storyFrags = stories.filter((s) => s.cover_image || s.page_scan).slice(0, 2);
 
   return (
-    <Link to={`/archive/issue/${issue.slug}`} className="group block focus-ring">
-      <div
-        className="relative transition-transform duration-500 group-hover:-translate-y-1"
-        style={{ transform: `rotate(${index % 2 ? 0.5 : -0.5}deg)` }}
-      >
+    <Link
+      to={`/archive/issue/${issue.slug}`}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      className="group block focus-ring"
+      style={{
+        position: 'absolute',
+        top,
+        left: `${left}%`,
+        width: `${width}%`,
+        height,
+        zIndex: hovered ? 60 : z,
+        transform: `rotate(${rotate}deg)`,
+        transition: 'z-index 0s'
+      }}
+    >
+      <div className="h-full flex flex-col transition-transform duration-500 group-hover:-translate-y-1.5 group-hover:scale-[1.02]">
         {/* tab */}
         <div
-          className="relative inline-block px-5 py-3 md:px-7 md:py-4 shadow-[0_8px_20px_rgba(0,0,0,0.25)]"
+          className="relative inline-block self-start px-5 py-3 md:px-7 md:py-4 shadow-[0_8px_20px_rgba(0,0,0,0.25)]"
           style={{ background: color.tab, color: color.ink }}
         >
           <div className="flex items-baseline gap-3 md:gap-5 flex-wrap">
@@ -37,7 +51,7 @@ export default function IssueFolder({ issue, stories, illustrations, index }) {
 
         {/* body — collage of fragments from this issue */}
         <div
-          className="relative h-64 md:h-72 shadow-[0_14px_34px_rgba(0,0,0,0.3)]"
+          className="relative flex-1 shadow-[0_14px_34px_rgba(0,0,0,0.3)]"
           style={{ background: color.bg, color: color.ink }}
         >
           <Tape className="absolute -top-3 left-1/2 -translate-x-1/2 z-30" />
