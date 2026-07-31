@@ -294,6 +294,10 @@
   .folder-hidden { transform: translateY(48px) rotate(var(--rot, 0deg)); opacity: 0; pointer-events: none; transition: transform .55s cubic-bezier(.2,.8,.2,1), opacity .55s; }
   .group:hover .folder-hidden { transform: translateY(0) rotate(var(--rot, 0deg)); opacity: 1; pointer-events: auto; }
 
+  /* Scattered photos lift subtly when you hover their folder */
+  .folder-photo { transform: rotate(var(--rot, 0deg)); transition: transform .5s cubic-bezier(.2,.8,.2,1), box-shadow .5s; }
+  .group:hover .folder-photo { transform: rotate(var(--rot, 0deg)) translateY(var(--lift, -10px)) scale(1.04); box-shadow: 0 16px 26px rgba(0,0,0,.26); z-index: 40; }
+
   /* Underline like a pen mark */
   .ink-underline {
     background-image: linear-gradient(transparent 62%, hsl(var(--burgundy) / 0.35) 62%, hsl(var(--burgundy) / 0.35) 92%, transparent 92%);

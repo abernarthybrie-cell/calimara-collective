@@ -15,11 +15,11 @@ const FOLDER_COLORS = [
 
 // five photos per folder — two portrait up top, three landscape below, scattered with space between
 const PHOTO_SLOTS = [
-  { top: 5,  left: 2,  w: 150, rot: -3, aspect: '3/4' },
-  { top: 8,  left: 66, w: 130, rot: 4,  aspect: '4/6' },
-  { top: 28, left: 5,  w: 180, rot: -2, aspect: '4/3' },
-  { top: 46, left: 54, w: 170, rot: 3,  aspect: '3/2' },
-  { top: 64, left: 30, w: 160, rot: -3, aspect: '6/4' }
+  { top: 5,  left: 2,  w: 150, rot: -3, aspect: '3/4', lift: -8 },
+  { top: 8,  left: 66, w: 130, rot: 4,  aspect: '4/6', lift: -15 },
+  { top: 28, left: 5,  w: 180, rot: -2, aspect: '4/3', lift: -10 },
+  { top: 46, left: 54, w: 170, rot: 3,  aspect: '3/2', lift: -17 },
+  { top: 64, left: 30, w: 160, rot: -3, aspect: '6/4', lift: -12 }
 ];
 
 const ASPECT_CLASS = {
@@ -93,8 +93,8 @@ export default function IssueFolder({ issue, stories, illustrations, layout, pol
           {/* polaroid — only on the top and bottom folder */}
           {polaroid && (
             <div
-              className="fragment absolute z-20"
-              style={{ top: '68%', left: '40%', width: 112, '--rot': '-2deg' }}
+              className="folder-photo absolute z-20"
+              style={{ top: '68%', left: '40%', width: 112, '--rot': '-2deg', '--lift': '-14px' }}
             >
               <Polaroid src={pool[PHOTO_SLOTS.length] || null} alt={issue.title} caption={issue.theme} objectNumber={`ISSUE ${num}`} />
             </div>
@@ -117,11 +117,11 @@ export default function IssueFolder({ issue, stories, illustrations, layout, pol
   );
 }
 
-function PhotoSlot({ top, left, w, rot, aspect, src, alt }) {
+function PhotoSlot({ top, left, w, rot, aspect, lift, src, alt }) {
   return (
     <div
-      className="fragment absolute z-20"
-      style={{ top: `${top}%`, left: `${left}%`, width: w, '--rot': `${rot}deg` }}
+      className="folder-photo absolute z-20"
+      style={{ top: `${top}%`, left: `${left}%`, width: w, '--rot': `${rot}deg`, '--lift': `${lift}px` }}
     >
       <ScanImage src={src} alt={alt} className={`${ASPECT_CLASS[aspect] || 'aspect-[3/4]'} w-full shadow-lg`} />
     </div>
