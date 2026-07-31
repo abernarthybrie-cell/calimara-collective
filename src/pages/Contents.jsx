@@ -1,25 +1,47 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
+import { hasImage } from '@/lib/calimara';
 import Stamp from '@/components/Stamp';
+import ScanImage from '@/components/ScanImage';
 
 const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI'];
 
 export default function Contents() {
   const [stories, setStories] = useState([]);
   const [rubrici, setRubrici] = useState([]);
+  const [issues, setIssues] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     Promise.all([
     base44.entities.Story.list(500),
-    base44.entities.Rubrica.list('order', 100)]
-    ).then(([s, r]) => {
+    base44.entities.Rubrica.list('order', 100),
+    base44.entities.Issue.list('number', 100)]
+    ).then(([s, r, iss]) => {
       setStories(s);
       setRubrici(r);
+      setIssues(iss);
       setLoading(false);
     }).catch(() => setLoading(false));
   }, []);
+
+  // Map each issue to its uploaded page scans, keyed by issue number and slug
+  // so every story can find the page that contains its text.
+  const pageImagesByIssue = useMemo(() => {
+    const byNum = {};
+    const bySlug = {};
+    issues.forEach((iss) => {
+      const imgs = iss.page_images || [];
+      byNum[iss.number] = imgs;
+      bySlug[iss.slug] = imgs;
+    });
+    return (story) => {
+      const imgs = (story.issue_slug && bySlug[story.issue_slug]) || byNum[story.issue_number] || [];
+      const idx = (story.page_number || 0) - 1;
+      return idx >= 0 && idx < imgs.length ? imgs[idx] : null;
+    };
+  }, [issues]);
 
   // Group stories by rubrica. Known rubrici come first (in their defined order),
   // then any rubrica names that appear on stories but aren't in the entity,
@@ -93,12 +115,19 @@ export default function Contents() {
                     {sec.stories.map((s) => {
                   const issueSlug = s.issue_slug || `issue-${String(s.issue_number || 1).padStart(2, '0')}`;
                   const meta = [s.issue_number ? `№${String(s.issue_number).padStart(2, '0')}` : null, s.page_number ? `p.${s.page_number}` : null].filter(Boolean).join(' · ');
+                  const pageImage = pageImagesByIssue(s);
                   return (
                     <li key={s.id}>
                           <Link
                         to={`/archive/issue/${issueSlug}/story/${s.slug}`}
-                        className="group flex items-baseline gap-3 py-2 hover:bg-paper-deep/60 transition-colors focus-ring px-1">
-                        
+                        className="group flex items-center gap-3 py-2 hover:bg-paper-deep/60 transition-colors focus-ring px-1">
+                            {pageImage && hasImage(pageImage) ? (
+                              <span className="shrink-0 w-9 aspect-[210/297] overflow-hidden border border-ink/20 shadow-sm bg-white">
+                                <ScanImage src={pageImage} alt={`page ${s.page_number} of issue ${s.issue_number}`} className="w-full h-full" fittingType="fill" />
+                              </span>
+                            ) : (
+                              <span className="shrink-0 w-9 aspect-[210/297] border border-dashed border-ink/20 bg-paper-deep/40" />
+                            )}
                             <span className="text-lg leading-tight group-hover:text-burgundy transition-colors [font-family:'Impact_Label',_sans-serif] font-normal">{s.title}</span>
                             {s.author_name && s.author_name.split('&').map((n, i) => (
                               <span key={i} className="text-base text-ink-soft/70 whitespace-nowrap [font-family:'Impact_Label',_sans-serif] font-normal">{n.trim()}{i < s.author_name.split('&').length - 1 ? ' &' : ''}</span>
