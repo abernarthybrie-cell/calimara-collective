@@ -12,9 +12,9 @@ export default function Contents() {
 
   useEffect(() => {
     Promise.all([
-      base44.entities.Story.list(500),
-      base44.entities.Rubrica.list('order', 100),
-    ]).then(([s, r]) => {
+    base44.entities.Story.list(500),
+    base44.entities.Rubrica.list('order', 100)]
+    ).then(([s, r]) => {
       setStories(s);
       setRubrici(r);
       setLoading(false);
@@ -30,14 +30,14 @@ export default function Contents() {
     const byRubrica = {};
     const noRubrica = [];
     stories.forEach((s) => {
-      if (!s.rubrica) { noRubrica.push(s); return; }
+      if (!s.rubrica) {noRubrica.push(s);return;}
       (byRubrica[s.rubrica] = byRubrica[s.rubrica] || []).push(s);
     });
     const extra = Object.keys(byRubrica).filter((n) => !knownNames.has(n)).sort();
     const ordered = [
-      ...known.map((r) => ({ name: r.name, description: r.description, stories: byRubrica[r.name] || [] })),
-      ...extra.map((n) => ({ name: n, description: '', stories: byRubrica[n] })).filter((sec) => sec.stories.length > 0),
-    ];
+    ...known.map((r) => ({ name: r.name, description: r.description, stories: byRubrica[r.name] || [] })),
+    ...extra.map((n) => ({ name: n, description: '', stories: byRubrica[n] })).filter((sec) => sec.stories.length > 0)];
+
     if (noRubrica.length) ordered.push({ name: 'Fără rubrică', description: '', stories: noRubrica });
     ordered.forEach((sec) => sec.stories.sort(
       (a, b) => (a.issue_number || 0) - (b.issue_number || 0) || (a.page_number || 0) - (b.page_number || 0)
@@ -70,12 +70,12 @@ export default function Contents() {
       {/* the contents itself */}
       <section className="pb-20">
         <div className="mx-auto max-w-[900px] px-6 lg:px-10">
-          {sections.length === 0 ? (
-            <p className="font-hand text-2xl text-ink-soft text-center py-16">The contents are still being catalogued — check back soon.</p>
-          ) : (
-            <div className="space-y-12">
-              {sections.map((sec, i) => (
-                <div key={sec.name} className="relative">
+          {sections.length === 0 ?
+          <p className="font-hand text-2xl text-ink-soft text-center py-16">The contents are still being catalogued — check back soon.</p> :
+
+          <div className="space-y-12">
+              {sections.map((sec, i) =>
+            <div key={sec.name} className="relative">
                   <div className="mb-4 pb-2 border-b-2 border-ink/20">
                     <div className="flex items-baseline gap-3">
                       <span className="font-display text-xl md:text-2xl text-burgundy leading-none">{ROMAN[i] || i + 1}</span>
@@ -85,35 +85,35 @@ export default function Contents() {
                     {sec.description && <p className="font-body text-sm text-ink-soft mt-2 max-w-lg">{sec.description}</p>}
                   </div>
                   <ul className="space-y-0">
-                    {sec.stories.length === 0 && (
-                      <li className="py-3 px-1">
+                    {sec.stories.length === 0 &&
+                <li className="py-3 px-1">
                         <p className="font-hand text-lg text-ink-soft/50 italic">Nothing filed here yet — the first piece in this rubric is waiting to be written.</p>
                       </li>
-                    )}
+                }
                     {sec.stories.map((s) => {
-                      const issueSlug = s.issue_slug || `issue-${String(s.issue_number || 1).padStart(2, '0')}`;
-                      const meta = [s.issue_number ? `№${String(s.issue_number).padStart(2, '0')}` : null, s.page_number ? `p.${s.page_number}` : null].filter(Boolean).join(' · ');
-                      return (
-                        <li key={s.id}>
+                  const issueSlug = s.issue_slug || `issue-${String(s.issue_number || 1).padStart(2, '0')}`;
+                  const meta = [s.issue_number ? `№${String(s.issue_number).padStart(2, '0')}` : null, s.page_number ? `p.${s.page_number}` : null].filter(Boolean).join(' · ');
+                  return (
+                    <li key={s.id}>
                           <Link
-                            to={`/archive/issue/${issueSlug}/story/${s.slug}`}
-                            className="group flex items-baseline gap-3 py-2 hover:bg-paper-deep/60 transition-colors focus-ring px-1"
-                          >
-                            <span className="font-heading text-lg leading-tight group-hover:text-burgundy transition-colors">{s.title}</span>
+                        to={`/archive/issue/${issueSlug}/story/${s.slug}`}
+                        className="group flex items-baseline gap-3 py-2 hover:bg-paper-deep/60 transition-colors focus-ring px-1">
+                        
+                            <span className="text-lg leading-tight group-hover:text-burgundy transition-colors [font-family:'Impact_Label',_sans-serif] font-normal">{s.title}</span>
                             {s.author_name && <span className="font-hand text-base text-ink-soft/70 whitespace-nowrap">{s.author_name}</span>}
                             <span className="flex-1 border-b border-dotted border-ink/20 mb-[3px] min-w-[20px]" />
                             {meta && <span className="label-mono text-ink-soft/70 whitespace-nowrap">{meta}</span>}
                           </Link>
-                        </li>
-                      );
-                    })}
+                        </li>);
+
+                })}
                   </ul>
                 </div>
-              ))}
+            )}
             </div>
-          )}
+          }
         </div>
       </section>
-    </div>
-  );
+    </div>);
+
 }
