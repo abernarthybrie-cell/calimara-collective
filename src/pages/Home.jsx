@@ -132,7 +132,7 @@ export default function Home() {
       </section>
 
       {/* ===== CURRENTLY ===== */}
-      <section className="bg-archive-bg py-20 md:py-24 grain text-[hsl(var(--faded-red))]">
+      <section className="bg-archive-bg py-20 md:py-24 grain text-[hsl(var(--cafe-noir))]">
         <div className="mx-auto max-w-[1400px] px-6 lg:px-10">
           <Reveal className="flex items-baseline justify-between mb-10">
             <h2 className="font-heading text-4xl md:text-5xl">Călimara, currently</h2>
