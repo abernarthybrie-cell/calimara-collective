@@ -7,7 +7,6 @@ import Polaroid from '@/components/Polaroid';
 import Tape from '@/components/Tape';
 import Stamp from '@/components/Stamp';
 import ScanImage from '@/components/ScanImage';
-import LogoMark from '@/components/LogoMark';
 import PhysicalObject from '@/components/PhysicalObject';
 import Reveal from '@/components/Reveal';
 import ObjectModal from '@/components/ObjectModal';
@@ -71,12 +70,6 @@ export default function Home() {
               <p className="font-hand text-2xl text-ink leading-snug">what is<br />Călimara?</p>
               <p className="label-mono text-[0.6rem] text-burgundy mt-2">— turn me over —</p>
             </div>
-          </PhysicalObject>
-
-          {/* L emblem */}
-          <PhysicalObject depth={0.45} rotate={5} tilt={5} outerClassName="pointer-events-auto"
-          style={{ position: 'absolute', top: '24%', right: '34%', width: '6.5rem' }}>
-            <LogoMark size={104} rotate={0} />
           </PhysicalObject>
 
           {/* film strip */}
