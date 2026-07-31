@@ -104,14 +104,14 @@ export default function Home() {
           </p>
           <div className="flex flex-col sm:flex-row items-center gap-4 mt-10">
             <Link to="/archive" className="group bg-ink text-paper px-7 py-3.5 hover:bg-burgundy transition-colors focus-ring inline-flex items-center gap-2">
-              <span className="label-mono">ENTER THE ARCHIVE</span>
+              <span className="label-mono [font-family:'Punktype',_sans-serif] font-normal">ENTER THE ARCHIVE</span>
               <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
             </Link>
             <button onClick={openDrawer} className="label-mono text-ink hover:text-burgundy focus-ring underline underline-offset-4">
               SHOW ME SOMETHING RANDOM →
             </button>
           </div>
-          <p className="text-lg text-ink-soft/70 mt-8 font-normal [font-family:'Choretto_Demo',_sans-serif]">↓ scroll into the desk · things move</p>
+          <p className="text-lg text-ink-soft/70 mt-8 font-normal [font-family:'EB_Garamond',_serif]">↓ scroll into the desk · things move</p>
         </div>
       </section>
 
