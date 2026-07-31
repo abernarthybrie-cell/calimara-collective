@@ -13,6 +13,7 @@ export default function StoryDetail() {
   const [related, setRelated] = useState([]);
   const [illus, setIllus] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showText, setShowText] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -40,6 +41,9 @@ export default function StoryDetail() {
   if (!story) return <div className="pt-32 px-6 font-hand text-2xl">That story isn't in the archive.</div>;
 
   const num = String(story.issue_number).padStart(2,'0');
+  // the original printed page, pulled straight from the issue's uploaded scans
+  const issuePages = (issue && issue.page_images) || [];
+  const originalPage = (story.page_number && issuePages[story.page_number - 1]) || story.page_scan;
 
   return (
     <div className="pt-14 sm:pt-16">
@@ -58,10 +62,29 @@ export default function StoryDetail() {
                 <span className="label-mono text-ink-soft/60">· {formatDate(story.publication_date)}</span>
               </div>
 
-              {/* web readable text */}
-              <div className="mt-10 font-body text-xl leading-[1.75] text-ink whitespace-pre-line max-w-prose">
-                {story.full_text}
-              </div>
+              {/* description — written by the author or the editor */}
+              {story.excerpt && (
+                <p className="mt-6 font-body text-lg italic text-ink-soft leading-relaxed max-w-prose border-l-2 border-burgundy/40 pl-4">
+                  {story.excerpt}
+                </p>
+              )}
+
+              {/* read the plain text */}
+              {story.full_text && (
+                <div className="mt-8">
+                  <button
+                    onClick={() => setShowText((v) => !v)}
+                    className="label-mono border border-ink/30 px-4 py-2 hover:bg-paper-deep focus-ring inline-flex items-center gap-2"
+                  >
+                    {showText ? 'HIDE THE PLAIN TEXT' : 'READ THE PLAIN TEXT'}
+                  </button>
+                  {showText && (
+                    <div className="mt-6 font-body text-xl leading-[1.75] text-ink whitespace-pre-line max-w-prose animate-fade-in">
+                      {story.full_text}
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* illustrations within */}
               {illus.length > 0 && (
@@ -87,7 +110,7 @@ export default function StoryDetail() {
             <aside className="space-y-8">
               <div>
                 <p className="label-mono text-ink-soft/60 mb-2">ORIGINAL PAGE · ARTIFACT</p>
-                <ScanImage src={story.page_scan} alt="Original printed page" objectNumber={`p.${story.page_number}`} className="aspect-[3/4] w-full shadow-xl border border-ink/15" fittingType="fit" />
+                <ScanImage src={originalPage} alt="Original printed page" objectNumber={`p.${story.page_number}`} className="aspect-[3/4] w-full shadow-xl border border-ink/15" fittingType="fit" />
                 <p className="font-hand text-sm text-ink-soft mt-1">as it appears in the printed issue</p>
               </div>
 
