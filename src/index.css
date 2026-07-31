@@ -99,8 +99,8 @@
     /* Călimara four-font system: EB Garamond (literary), TAN Giok (display),
        Marline (expressive), 29LT Makina (experimental/labels). The three
        non-Google fonts fall back gracefully until their files are provided. */
-    --font-heading: 'EB Garamond', Georgia, serif;
-    --font-body: 'EB Garamond', Georgia, serif;
+    --font-heading: 'Made Of Scars', Georgia, serif;
+    --font-body: 'Made Of Scars', Georgia, serif;
     --font-display: 'TAN Giok', 'EB Garamond', Georgia, serif;
     --font-mono: 'Punktype', ui-monospace, 'Courier New', monospace;
     --font-ui: 'Punktype', ui-monospace, 'Courier New', monospace;
