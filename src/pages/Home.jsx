@@ -147,7 +147,7 @@ export default function Home() {
             { n: stats?.events ?? '—', l: 'EVENTS' }].
             map((s, i) =>
             <Reveal key={s.l} delay={i * 60} className="bg-archive-bg p-6 md:p-8">
-                <p className="font-heading text-5xl md:text-6xl text-dusty-yellow">{s.n}</p>
+                <p className="font-heading text-5xl md:text-6xl text-[hsl(var(--archive-line))]">{s.n}</p>
                 <p className="label-mono text-archive-muted mt-2">{s.l}</p>
               </Reveal>
             )}
