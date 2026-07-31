@@ -214,6 +214,9 @@ function TurningPage({ turn, onDone }) {
   const { dir, side, front, back } = turn;
   const origin = side === 'right' ? '0% 50%' : '100% 50%';
   const posClass = side === 'right' ? 'left-1/2' : 'left-0';
+  const spineSide = side === 'right' ? 'left' : 'right';
+  const backSpineSide = side === 'right' ? 'right' : 'left';
+  const curlEase = [0.45, 0, 0.25, 1];
   return (
     <div
       className={`absolute top-0 ${posClass} w-[42vw] max-w-[400px] aspect-[3/4] z-30`}
@@ -224,23 +227,38 @@ function TurningPage({ turn, onDone }) {
         style={{ transformStyle: 'preserve-3d', transformOrigin: origin }}
         initial={{ rotateY: 0 }}
         animate={{ rotateY: dir === 1 ? -180 : 180 }}
-        transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
+        transition={{ duration: 0.9, ease: curlEase }}
         onAnimationComplete={onDone}
       >
         {/* front face — the page being turned */}
         <div className="absolute inset-0" style={{ backfaceVisibility: 'hidden' }}>
           <PageFace pageNo={front.pageNo} image={front.image} />
-          <div
+          {/* curl shadow — darkens toward the spine as the page lifts, peaks mid-turn */}
+          <motion.div
             className="absolute inset-0 pointer-events-none"
-            style={{ background: side === 'right' ? 'linear-gradient(to left, transparent 55%, rgba(0,0,0,0.22))' : 'linear-gradient(to right, transparent 55%, rgba(0,0,0,0.22))' }}
+            style={{ background: `linear-gradient(to ${spineSide}, rgba(0,0,0,0) 28%, rgba(0,0,0,0.6) 100%)` }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0, 0.9, 0] }}
+            transition={{ duration: 0.9, ease: curlEase }}
+          />
+          {/* specular sheen along the curl ridge */}
+          <motion.div
+            className="absolute inset-0 pointer-events-none"
+            style={{ background: `linear-gradient(to ${spineSide}, rgba(255,250,238,0.55) 0%, transparent 16%)` }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0, 0.75, 0] }}
+            transition={{ duration: 0.9, ease: curlEase }}
           />
         </div>
-        {/* back face — revealed as the page swings over */}
+        {/* back face — revealed as the page curls over */}
         <div className="absolute inset-0" style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}>
           <PageFace pageNo={back.pageNo} image={back.image} />
-          <div
+          <motion.div
             className="absolute inset-0 pointer-events-none"
-            style={{ background: side === 'right' ? 'linear-gradient(to right, transparent 55%, rgba(0,0,0,0.18))' : 'linear-gradient(to left, transparent 55%, rgba(0,0,0,0.18))' }}
+            style={{ background: `linear-gradient(to ${backSpineSide}, rgba(0,0,0,0) 40%, rgba(0,0,0,0.42) 100%)` }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0, 0, 0.65] }}
+            transition={{ duration: 0.9, ease: curlEase }}
           />
         </div>
       </motion.div>
