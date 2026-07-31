@@ -135,7 +135,7 @@ export default function Home() {
       <section className="py-20 md:py-24 grain text-[hsl(var(--cafe-noir))] bg-[hsl(var(--mauve))]">
         <div className="mx-auto max-w-[1400px] px-6 lg:px-10">
           <Reveal className="flex items-baseline justify-between mb-10">
-            <h2 className="font-heading text-4xl md:text-5xl text-[hsl(var(--cedar))]">Călimara, currently</h2>
+            <h2 className="font-heading text-4xl md:text-5xl text-[hsl(var(--paper-shadow))]">Călimara, currently</h2>
             <span className="label-mono text-archive-muted">UPDATED FROM THE DATABASE</span>
           </Reveal>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-px bg-archive-line">
