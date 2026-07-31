@@ -102,7 +102,7 @@ export default function Contents() {
                             <span className="text-lg leading-tight group-hover:text-burgundy transition-colors [font-family:'Impact_Label',_sans-serif] font-normal">{s.title}</span>
                             {s.author_name && <span className="text-base text-ink-soft/70 whitespace-nowrap [font-family:'Impact_Label',_sans-serif] font-normal">{s.author_name}</span>}
                             <span className="flex-1 border-b border-dotted border-ink/20 mb-[3px] min-w-[20px]" />
-                            {meta && <span className="label-mono text-ink-soft/70 whitespace-nowrap">{meta}</span>}
+                            {meta && <span className="label-mono text-ink-soft/70 whitespace-nowrap [font-family:'Impact_Label_Reversed',_sans-serif] font-normal">{meta}</span>}
                           </Link>
                         </li>);
 
