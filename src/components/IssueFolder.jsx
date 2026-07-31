@@ -7,7 +7,7 @@ import Polaroid from '@/components/Polaroid';
 const FOLDER_COLORS = [
   { bg: 'hsl(var(--latte))',      ink: 'hsl(var(--cafe-noir))', dark: false },
   { bg: 'hsl(var(--mauve))',      ink: 'hsl(var(--linen))',    dark: true },
-  { bg: 'hsl(var(--cedar))',      ink: 'hsl(var(--cafe-noir))', dark: false },
+  { bg: 'hsl(40 62% 66%)',        ink: 'hsl(var(--cafe-noir))', dark: false },
   { bg: 'hsl(var(--weathered))',  ink: 'hsl(var(--cafe-noir))', dark: false },
   { bg: 'hsl(var(--clockwork))',  ink: 'hsl(var(--linen))',    dark: true },
   { bg: 'hsl(var(--deep-olive))', ink: 'hsl(var(--linen))',    dark: true }
