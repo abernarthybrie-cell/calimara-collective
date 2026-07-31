@@ -116,7 +116,7 @@ export default function Home() {
       </section>
 
       {/* ===== WHAT IS CĂLIMARA ===== */}
-      <section className="relative py-20 md:py-28 grain-light overflow-hidden bg-[hsl(var(--paper-shadow))]">
+      <section className="relative py-20 md:py-28 grain-light overflow-hidden bg-[hsl(var(--paper-deep))]">
         <div className="absolute -left-10 top-10 w-72 h-72 bg-paper rotate-6 opacity-60 pointer-events-none" aria-hidden />
         <Reveal className="relative mx-auto max-w-3xl px-6">
           <p className="label-mono text-burgundy mb-4">— WHAT IS CĂLIMARA? —</p>
@@ -132,7 +132,7 @@ export default function Home() {
       </section>
 
       {/* ===== CURRENTLY ===== */}
-      <section className="bg-archive-bg py-20 md:py-24 grain text-[hsl(var(--cafe-noir))]">
+      <section className="py-20 md:py-24 grain text-[hsl(var(--cafe-noir))] bg-[hsl(var(--faded-red))]">
         <div className="mx-auto max-w-[1400px] px-6 lg:px-10">
           <Reveal className="flex items-baseline justify-between mb-10">
             <h2 className="font-heading text-4xl md:text-5xl">Călimara, currently</h2>
