@@ -1,24 +1,51 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Paperclip } from 'lucide-react';
 import ScanImage from '@/components/ScanImage';
-import Tape from '@/components/Tape';
 
+// bright palette colors — cycled per issue
 const FOLDER_COLORS = [
-  { bg: 'hsl(40 16% 82%)', tab: 'hsl(40 16% 76%)', ink: 'hsl(30 12% 20%)' },
-  { bg: 'hsl(355 26% 80%)', tab: 'hsl(355 26% 74%)', ink: 'hsl(355 30% 22%)' },
-  { bg: 'hsl(210 20% 78%)', tab: 'hsl(210 20% 72%)', ink: 'hsl(210 30% 20%)' },
-  { bg: 'hsl(95 15% 74%)', tab: 'hsl(95 15% 68%)', ink: 'hsl(95 20% 20%)' },
-  { bg: 'hsl(34 34% 76%)', tab: 'hsl(34 34% 70%)', ink: 'hsl(28 30% 22%)' }
+  { bg: 'hsl(var(--latte))',      ink: 'hsl(var(--cafe-noir))', dark: false },
+  { bg: 'hsl(var(--mauve))',      ink: 'hsl(var(--linen))',    dark: true },
+  { bg: 'hsl(var(--cedar))',      ink: 'hsl(var(--cafe-noir))', dark: false },
+  { bg: 'hsl(var(--weathered))',  ink: 'hsl(var(--cafe-noir))', dark: false },
+  { bg: 'hsl(var(--clockwork))',  ink: 'hsl(var(--linen))',    dark: true },
+  { bg: 'hsl(var(--deep-olive))', ink: 'hsl(var(--linen))',    dark: true }
 ];
+
+// six photo slots per folder — varied position, size, aspect, rotation
+const PHOTO_SLOTS = [
+  { top: 4,  left: 3,  w: 140, rot: -3, aspect: '3/4', caption: true },
+  { top: 6,  left: 58, w: 110, rot: 5,  aspect: '1/1', caption: false },
+  { top: 28, left: 30, w: 90,  rot: 2,  aspect: '3/4', caption: false },
+  { top: 46, left: 5,  w: 120, rot: -2, aspect: '4/5', caption: false },
+  { top: 48, left: 64, w: 100, rot: 4,  aspect: '1/1', caption: false },
+  { top: 70, left: 36, w: 85,  rot: -4, aspect: '3/4', caption: false }
+];
+
+const HIDDEN_SLOTS = [
+  { top: 88, left: 20, w: 90, rot: 6, aspect: '3/4' },
+  { top: 90, left: 60, w: 80, rot: -5, aspect: '1/1' }
+];
+
+const ASPECT_CLASS = {
+  '3/4': 'aspect-[3/4]',
+  '1/1': 'aspect-square',
+  '4/5': 'aspect-[4/5]'
+};
 
 export default function IssueFolder({ issue, stories, illustrations, layout }) {
   const { top, left, width, height, rotate, z } = layout;
   const [hovered, setHovered] = useState(false);
   const color = FOLDER_COLORS[(issue.number || 0) % FOLDER_COLORS.length];
   const num = String(issue.number).padStart(2, '0');
-  const illus = illustrations.slice(0, 3);
-  const storyFrags = stories.filter((s) => s.cover_image || s.page_scan).slice(0, 2);
+  const tabRight = (issue.number || 0) % 2 === 1;
+
+  // pool of real images for this issue
+  const pool = [
+    issue.cover_image,
+    ...illustrations.map((i) => i.image),
+    ...stories.map((s) => s.cover_image || s.page_scan)
+  ].filter(Boolean);
 
   return (
     <Link
@@ -38,10 +65,10 @@ export default function IssueFolder({ issue, stories, illustrations, layout }) {
       }}
     >
       <div className="h-full flex flex-col transition-transform duration-500 group-hover:-translate-y-1.5 group-hover:scale-[1.02]">
-        {/* tab */}
+        {/* tab — left or right depending on the issue */}
         <div
-          className="relative inline-block self-start px-5 py-3 md:px-7 md:py-4 shadow-[0_8px_20px_rgba(0,0,0,0.25)]"
-          style={{ background: color.tab, color: color.ink }}
+          className={`relative inline-block px-5 py-3 md:px-7 md:py-4 shadow-[0_8px_20px_rgba(0,0,0,0.25)] ${tabRight ? 'self-end' : 'self-start'}`}
+          style={{ background: color.bg, color: color.ink, boxShadow: 'inset 0 -3px 6px rgba(0,0,0,0.12), 0 8px 20px rgba(0,0,0,0.25)' }}
         >
           <div className="flex items-baseline gap-3 md:gap-5 flex-wrap">
             <span className="label-mono opacity-70">ISSUE {num}</span>
@@ -49,64 +76,52 @@ export default function IssueFolder({ issue, stories, illustrations, layout }) {
           </div>
         </div>
 
-        {/* body — collage of fragments from this issue */}
+        {/* body — scattered photos from this issue */}
         <div
           className="relative flex-1 shadow-[0_14px_34px_rgba(0,0,0,0.3)]"
           style={{ background: color.bg, color: color.ink }}
         >
-          <Tape className="absolute -top-3 left-1/2 -translate-x-1/2 z-30" />
+          {PHOTO_SLOTS.map((slot, i) => (
+            <PhotoSlot
+              key={i}
+              {...slot}
+              src={pool[i] || null}
+              alt={issue.title}
+              caption={slot.caption ? issue.theme : null}
+              ink={color.ink}
+            />
+          ))}
 
-          {/* cover polaroid */}
-          <div className="fragment absolute top-4 left-3 md:left-6 w-28 md:w-32 z-20" style={{ '--rot': '-3deg' }}>
-            <div className="bg-white p-1.5 pb-5 shadow-lg">
-              <ScanImage src={issue.cover_image} alt={issue.title} objectNumber={`ISSUE ${num}`} className="aspect-[3/4] w-full" />
-              <p className="font-hand text-xs mt-1 text-center" style={{ color: color.ink }}>{issue.theme}</p>
+          {/* hidden photos — emerge from behind on hover */}
+          {HIDDEN_SLOTS.map((slot, i) => (
+            <div
+              key={`h-${i}`}
+              className="folder-hidden absolute bg-white p-1 pb-4 shadow-lg"
+              style={{ top: `${slot.top}%`, left: `${slot.left}%`, width: slot.w, zIndex: 10, '--rot': `${slot.rot}deg` }}
+            >
+              <ScanImage src={pool[PHOTO_SLOTS.length + i] || null} alt={issue.title} className={`${ASPECT_CLASS[slot.aspect] || 'aspect-[3/4]'} w-full`} />
             </div>
-          </div>
+          ))}
 
-          {/* illustration fragment */}
-          {illus[0] && (
-            <div className="fragment absolute top-5 right-4 md:right-8 w-24 md:w-28 z-20 bg-white p-1.5 shadow-lg" style={{ '--rot': '4deg' }}>
-              <ScanImage src={illus[0].image} alt={illus[0].title} className="aspect-square w-full" />
-            </div>
-          )}
-
-          {/* theme note */}
-          <div
-            className="fragment absolute bottom-5 left-1/2 -ml-[5.5rem] w-44 z-20 bg-[#fdfaf2] p-3 shadow-md border"
-            style={{ '--rot': '-1deg', borderColor: 'hsl(var(--ink) / 0.15)' }}
-          >
-            <p className="font-hand text-lg leading-snug" style={{ color: color.ink }}>{issue.theme}</p>
-            <p className="label-mono text-[0.55rem] mt-1 opacity-60">{issue.page_count} pp · {(issue.contributor_names || []).length} contributors</p>
-          </div>
-
-          {/* story fragment */}
-          {storyFrags[0] && (
-            <div className="fragment absolute bottom-6 right-5 md:right-10 w-28 z-20 bg-white p-1.5 shadow-md" style={{ '--rot': '3deg' }}>
-              <ScanImage src={storyFrags[0].cover_image || storyFrags[0].page_scan} alt={storyFrags[0].title} className="aspect-[3/4] w-full" />
-              <p className="font-hand text-[0.7rem] mt-1 leading-tight" style={{ color: color.ink }}>{storyFrags[0].title}</p>
-            </div>
-          )}
-
-          {/* hidden fragments — emerge from behind on hover */}
-          {illus[1] && (
-            <div className="folder-hidden absolute -bottom-1 left-[22%] w-24 z-10 bg-white p-1.5 shadow-lg" style={{ '--rot': '5deg' }}>
-              <ScanImage src={illus[1].image} alt={illus[1].title} className="aspect-square w-full" />
-            </div>
-          )}
-          {storyFrags[1] && (
-            <div className="folder-hidden absolute -bottom-0.5 right-[24%] w-24 z-10 bg-white p-1.5 shadow-lg" style={{ '--rot': '-4deg' }}>
-              <ScanImage src={storyFrags[1].cover_image || storyFrags[1].page_scan} alt={storyFrags[1].title} className="aspect-[3/4] w-full" />
-            </div>
-          )}
-
-          {/* paperclip + open hint */}
-          <div className="absolute top-2 right-2 z-30 opacity-70" aria-hidden>
-            <Paperclip size={24} strokeWidth={1.5} />
-          </div>
-          <span className="absolute bottom-2 right-3 label-mono text-[0.55rem] opacity-50 z-30">OPEN →</span>
+          {/* small theme tag + open hint */}
+          <span className="absolute bottom-2 left-3 label-mono text-[0.55rem] opacity-60 z-30">{issue.page_count} pp</span>
+          <span className="absolute bottom-2 right-3 label-mono text-[0.55rem] opacity-60 z-30">OPEN →</span>
         </div>
       </div>
     </Link>
+  );
+}
+
+function PhotoSlot({ top, left, w, rot, aspect, caption, src, alt, ink }) {
+  return (
+    <div
+      className="fragment absolute z-20"
+      style={{ top: `${top}%`, left: `${left}%`, width: w, '--rot': `${rot}deg` }}
+    >
+      <div className="bg-white p-1 pb-4 shadow-lg">
+        <ScanImage src={src} alt={alt} className={`${ASPECT_CLASS[aspect] || 'aspect-[3/4]'} w-full`} />
+        {caption && <p className="font-hand text-[0.7rem] mt-1 text-center leading-tight" style={{ color: ink }}>{caption}</p>}
+      </div>
+    </div>
   );
 }

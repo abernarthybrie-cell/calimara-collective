@@ -18,7 +18,7 @@ const FOLDER_RHYTHM = [
 const CLUTTER_RHYTHM = [
   { type: 'photo', left: 70, w: 110, rot: 4,   behind: false },
   { type: 'note',  left: 2,  w: 150, rot: -3,  behind: true },
-  { type: 'tape',  left: 60, w: 140, rot: 6,   behind: false },
+  { type: 'photo', left: 60, w: 120, rot: 6,   behind: false },
   { type: 'scrap', left: 15, w: 120, rot: 2,   behind: true },
   { type: 'photo', left: 73, w: 100, rot: -4,  behind: false },
   { type: 'note',  left: 5,  w: 140, rot: 3,   behind: true }
@@ -52,7 +52,7 @@ export default function Archive() {
     for (let i = 0; i < n; i++) {
       const cfg = FOLDER_RHYTHM[i % FOLDER_RHYTHM.length];
       const isLast = i === n - 1;
-      folders.push({ top: t, left: cfg.left, width: cfg.w, height: cfg.h, rotate: cfg.rot, z: n - i });
+      folders.push({ top: t, left: cfg.left, width: cfg.w, height: cfg.h, rotate: cfg.rot, z: i + 1 });
       t += cfg.h - (isLast ? 0 : cfg.ov);
     }
     const clutter = [];
@@ -65,7 +65,7 @@ export default function Archive() {
         left: c.left,
         w: c.w,
         rot: c.rot,
-        z: c.behind ? folderBelow.z - 0.4 : folders[i].z + 0.4
+        z: c.behind ? folderBelow.z - 0.5 : folderBelow.z + 0.5
       });
     }
     return { folders, clutter, totalHeight: t };
