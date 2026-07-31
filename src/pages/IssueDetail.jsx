@@ -75,23 +75,82 @@ export default function IssueDetail() {
   if (!issue) return <div className="pt-32 px-6 font-hand text-2xl">That issue isn't in the archive.</div>;
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <div className="mx-auto max-w-[1100px] w-full px-4 md:px-10 pt-6 pb-3 flex items-center justify-between gap-4 flex-wrap">
-        <Link to="/archive" className="label-mono text-ink-soft hover:text-ink">← BACK TO THE FOLDERS</Link>
-        <p className="label-mono text-ink-soft">ISSUE {num} · {issue.title}</p>
-      </div>
-      <div className="flex-1 mx-auto max-w-[1100px] w-full px-4 md:px-10 pb-10">
-        <div className="relative w-full h-full min-h-[70vh] shadow-2xl overflow-hidden">
-          <iframe
-            src="https://heyzine.com/flip-book/7cdee8cce9.html"
-            title={`${issue.title} — flipbook`}
-            className="absolute inset-0 w-full h-full"
-            style={{ border: 0 }}
-            allow="autoplay; fullscreen; clipboard-write"
-            allowFullScreen
-          />
+    <div className="pt-14 sm:pt-16 min-h-screen bg-archive-bg text-archive-fg grain">
+      {/* header */}
+      <header className="pt-12 pb-8">
+        <div className="mx-auto max-w-[1400px] px-6 lg:px-10">
+          <Link to="/archive" className="label-mono text-dusty-yellow hover:text-paper">← BACK TO THE FOLDERS</Link>
+          <div className="mt-4 flex items-end justify-between gap-4 flex-wrap">
+            <div>
+              <p className="label-mono text-dusty-yellow">ISSUE {num} · {formatDate(issue.publication_date)}</p>
+              <h1 className="font-heading text-4xl md:text-6xl mt-2">{issue.title}</h1>
+              <p className="label-mono text-archive-fg/60 mt-2">THEME · {issue.theme} · {issue.page_count} PAGES</p>
+            </div>
+            {issue.allow_download && issue.pdf_url && (
+              <a href={issue.pdf_url} download className="label-mono border border-archive-line px-3 py-2 hover:bg-archive-bg2 focus-ring inline-flex items-center gap-1.5">
+                <Download size={13} /> DOWNLOAD PDF
+              </a>
+            )}
+          </div>
         </div>
-      </div>
+      </header>
+
+      {/* the reader — open magazine spread flanked by annotation margins */}
+      <section className="pb-16">
+        <div className="mx-auto max-w-[1400px] px-4 md:px-10">
+          <div className="grid md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] gap-6 items-center">
+            <MarginPanel side="left" annotation={leftMargin} />
+
+            {/* book spread */}
+            <div className="relative mx-auto" style={{ perspective: 2200 }}>
+              <div className="relative flex shadow-2xl" style={{ transformStyle: 'preserve-3d' }}>
+                <Page
+                  side="left"
+                  pageNo={dispLeftNo}
+                  image={pageImages[dispLeftNo - 1]}
+                  story={stories.find((s) => s.page_number === dispLeftNo)}
+                  illus={illus.filter((i) => i.page_number === dispLeftNo)}
+                  onAnnotate={setLeftMargin}
+                />
+                <div className="w-px bg-ink/30" style={{ boxShadow: '0 0 14px rgba(0,0,0,0.35)' }} />
+                <Page
+                  side="right"
+                  pageNo={dispRightNo}
+                  image={pageImages[dispRightNo - 1]}
+                  story={stories.find((s) => s.page_number === dispRightNo)}
+                  illus={illus.filter((i) => i.page_number === dispRightNo)}
+                  onAnnotate={setRightMargin}
+                />
+              </div>
+              {turn && <TurningPage turn={turn} onDone={onTurnDone} />}
+            </div>
+
+            <MarginPanel side="right" annotation={rightMargin} />
+          </div>
+
+          {/* page navigation */}
+          <div className="mt-10 flex items-center justify-center gap-6">
+            <button
+              onClick={goPrev}
+              disabled={spread <= 1 || !!turn}
+              aria-label="Previous spread"
+              className="w-11 h-11 bg-archive-bg2 border border-archive-line flex items-center justify-center hover:bg-burgundy hover:text-paper disabled:opacity-30 focus-ring"
+            >
+              <ChevronLeft size={20} />
+            </button>
+            <p className="label-mono text-archive-muted">SPREAD {spread} / {spreadCount}</p>
+            <button
+              onClick={goNext}
+              disabled={spread >= spreadCount || !!turn}
+              aria-label="Next spread"
+              className="w-11 h-11 bg-archive-bg2 border border-archive-line flex items-center justify-center hover:bg-burgundy hover:text-paper disabled:opacity-30 focus-ring"
+            >
+              <ChevronRight size={20} />
+            </button>
+          </div>
+          <p className="mt-4 text-center font-hand text-lg text-archive-fg/40">the interactive magazine reader — content will be filed in soon</p>
+        </div>
+      </section>
     </div>
   );
 }
