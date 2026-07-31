@@ -76,13 +76,13 @@ export default function Contents() {
             <div className="space-y-12">
               {sections.map((sec, i) => (
                 <div key={sec.name} className="relative">
-                  <div className="flex items-baseline gap-4 mb-4 pb-2 border-b-2 border-ink/20">
-                    <span className="font-display text-3xl text-burgundy/70 leading-none">{ROMAN[i] || i + 1}</span>
-                    <div>
+                  <div className="mb-4 pb-2 border-b-2 border-ink/20">
+                    <div className="flex items-baseline gap-3">
+                      <span className="font-display text-3xl md:text-5xl text-burgundy leading-none">{ROMAN[i] || i + 1}</span>
                       <h2 className="font-heading text-3xl md:text-4xl leading-none">{sec.name}</h2>
-                      {sec.description && <p className="font-body text-sm text-ink-soft mt-1 max-w-lg">{sec.description}</p>}
+                      <span className="ml-auto label-mono text-ink-soft/50">{sec.stories.length}</span>
                     </div>
-                    <span className="ml-auto label-mono text-ink-soft/50">{sec.stories.length}</span>
+                    {sec.description && <p className="font-body text-sm text-ink-soft mt-2 max-w-lg">{sec.description}</p>}
                   </div>
                   <ul className="space-y-0">
                     {sec.stories.map((s) => {
