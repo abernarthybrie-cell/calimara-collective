@@ -116,7 +116,7 @@ export default function Home() {
       </section>
 
       {/* ===== WHAT IS CĂLIMARA ===== */}
-      <section className="relative py-20 md:py-28 grain-light overflow-hidden bg-[hsl(var(--burgundy))]">
+      <section className="relative py-20 md:py-28 grain-light overflow-hidden bg-[hsl(var(--paper-shadow))]">
         <div className="absolute -left-10 top-10 w-72 h-72 bg-paper rotate-6 opacity-60 pointer-events-none" aria-hidden />
         <Reveal className="relative mx-auto max-w-3xl px-6">
           <p className="label-mono text-burgundy mb-4">— WHAT IS CĂLIMARA? —</p>
