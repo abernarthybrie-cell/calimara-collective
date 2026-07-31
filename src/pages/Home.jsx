@@ -111,7 +111,7 @@ export default function Home() {
               SHOW ME SOMETHING RANDOM →
             </button>
           </div>
-          <p className="font-hand text-lg text-ink-soft/70 mt-8">↓ scroll into the desk · things move</p>
+          <p className="text-lg text-ink-soft/70 mt-8 font-normal [font-family:'Choretto_Demo',_sans-serif]">↓ scroll into the desk · things move</p>
         </div>
       </section>
 
