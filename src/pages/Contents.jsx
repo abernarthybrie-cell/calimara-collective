@@ -36,8 +36,8 @@ export default function Contents() {
     const extra = Object.keys(byRubrica).filter((n) => !knownNames.has(n)).sort();
     const ordered = [
       ...known.map((r) => ({ name: r.name, description: r.description, stories: byRubrica[r.name] || [] })),
-      ...extra.map((n) => ({ name: n, description: '', stories: byRubrica[n] })),
-    ].filter((sec) => sec.stories.length > 0);
+      ...extra.map((n) => ({ name: n, description: '', stories: byRubrica[n] })).filter((sec) => sec.stories.length > 0),
+    ];
     if (noRubrica.length) ordered.push({ name: 'Fără rubrică', description: '', stories: noRubrica });
     ordered.forEach((sec) => sec.stories.sort(
       (a, b) => (a.issue_number || 0) - (b.issue_number || 0) || (a.page_number || 0) - (b.page_number || 0)
@@ -85,6 +85,11 @@ export default function Contents() {
                     {sec.description && <p className="font-body text-sm text-ink-soft mt-2 max-w-lg">{sec.description}</p>}
                   </div>
                   <ul className="space-y-0">
+                    {sec.stories.length === 0 && (
+                      <li className="py-3 px-1">
+                        <p className="font-hand text-lg text-ink-soft/50 italic">Nothing filed here yet — the first piece in this rubric is waiting to be written.</p>
+                      </li>
+                    )}
                     {sec.stories.map((s) => {
                       const issueSlug = s.issue_slug || `issue-${String(s.issue_number || 1).padStart(2, '0')}`;
                       const meta = [s.issue_number ? `№${String(s.issue_number).padStart(2, '0')}` : null, s.page_number ? `p.${s.page_number}` : null].filter(Boolean).join(' · ');
