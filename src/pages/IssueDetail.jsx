@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
 import { formatDate } from '@/lib/calimara';
 import ScanImage from '@/components/ScanImage';
+import PageZoom from '@/components/PageZoom';
 
 export default function IssueDetail() {
   const { issueSlug } = useParams();
@@ -16,6 +17,7 @@ export default function IssueDetail() {
   const [leftMargin, setLeftMargin] = useState(null);
   const [rightMargin, setRightMargin] = useState(null);
   const [turn, setTurn] = useState(null);
+  const [zoom, setZoom] = useState(null);
 
   useEffect(() => {
     setLoading(true);
@@ -69,6 +71,7 @@ export default function IssueDetail() {
     setRightMargin(null);
     setTurn(null);
   };
+  const openZoom = (pageNo, image) => setZoom({ pageNo, image, title: issue?.title });
 
   const turning = !!turn;
   const curPages = pagesForSpread(spread);
@@ -119,6 +122,7 @@ export default function IssueDetail() {
                     story={stories.find((s) => s.page_number === dispLeftNo)}
                     illus={illus.filter((i) => i.page_number === dispLeftNo)}
                     onAnnotate={setLeftMargin}
+                    onZoom={openZoom}
                   />
                 )}
                 <div className="w-px bg-ink/30" style={{ boxShadow: '0 0 14px rgba(0,0,0,0.35)' }} />
@@ -129,6 +133,7 @@ export default function IssueDetail() {
                   story={stories.find((s) => s.page_number === dispRightNo)}
                   illus={illus.filter((i) => i.page_number === dispRightNo)}
                   onAnnotate={setRightMargin}
+                  onZoom={openZoom}
                 />
               </div>
               {turn && <TurningPage turn={turn} onDone={onTurnDone} />}
@@ -160,18 +165,28 @@ export default function IssueDetail() {
           <p className="mt-4 text-center font-hand text-lg text-archive-fg/40">the interactive magazine reader — content will be filed in soon</p>
         </div>
       </section>
+
+      {zoom && (
+        <PageZoom
+          pageNo={zoom.pageNo}
+          image={zoom.image}
+          title={zoom.title}
+          onClose={() => setZoom(null)}
+        />
+      )}
     </div>
   );
 }
 
-function Page({ side, pageNo, image, story, illus, onAnnotate }) {
+function Page({ side, pageNo, image, story, illus, onAnnotate, onZoom }) {
   const blank = pageNo === null;
   return (
     <div
-      className={`relative w-[42vw] max-w-[400px] aspect-[210/297] ${blank ? 'bg-archive-bg2' : 'bg-white'}`}
+      className={`relative w-[42vw] max-w-[400px] aspect-[210/297] ${blank ? 'bg-archive-bg2' : 'bg-white'} ${blank || !image ? '' : 'cursor-zoom-in'}`}
       style={{
         boxShadow: blank ? 'none' : side === 'left' ? 'inset -12px 0 22px -12px rgba(0,0,0,0.3)' : 'inset 12px 0 22px -12px rgba(0,0,0,0.3)'
       }}
+      onClick={() => !blank && image && onZoom(pageNo, image)}
     >
       {blank ? null : image ? (
         <ScanImage src={image} alt={`page ${pageNo}`} className="w-full h-full align-top" fittingType="fill" />
@@ -278,7 +293,7 @@ function TurningPage({ turn, onDone }) {
 
 function Hotspot({ x, y, label, onClick }) {
   return (
-    <button onClick={onClick} className="absolute focus-ring group" style={{ left: `${x}%`, top: `${y}%` }} aria-label={label}>
+    <button onClick={(e) => { e.stopPropagation(); onClick(); }} className="absolute focus-ring group" style={{ left: `${x}%`, top: `${y}%` }} aria-label={label}>
       <span className="block w-5 h-5 rounded-full border-2 border-burgundy bg-paper/70 group-hover:bg-burgundy group-hover:scale-125 transition-all shadow" />
       <span className="absolute left-1/2 -translate-x-1/2 -bottom-6 whitespace-nowrap font-hand text-sm text-burgundy bg-paper px-1.5 border border-burgundy/40 opacity-0 group-hover:opacity-100 transition-opacity">
         {label}
