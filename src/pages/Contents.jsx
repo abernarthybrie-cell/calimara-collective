@@ -100,7 +100,9 @@ export default function Contents() {
                         className="group flex items-baseline gap-3 py-2 hover:bg-paper-deep/60 transition-colors focus-ring px-1">
                         
                             <span className="text-lg leading-tight group-hover:text-burgundy transition-colors [font-family:'Impact_Label',_sans-serif] font-normal">{s.title}</span>
-                            {s.author_name && <span className="text-base text-ink-soft/70 whitespace-nowrap [font-family:'Impact_Label',_sans-serif] font-normal">{s.author_name}</span>}
+                            {s.author_name && s.author_name.split('&').map((n, i) => (
+                              <span key={i} className="text-base text-ink-soft/70 whitespace-nowrap [font-family:'Impact_Label',_sans-serif] font-normal">{n.trim()}{i < s.author_name.split('&').length - 1 ? ' &' : ''}</span>
+                            ))}
                             <span className="flex-1 border-b border-dotted border-ink/20 mb-[3px] min-w-[20px]" />
                             {meta && <span className="label-mono text-ink-soft/70 whitespace-nowrap [font-family:'Impact_Label_Reversed',_sans-serif] font-normal">{meta}</span>}
                           </Link>
