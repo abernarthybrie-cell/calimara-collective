@@ -95,6 +95,24 @@ export default function IssueDetail() {
         </div>
       </header>
 
+      {/* the magazine — embedded flipbook with the page-turn animation */}
+      <section className="pb-16">
+        <div className="mx-auto max-w-[1100px] px-4 md:px-10">
+          <p className="label-mono text-dusty-yellow mb-3">THE MAGAZINE · FLIP THROUGH</p>
+          <div className="relative w-full aspect-[3/4] md:aspect-[16/10] bg-archive-bg2 border border-archive-line shadow-2xl overflow-hidden">
+            <iframe
+              src="https://heyzine.com/flip-book/7cdee8cce9.html"
+              title={`${issue.title} — flipbook`}
+              className="absolute inset-0 w-full h-full"
+              style={{ border: 0 }}
+              allow="autoplay; fullscreen; clipboard-write"
+              allowFullScreen
+            />
+          </div>
+          <p className="mt-3 text-center font-hand text-lg text-archive-fg/40">drag the corner — the page curls and turns</p>
+        </div>
+      </section>
+
       {/* the reader — open magazine spread flanked by annotation margins */}
       <section className="pb-16">
         <div className="mx-auto max-w-[1400px] px-4 md:px-10">
