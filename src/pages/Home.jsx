@@ -96,7 +96,7 @@ export default function Home() {
         </div>
 
         {/* LAYER 3 — central content */}
-        <div className="relative z-10 mx-auto max-w-[1400px] px-6 lg:px-10 py-20 md:py-28 text-center min-h-[calc(100vh-4rem)] flex flex-col items-center justify-center bg-[hsl(var(--archive-line))]">
+        <div className="relative z-10 mx-auto max-w-[1400px] px-6 lg:px-10 py-20 md:py-28 text-center min-h-[calc(100vh-4rem)] flex flex-col items-center justify-center bg-[#3c2c34]">
           <p className="label-mono text-burgundy mb-5 animate-fade-in">INDEPENDENT STUDENT MAGAZINE · BUCHAREST</p>
           <h1 className="font-display text-[20vw] md:text-[13rem] leading-[0.82] tracking-tight animate-rise-in bg-[#3c2c34]">CĂLIMARA</h1>
           <p className="font-heading italic text-2xl md:text-3xl text-ink-soft mt-6 max-w-2xl mx-auto animate-fade-in">
