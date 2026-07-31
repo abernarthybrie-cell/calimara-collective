@@ -6,6 +6,7 @@ import { base44 } from '@/api/base44Client';
 import { formatMonthYear } from '@/lib/calimara';
 import ScanImage from '@/components/ScanImage';
 import PageZoom from '@/components/PageZoom';
+import SpreadThumbnails from '@/components/SpreadThumbnails';
 
 export default function IssueDetail() {
   const { issueSlug } = useParams();
@@ -175,6 +176,13 @@ export default function IssueDetail() {
             </button>
           </div>
           <p className="mt-4 text-center font-hand text-lg text-archive-fg/40">the interactive magazine reader — content will be filed in soon</p>
+
+          <SpreadThumbnails
+            pageImages={pageImages}
+            pageCount={pageCount}
+            currentSpread={spread}
+            onJump={(s) => { setSpread(s); setLeftMargin(null); setRightMargin(null); }}
+          />
         </div>
       </section>
 
