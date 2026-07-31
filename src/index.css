@@ -35,6 +35,13 @@
   font-display: swap;
   src: url('./assets/fonts/punktype-13417563-400-normal.woff2') format('woff2');
 }
+@font-face {
+  font-family: 'HawtFriend';
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url('./assets/fonts/hawt-friend-167f8fd1-400-normal.woff2') format('woff2');
+}
 /* base44-workspace-fonts:end */
 
 @tailwind base;
