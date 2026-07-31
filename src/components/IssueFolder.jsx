@@ -109,8 +109,7 @@ export default function IssueFolder({ issue, stories, illustrations, layout, pol
             className="absolute -left-2 -right-2 -bottom-2 h-3 rounded-b-[10px] z-0"
             style={{ background: color.bg, boxShadow: '0 6px 14px rgba(0,0,0,0.22)' }}
           />
-          {/* blank white page — the file inside, peeks below the back cover */}
-          <div className="absolute -left-1 -right-1 -bottom-5 h-3 bg-[#fdfaf2] rounded-b-[8px] z-0 shadow-md" />
+
         </div>
       </div>
     </Link>
