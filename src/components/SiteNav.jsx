@@ -58,7 +58,7 @@ export default function SiteNav({ onOpenSearch, onOpenDrawer }) {
           className={`flex items-center gap-3 pl-3 pr-2 py-2 transition-all duration-300 ${scrolled ? 'bg-paper/90 backdrop-blur-sm shadow-md border border-ink/10' : 'bg-transparent'}`}
           style={{ transform: 'rotate(-1deg)' }}>
           
-          <Link to="/" className="text-lg leading-none tracking-tight focus-ring [font-family:'HawtFriend',_sans-serif] font-normal" aria-label="Călimara home">C A LIMARA</Link>
+          <Link to="/" className="font-heading text-lg leading-none tracking-tight focus-ring" aria-label="Călimara home">C A L I M A R A</Link>
           <span className="hidden sm:inline w-px h-4 bg-ink/20" />
           <nav className="hidden sm:flex items-center gap-3">
             {PRIMARY.map((l) =>
