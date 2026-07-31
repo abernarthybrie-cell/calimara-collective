@@ -34,6 +34,16 @@
     --olive: 76 20% 33%;
     --gold: 43 58% 52%;
 
+    /* Călimara palette — clockwork, cedar, latte, deep olive, café noir, mauve, weathered, linen */
+    --clockwork: 30 29% 34%;
+    --cedar: 54 13% 43%;
+    --latte: 34 43% 75%;
+    --deep-olive: 55 20% 22%;
+    --cafe-noir: 27 32% 20%;
+    --mauve: 0 18% 39%;
+    --weathered: 28 20% 53%;
+    --linen: 30 100% 98%;
+
     --radius: 0px;
     /* Călimara four-font system: EB Garamond (literary), TAN Giok (display),
        Marline (expressive), 29LT Makina (experimental/labels). The three
@@ -66,6 +76,14 @@
     --border: 40 12% 28%;
     --input: 40 12% 28%;
     --ring: 152 10% 47%;
+    --clockwork: 30 29% 34%;
+    --cedar: 54 13% 43%;
+    --latte: 34 43% 75%;
+    --deep-olive: 55 20% 22%;
+    --cafe-noir: 27 32% 20%;
+    --mauve: 0 18% 39%;
+    --weathered: 28 20% 53%;
+    --linen: 30 100% 98%;
     --sidebar-background: 30 8% 10%;
     --sidebar-foreground: 40 28% 86%;
     --sidebar-primary: 170 16% 29%;
