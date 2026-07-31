@@ -110,7 +110,7 @@ export default function IssueDetail() {
             <div className="relative mx-auto" style={{ perspective: 2200 }}>
               <div className="relative flex shadow-2xl" style={{ transformStyle: 'preserve-3d' }}>
                 {dispLeftNo === null ? (
-                  <div className="w-[42vw] max-w-[400px] aspect-[3/4]" aria-hidden="true" />
+                  <div className="w-[42vw] max-w-[400px] aspect-[210/297]" aria-hidden="true" />
                 ) : (
                   <Page
                     side="left"
@@ -168,7 +168,7 @@ function Page({ side, pageNo, image, story, illus, onAnnotate }) {
   const blank = pageNo === null;
   return (
     <div
-      className={`relative w-[42vw] max-w-[400px] aspect-[3/4] ${blank ? 'bg-archive-bg2' : 'bg-white'}`}
+      className={`relative w-[42vw] max-w-[400px] aspect-[210/297] ${blank ? 'bg-archive-bg2' : 'bg-white'}`}
       style={{
         boxShadow: blank ? 'none' : side === 'left' ? 'inset -12px 0 22px -12px rgba(0,0,0,0.3)' : 'inset 12px 0 22px -12px rgba(0,0,0,0.3)'
       }}
@@ -229,7 +229,7 @@ function TurningPage({ turn, onDone }) {
   const curlEase = [0.45, 0, 0.25, 1];
   return (
     <div
-      className={`absolute top-0 ${posClass} w-[42vw] max-w-[400px] aspect-[3/4] z-30`}
+      className={`absolute top-0 ${posClass} w-[42vw] max-w-[400px] aspect-[210/297] z-30`}
       style={{ transformStyle: 'preserve-3d' }}
     >
       <motion.div
