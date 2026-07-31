@@ -7,7 +7,7 @@ import Stamp from '@/components/Stamp';
 const FOLDER_RHYTHM = [
   { h: 300, ov: 120, left: 1,  w: 94, rot: -1.5 },
   { h: 330, ov: 140, left: 9,  w: 80, rot: 2 },
-  { h: 560, ov: 70,  left: -3, w: 96, rot: -2.5 },
+  { h: 290, ov: 110, left: -3, w: 96, rot: -2.5 },
   { h: 340, ov: 130, left: 7,  w: 82, rot: 1 },
   { h: 310, ov: 125, left: 0,  w: 88, rot: -1 },
   { h: 300, ov: 115, left: 12, w: 76, rot: 2.5 },
