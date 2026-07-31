@@ -21,6 +21,13 @@
   font-display: swap;
   src: url('./assets/fonts/choretto-demo-63eb6ba9-400-normal.woff2') format('woff2');
 }
+@font-face {
+  font-family: 'Concetta Kalvani';
+  font-weight: 250;
+  font-style: normal;
+  font-display: swap;
+  src: url('./assets/fonts/concetta-kalvani-86045e81-250-normal.woff2') format('woff2');
+}
 /* base44-workspace-fonts:end */
 
 @tailwind base;
