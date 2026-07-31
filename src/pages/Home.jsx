@@ -40,7 +40,7 @@ export default function Home() {
   const issueLink = newest ? `/archive/issue/${newest.slug}` : '/archive';
 
   return (
-    <div className="pt-14 sm:pt-16">
+    <div className="pt-14 sm:pt-16 bg-[#3b2b33]/[0.9]">
       {/* ===== HERO DESK ===== */}
       <section className="relative overflow-hidden bg-paper grain" style={{ perspective: 1000, minHeight: 'calc(100vh - 4rem)' }}>
         {/* LAYER 1 — faded background photocopy */}
@@ -96,7 +96,7 @@ export default function Home() {
         </div>
 
         {/* LAYER 3 — central content */}
-        <div className="relative z-10 mx-auto max-w-[1400px] px-6 lg:px-10 py-20 md:py-28 text-center min-h-[calc(100vh-4rem)] flex flex-col items-center justify-center">
+        <div className="relative z-10 mx-auto max-w-[1400px] px-6 lg:px-10 py-20 md:py-28 text-center min-h-[calc(100vh-4rem)] flex flex-col items-center justify-center bg-[hsl(var(--archive-line))]">
           <p className="label-mono text-burgundy mb-5 animate-fade-in">INDEPENDENT STUDENT MAGAZINE · BUCHAREST</p>
           <h1 className="font-display text-[20vw] md:text-[13rem] leading-[0.82] tracking-tight animate-rise-in bg-[#3c2c34]">CĂLIMARA</h1>
           <p className="font-heading italic text-2xl md:text-3xl text-ink-soft mt-6 max-w-2xl mx-auto animate-fade-in">
