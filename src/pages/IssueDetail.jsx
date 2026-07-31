@@ -174,7 +174,7 @@ function Page({ side, pageNo, image, story, illus, onAnnotate }) {
       }}
     >
       {blank ? null : image ? (
-        <ScanImage src={image} alt={`page ${pageNo}`} className="w-full h-full" fittingType={pageNo === 1 ? 'fill' : 'fit'} />
+        <ScanImage src={image} alt={`page ${pageNo}`} className="w-full h-full" fittingType="fill" />
       ) : (
         <div className="w-full h-full scan-placeholder flex items-center justify-center">
           <span className="label-mono text-ink-soft/60">PAGE {pageNo}</span>
@@ -209,7 +209,7 @@ function PageFace({ pageNo, image }) {
   return (
     <div className="relative w-full h-full bg-white">
       {image ? (
-        <ScanImage src={image} alt={`page ${pageNo}`} className="w-full h-full" fittingType={pageNo === 1 ? 'fill' : 'fit'} />
+        <ScanImage src={image} alt={`page ${pageNo}`} className="w-full h-full" fittingType="fill" />
       ) : (
         <div className="w-full h-full scan-placeholder flex items-center justify-center">
           <span className="label-mono text-ink-soft/60">PAGE {pageNo}</span>
