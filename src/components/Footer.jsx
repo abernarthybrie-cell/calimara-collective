@@ -14,7 +14,7 @@ export default function Footer() {
       <div className="mx-auto max-w-[1400px] px-6 lg:px-10 py-14 grid gap-10 md:grid-cols-12">
         <div className="md:col-span-5">
           <LogoMark size={64} rotate={-3} className="mb-3" />
-          <p className="font-heading text-3xl">CĂLIMARA</p>
+          <p className="text-3xl [font-family:'HawtFriend',_'EB_Garamond',_Georgia,_serif] font-normal">Calimara colective</p>
           <p className="label-mono text-paper/60 mt-2">BUCHAREST · EST. {year}</p>
           <p className="text-xl text-paper/70 mt-4 max-w-sm leading-snug font-normal [font-family:'Caveat',_system-ui]">A magazine made by young people who have something to say.
 
