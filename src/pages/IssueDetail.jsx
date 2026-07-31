@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Download } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
 import { formatDate } from '@/lib/calimara';
 import ScanImage from '@/components/ScanImage';
@@ -15,12 +15,14 @@ export default function IssueDetail() {
   const [spread, setSpread] = useState(1);
   const [leftMargin, setLeftMargin] = useState(null);
   const [rightMargin, setRightMargin] = useState(null);
+  const [turn, setTurn] = useState(null);
 
   useEffect(() => {
     setLoading(true);
     setLeftMargin(null);
     setRightMargin(null);
     setSpread(1);
+    setTurn(null);
     Promise.all([
       base44.entities.Issue.filter({ slug: issueSlug }, 'number', 50),
       base44.entities.Story.filter({ issue_slug: issueSlug }, 'page_number', 200),
@@ -45,6 +47,29 @@ export default function IssueDetail() {
   const rightStory = stories.find((s) => s.page_number === rightPageNo);
   const leftIllus = illus.filter((i) => i.page_number === leftPageNo);
   const rightIllus = illus.filter((i) => i.page_number === rightPageNo);
+
+  const pageContent = (pageNo) => ({ pageNo, image: pageImages[pageNo - 1] });
+
+  const goNext = () => {
+    if (spread >= spreadCount || turn) return;
+    const target = spread + 1;
+    setTurn({ dir: 1, target, side: 'right', front: pageContent(rightPageNo), back: pageContent(target * 2 - 1) });
+  };
+  const goPrev = () => {
+    if (spread <= 1 || turn) return;
+    const target = spread - 1;
+    setTurn({ dir: -1, target, side: 'left', front: pageContent(leftPageNo), back: pageContent(target * 2) });
+  };
+  const onTurnDone = () => {
+    setSpread(turn.target);
+    setLeftMargin(null);
+    setRightMargin(null);
+    setTurn(null);
+  };
+
+  const turning = !!turn;
+  const dispLeftNo = turning ? (turn.dir === 1 ? leftPageNo : turn.target * 2 - 1) : leftPageNo;
+  const dispRightNo = turning ? (turn.dir === 1 ? turn.target * 2 : rightPageNo) : rightPageNo;
 
   if (loading) return <div className="pt-32 px-6 label-mono text-ink-soft">opening the issue…</div>;
   if (!issue) return <div className="pt-32 px-6 font-hand text-2xl">That issue isn't in the archive.</div>;
@@ -78,35 +103,26 @@ export default function IssueDetail() {
 
             {/* book spread */}
             <div className="relative mx-auto" style={{ perspective: 2200 }}>
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={spread}
-                  initial={{ rotateY: -16, opacity: 0 }}
-                  animate={{ rotateY: 0, opacity: 1 }}
-                  exit={{ rotateY: 16, opacity: 0 }}
-                  transition={{ duration: 0.5, ease: 'easeOut' }}
-                  className="flex shadow-2xl"
-                  style={{ transformStyle: 'preserve-3d' }}
-                >
-                  <Page
-                    side="left"
-                    pageNo={leftPageNo}
-                    image={pageImages[leftPageNo - 1]}
-                    story={leftStory}
-                    illus={leftIllus}
-                    onAnnotate={setLeftMargin}
-                  />
-                  <div className="w-px bg-ink/30" style={{ boxShadow: '0 0 14px rgba(0,0,0,0.35)' }} />
-                  <Page
-                    side="right"
-                    pageNo={rightPageNo}
-                    image={pageImages[rightPageNo - 1]}
-                    story={rightStory}
-                    illus={rightIllus}
-                    onAnnotate={setRightMargin}
-                  />
-                </motion.div>
-              </AnimatePresence>
+              <div className="relative flex shadow-2xl" style={{ transformStyle: 'preserve-3d' }}>
+                <Page
+                  side="left"
+                  pageNo={dispLeftNo}
+                  image={pageImages[dispLeftNo - 1]}
+                  story={stories.find((s) => s.page_number === dispLeftNo)}
+                  illus={illus.filter((i) => i.page_number === dispLeftNo)}
+                  onAnnotate={setLeftMargin}
+                />
+                <div className="w-px bg-ink/30" style={{ boxShadow: '0 0 14px rgba(0,0,0,0.35)' }} />
+                <Page
+                  side="right"
+                  pageNo={dispRightNo}
+                  image={pageImages[dispRightNo - 1]}
+                  story={stories.find((s) => s.page_number === dispRightNo)}
+                  illus={illus.filter((i) => i.page_number === dispRightNo)}
+                  onAnnotate={setRightMargin}
+                />
+              </div>
+              {turn && <TurningPage turn={turn} onDone={onTurnDone} />}
             </div>
 
             <MarginPanel side="right" annotation={rightMargin} />
@@ -115,8 +131,8 @@ export default function IssueDetail() {
           {/* page navigation */}
           <div className="mt-10 flex items-center justify-center gap-6">
             <button
-              onClick={() => { setLeftMargin(null); setRightMargin(null); setSpread((p) => Math.max(1, p - 1)); }}
-              disabled={spread <= 1}
+              onClick={goPrev}
+              disabled={spread <= 1 || !!turn}
               aria-label="Previous spread"
               className="w-11 h-11 bg-archive-bg2 border border-archive-line flex items-center justify-center hover:bg-burgundy hover:text-paper disabled:opacity-30 focus-ring"
             >
@@ -124,8 +140,8 @@ export default function IssueDetail() {
             </button>
             <p className="label-mono text-archive-muted">SPREAD {spread} / {spreadCount}</p>
             <button
-              onClick={() => { setLeftMargin(null); setRightMargin(null); setSpread((p) => Math.min(spreadCount, p + 1)); }}
-              disabled={spread >= spreadCount}
+              onClick={goNext}
+              disabled={spread >= spreadCount || !!turn}
               aria-label="Next spread"
               className="w-11 h-11 bg-archive-bg2 border border-archive-line flex items-center justify-center hover:bg-burgundy hover:text-paper disabled:opacity-30 focus-ring"
             >
@@ -178,6 +194,59 @@ function Page({ side, pageNo, image, story, illus, onAnnotate }) {
 
       {/* animated page-turn corner curl */}
       <span className={`page-curl ${side === 'left' ? 'left' : ''}`} aria-hidden="true" />
+    </div>
+  );
+}
+
+function PageFace({ pageNo, image }) {
+  return (
+    <div className="relative w-full h-full bg-white">
+      {image ? (
+        <ScanImage src={image} alt={`page ${pageNo}`} className="w-full h-full" fittingType="fit" />
+      ) : (
+        <div className="w-full h-full scan-placeholder flex items-center justify-center">
+          <span className="label-mono text-ink-soft/60">PAGE {pageNo}</span>
+        </div>
+      )}
+      <span className="absolute bottom-2 right-3 label-mono text-ink-soft/40 text-[0.55rem]">p.{pageNo}</span>
+    </div>
+  );
+}
+
+function TurningPage({ turn, onDone }) {
+  const { dir, side, front, back } = turn;
+  const origin = side === 'right' ? '0% 50%' : '100% 50%';
+  const posClass = side === 'right' ? 'left-1/2' : 'left-0';
+  return (
+    <div
+      className={`absolute top-0 ${posClass} w-[42vw] max-w-[400px] aspect-[3/4] z-30`}
+      style={{ transformStyle: 'preserve-3d' }}
+    >
+      <motion.div
+        className="relative w-full h-full"
+        style={{ transformStyle: 'preserve-3d', transformOrigin: origin }}
+        initial={{ rotateY: 0 }}
+        animate={{ rotateY: dir === 1 ? -180 : 180 }}
+        transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
+        onAnimationComplete={onDone}
+      >
+        {/* front face — the page being turned */}
+        <div className="absolute inset-0" style={{ backfaceVisibility: 'hidden' }}>
+          <PageFace pageNo={front.pageNo} image={front.image} />
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{ background: side === 'right' ? 'linear-gradient(to left, transparent 55%, rgba(0,0,0,0.22))' : 'linear-gradient(to right, transparent 55%, rgba(0,0,0,0.22))' }}
+          />
+        </div>
+        {/* back face — revealed as the page swings over */}
+        <div className="absolute inset-0" style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}>
+          <PageFace pageNo={back.pageNo} image={back.image} />
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{ background: side === 'right' ? 'linear-gradient(to right, transparent 55%, rgba(0,0,0,0.18))' : 'linear-gradient(to left, transparent 55%, rgba(0,0,0,0.18))' }}
+          />
+        </div>
+      </motion.div>
     </div>
   );
 }
