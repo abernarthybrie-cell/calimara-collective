@@ -53,7 +53,7 @@ export default function StoryDetail() {
     <div className="pt-14 sm:pt-16">
       <article className="py-14">
         <div className="mx-auto max-w-[1100px] px-6 lg:px-10">
-          <Link to={`/archive/issue-${num}`} className="label-mono text-burgundy hover:text-ink focus-ring inline-flex items-center gap-1"><ArrowLeft size={14}/> ISSUE {num}</Link>
+          <Link to="/contents" className="label-mono text-burgundy hover:text-ink focus-ring inline-flex items-center gap-1"><ArrowLeft size={14}/> BACK TO CONTENTS</Link>
 
           <div className="mt-8 grid md:grid-cols-[1fr_20rem] gap-12">
             {/* main reading column */}
