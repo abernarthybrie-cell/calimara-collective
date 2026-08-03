@@ -5,13 +5,13 @@ import Stamp from '@/components/Stamp';
 
 // per-folder rhythm — height (px), overlap with the next (px), left offset (%), width (%), rotation (deg)
 const FOLDER_RHYTHM = [
-  { h: 300, ov: 120, left: 1,  w: 94, rot: -1.5 },
-  { h: 330, ov: 140, left: 9,  w: 80, rot: 2 },
-  { h: 290, ov: 110, left: -3, w: 96, rot: -2.5 },
-  { h: 340, ov: 130, left: 7,  w: 82, rot: 1 },
-  { h: 310, ov: 125, left: 0,  w: 88, rot: -1 },
-  { h: 300, ov: 115, left: 12, w: 76, rot: 2.5 },
-  { h: 320, ov: 0,   left: 4,  w: 90, rot: -1.5 }
+  { h: 300, ov: 120, left: -2, w: 94, rot: -1.5 },
+  { h: 330, ov: 140, left: 13, w: 80, rot: 2 },
+  { h: 290, ov: 110, left: -5, w: 96, rot: -2.5 },
+  { h: 340, ov: 130, left: 11, w: 82, rot: 1 },
+  { h: 310, ov: 125, left: -3, w: 88, rot: -1 },
+  { h: 300, ov: 115, left: 15, w: 76, rot: 2.5 },
+  { h: 320, ov: 0,   left: 1,  w: 90, rot: -1.5 }
 ];
 
 // clutter tucked between folders — type, left (%), width (px), rotation, tuck (behind next or in front)
@@ -110,6 +110,7 @@ export default function Archive() {
                   illustrations={illusFor(it.slug)}
                   layout={folders[i]}
                   polaroid={i === 0 || i === issues.length - 1}
+                  isLast={i === issues.length - 1}
                 />
               ))}
             </div>

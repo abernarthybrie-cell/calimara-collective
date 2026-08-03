@@ -33,10 +33,12 @@ const ASPECT_CLASS = {
   '6/4': 'aspect-[6/4]'
 };
 
-export default function IssueFolder({ issue, stories, illustrations, layout, polaroid }) {
+export default function IssueFolder({ issue, stories, illustrations, layout, polaroid, isLast }) {
   const { top, left, width, height, rotate, z } = layout;
   const [hovered, setHovered] = useState(false);
-  const color = FOLDER_COLORS[(issue.number || 0) % FOLDER_COLORS.length];
+  const color = isLast
+    ? { bg: 'hsl(var(--cyanotype))', ink: 'hsl(var(--linen))', dark: true }
+    : FOLDER_COLORS[(issue.number || 0) % FOLDER_COLORS.length];
   const num = String(issue.number).padStart(2, '0');
   const tabRight = (issue.number || 0) % 2 === 1;
 
