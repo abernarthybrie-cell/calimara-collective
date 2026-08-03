@@ -70,7 +70,7 @@ export default function StoryDetail() {
             {/* main reading column */}
             <div ref={readingRef}>
               <p className="label-mono text-burgundy">{story.category || story.rubrica || 'UNCATALOGUED'}{story.category && story.rubrica ? ` · ${story.rubrica}` : ''} · p.{story.page_number}</p>
-              <h1 className="text-4xl md:text-6xl mt-3 leading-[1.05] font-normal [font-family:'Jennifer_Lynne',_sans-serif]">{story.title}</h1>
+              <h1 className="text-4xl md:text-6xl mt-3 leading-[1.05] font-normal [font-family:'Impact_Label_Reversed',_sans-serif]">{story.title}</h1>
               <p className={`font-heading italic text-2xl mt-2 ${story.subtitle ? 'text-ink-soft' : 'text-ink-soft/45'}`}>
                 {story.subtitle || 'subtitle awaiting catalogue'}
               </p>
