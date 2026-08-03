@@ -318,11 +318,14 @@
     border: 1px solid rgba(30,24,18,.16);
   }
   .archive-object {
+    z-index: var(--object-z, 1);
+    cursor: pointer;
     transform: rotate(var(--rot, 0deg));
-    transition: transform 260ms cubic-bezier(.2,.75,.25,1), box-shadow 260ms ease;
+    transition: transform 280ms cubic-bezier(.2,.75,.25,1), box-shadow 280ms ease;
   }
-  .group:hover .archive-object {
-    transform: rotate(var(--rot, 0deg)) translate(var(--dx, 0), var(--dy, -8px));
+  .archive-object:hover {
+    z-index: 25;
+    transform: rotate(var(--hover-rot, var(--rot, 0deg))) translate(var(--dx, 0), var(--dy, -8px)) scale(1.02);
     box-shadow: 0 18px 28px rgba(0,0,0,.3);
   }
 
@@ -332,11 +335,14 @@
     background-size: 7px 7px, 100% 9px;
   }
   .archive-object {
+    z-index: var(--object-z, 1);
+    cursor: pointer;
     transform: rotate(var(--rot, 0deg));
-    transition: transform 260ms cubic-bezier(.2,.75,.25,1), box-shadow 260ms ease;
+    transition: transform 280ms cubic-bezier(.2,.75,.25,1), box-shadow 280ms ease;
   }
-  .group:hover .archive-object {
-    transform: rotate(var(--rot, 0deg)) translate(var(--dx, 0), var(--dy, -8px));
+  .archive-object:hover {
+    z-index: 25;
+    transform: rotate(var(--hover-rot, var(--rot, 0deg))) translate(var(--dx, 0), var(--dy, -8px)) scale(1.02);
   }
   .archive-front { transition: box-shadow 260ms ease; }
   .group:hover .archive-front { box-shadow: 0 -10px 22px rgba(0,0,0,.25), 0 24px 44px rgba(0,0,0,.52); }
