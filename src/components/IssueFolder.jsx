@@ -1,52 +1,25 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import ScanImage from '@/components/ScanImage';
-import Polaroid from '@/components/Polaroid';
+import ArchiveEphemera from '@/components/ArchiveEphemera';
 
-// bright palette colors — cycled per issue
 const FOLDER_COLORS = [
-  { bg: 'hsl(var(--latte))',      ink: 'hsl(var(--cafe-noir))', dark: false },
-  { bg: 'hsl(var(--mauve))',      ink: 'hsl(var(--linen))',    dark: true },
-  { bg: 'hsl(40 62% 66%)',        ink: 'hsl(var(--cafe-noir))', dark: false },
-  { bg: 'hsl(var(--weathered))',  ink: 'hsl(var(--cafe-noir))', dark: false },
-  { bg: 'hsl(var(--clockwork))',  ink: 'hsl(var(--linen))',    dark: true },
-  { bg: 'hsl(var(--deep-olive))', ink: 'hsl(var(--linen))',    dark: true }
+  { bg: 'hsl(var(--mauve))', ink: 'hsl(var(--linen))' },
+  { bg: 'hsl(var(--dusty-yellow))', ink: 'hsl(var(--linen))' },
+  { bg: 'hsl(var(--weathered))', ink: 'hsl(var(--cafe-noir))' },
+  { bg: 'hsl(var(--cyanotype))', ink: 'hsl(var(--linen))' }
 ];
 
-// five photos per folder — two portrait up top, three landscape below, scattered with space between
-const PHOTO_SLOTS = [
-  { top: 5,  left: 2,  w: 150, rot: -3, aspect: '3/4', lift: -8 },
-  { top: 8,  left: 66, w: 130, rot: 4,  aspect: '4/6', lift: -15 },
-  { top: 28, left: 5,  w: 180, rot: -2, aspect: '4/3', lift: -10 },
-  { top: 46, left: 54, w: 170, rot: 3,  aspect: '3/2', lift: -17 },
-  { top: 64, left: 30, w: 160, rot: -3, aspect: '6/4', lift: -12 }
-];
-
-const ASPECT_CLASS = {
-  '3/4': 'aspect-[3/4]',
-  '1/1': 'aspect-square',
-  '4/5': 'aspect-[4/5]',
-  '4/6': 'aspect-[4/6]',
-  '3/6': 'aspect-[3/6]',
-  '4/3': 'aspect-[4/3]',
-  '3/2': 'aspect-[3/2]',
-  '6/4': 'aspect-[6/4]'
-};
-
-export default function IssueFolder({ issue, stories, illustrations, layout, polaroid, isLast }) {
+export default function IssueFolder({ issue, stories, illustrations, layout, isLast }) {
   const { top, left, width, height, rotate, z } = layout;
   const [hovered, setHovered] = useState(false);
-  const color = isLast
-    ? { bg: 'hsl(var(--cyanotype))', ink: 'hsl(var(--linen))', dark: true }
-    : FOLDER_COLORS[(issue.number || 0) % FOLDER_COLORS.length];
+  const color = isLast ? FOLDER_COLORS[3] : FOLDER_COLORS[(Math.max(1, issue.number || 1) - 1) % 3];
   const num = String(issue.number).padStart(2, '0');
-  const tabRight = (issue.number || 0) % 2 === 1;
-
-  // pool of real images for this issue
-  const pool = [
+  const tabRight = (issue.number || 0) % 2 === 0;
+  const images = [
     issue.cover_image,
-    ...illustrations.map((i) => i.image),
-    ...stories.map((s) => s.cover_image || s.page_scan)
+    ...(issue.page_images || []),
+    ...illustrations.map((item) => item.image),
+    ...stories.map((story) => story.cover_image || story.page_scan)
   ].filter(Boolean);
 
   return (
@@ -55,76 +28,23 @@ export default function IssueFolder({ issue, stories, illustrations, layout, pol
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       className="group block focus-ring"
-      style={{
-        position: 'absolute',
-        top,
-        left: `${left}%`,
-        width: `${width}%`,
-        height,
-        zIndex: hovered ? 60 : z,
-        transform: `rotate(${rotate}deg)`,
-        transition: 'z-index 0s'
-      }}
+      style={{ position: 'absolute', top, left: `${left}%`, width: `${width}%`, height, zIndex: hovered ? 60 : z, transform: `rotate(${rotate}deg)` }}
     >
-      <div className="h-full flex flex-col transition-transform duration-500 group-hover:-translate-y-1.5 group-hover:scale-[1.02]">
-        {/* tab — left or right depending on the issue; rounded where it meets the body */}
-        <div
-          className={`relative inline-block px-5 py-3 md:px-7 md:py-4 rounded-b-[12px] ${tabRight ? 'self-end' : 'self-start'}`}
-          style={{ background: color.bg, color: color.ink, boxShadow: 'inset 0 -3px 6px rgba(0,0,0,0.12), 0 8px 20px rgba(0,0,0,0.25)' }}
-        >
-          <div className="flex items-baseline gap-3 md:gap-5 flex-wrap">
-            <span className="label-mono opacity-70">ISSUE {num}</span>
-            <h2 className="font-heading text-xl md:text-3xl leading-tight">{issue.title}</h2>
-          </div>
-        </div>
-
-        {/* front cover — photos sit between this and the back cover */}
-        <div
-          className="relative flex-1 rounded-t-[12px] shadow-[0_14px_34px_rgba(0,0,0,0.3)]"
-          style={{ background: color.bg, color: color.ink }}
-        >
-          {PHOTO_SLOTS.map((slot, i) => (
-            <PhotoSlot
-              key={i}
-              {...slot}
-              src={pool[i] || null}
-              alt={issue.title}
-            />
-          ))}
-
-          {/* polaroid — only on the top and bottom folder */}
-          {polaroid && (
-            <div
-              className="folder-photo absolute z-20"
-              style={{ top: '68%', left: '40%', width: 112, '--rot': '-2deg', '--lift': '-14px' }}
-            >
-              <Polaroid src={pool[PHOTO_SLOTS.length] || null} alt={issue.title} caption={issue.theme} objectNumber={`ISSUE ${num}`} />
-            </div>
-          )}
-
-          {/* small theme tag + open hint */}
-          <span className="absolute bottom-2 left-3 label-mono text-[0.55rem] opacity-60 z-30">{issue.page_count} pp</span>
-          <span className="absolute bottom-2 right-3 label-mono text-[0.55rem] opacity-60 z-30">OPEN →</span>
-
-          {/* back cover — the other cover, peeks below the front cover */}
-          <div
-            className="absolute -left-2 -right-2 -bottom-2 h-3 rounded-b-[10px] z-0"
-            style={{ background: color.bg, boxShadow: '0 6px 14px rgba(0,0,0,0.22)' }}
-          />
-
+      {/* back cover and its long alternating tab */}
+      <div className="archive-paper absolute inset-x-0 top-8 bottom-3 rounded-[10px] shadow-[0_18px_38px_rgba(0,0,0,0.42)]" style={{ background: color.bg }}>
+        <div className={`absolute -top-11 h-14 min-w-[62%] max-w-[82%] px-5 md:px-7 rounded-t-[10px] flex items-center ${tabRight ? 'right-0 justify-end text-right' : 'left-0'}`} style={{ background: color.bg, color: color.ink }}>
+          <div className="flex items-baseline gap-3 min-w-0"><span className="label-mono opacity-70 shrink-0">ISSUE {num}</span><h2 className="font-heading text-base md:text-2xl leading-none whitespace-nowrap">{issue.title}</h2></div>
         </div>
       </div>
-    </Link>
-  );
-}
 
-function PhotoSlot({ top, left, w, rot, aspect, lift, src, alt }) {
-  return (
-    <div
-      className="folder-photo absolute z-20"
-      style={{ top: `${top}%`, left: `${left}%`, width: w, '--rot': `${rot}deg`, '--lift': `${lift}px` }}
-    >
-      <ScanImage src={src} alt={alt} className={`${ASPECT_CLASS[aspect] || 'aspect-[3/4]'} w-full shadow-lg`} />
-    </div>
+      {/* documents, photographs and small found objects */}
+      <ArchiveEphemera images={images} issueNumber={num} />
+
+      {/* front cover, lowered to reveal the archive between both covers */}
+      <div className="archive-paper absolute inset-x-0 top-[46%] bottom-0 z-30 rounded-[8px] shadow-[0_-9px_24px_rgba(0,0,0,0.24),0_18px_34px_rgba(0,0,0,0.42)] transition-shadow duration-300 group-hover:shadow-[0_-12px_28px_rgba(0,0,0,0.3),0_24px_44px_rgba(0,0,0,0.5)]" style={{ background: color.bg, color: color.ink }}>
+        <span className="absolute bottom-3 left-4 label-mono text-[0.55rem] opacity-65">{issue.page_count} PP · FILED</span>
+        <span className="absolute bottom-3 right-4 label-mono text-[0.55rem] opacity-65">OPEN →</span>
+      </div>
+    </Link>
   );
 }

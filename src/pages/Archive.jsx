@@ -5,13 +5,10 @@ import Stamp from '@/components/Stamp';
 
 // per-folder rhythm — height (px), overlap with the next (px), left offset (%), width (%), rotation (deg)
 const FOLDER_RHYTHM = [
-  { h: 300, ov: 120, left: -2, w: 94, rot: -1.5 },
-  { h: 330, ov: 140, left: 13, w: 80, rot: 2 },
-  { h: 290, ov: 110, left: -5, w: 96, rot: -2.5 },
-  { h: 340, ov: 130, left: 11, w: 82, rot: 1 },
-  { h: 310, ov: 125, left: -3, w: 88, rot: -1 },
-  { h: 300, ov: 115, left: 15, w: 76, rot: 2.5 },
-  { h: 320, ov: 0,   left: 1,  w: 90, rot: -1.5 }
+  { h: 350, ov: 112, left: -4, w: 92, rot: -1.2 },
+  { h: 360, ov: 118, left: 14, w: 88, rot: 1.5 },
+  { h: 345, ov: 108, left: -6, w: 91, rot: -1.8 },
+  { h: 365, ov: 0,   left: 12, w: 89, rot: 1.1 }
 ];
 
 // clutter tucked between folders — type, left (%), width (px), rotation, tuck (behind next or in front)
@@ -79,9 +76,9 @@ export default function Archive() {
           <div className="flex items-end justify-between gap-4 flex-wrap">
             <div>
               <p className="label-mono text-dusty-yellow mb-2">— A PILE OF FOLDERS —</p>
-              <h1 className="font-heading text-5xl md:text-7xl">Archive</h1>
+              <h1 className="font-heading text-5xl md:text-7xl">ARCHIVE</h1>
             </div>
-            <Stamp className="text-dusty-yellow">{issues.length} ISSUES · PILED</Stamp>
+            <Stamp className="text-dusty-yellow">{issues.length} ISSUES. FILED</Stamp>
           </div>
         </div>
       </section>
