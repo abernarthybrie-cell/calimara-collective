@@ -24,19 +24,17 @@ export default function SearchOverlay({ open, onClose }) {
     if (!query.trim()) { setResults([]); setSearched(false); return; }
     setLoading(true); setSearched(true);
     try {
-      const [issues, stories, illus, people, rubrici] = await Promise.all([
-        base44.entities.Issue.filter({ status: 'published' }, 'number', 100),
+      const [allIssues, stories] = await Promise.all([
+        base44.entities.Issue.list('number', 100),
         base44.entities.Story.list('page_number', 500),
-        base44.entities.Illustration.list('page_number', 500),
-        base44.entities.Person.list('name', 500),
-        base44.entities.Rubrica.list('order', 100),
       ]);
       if (id !== reqId.current) return;
 
+      const issues = allIssues.filter((issue) => issue.status === 'published');
       const issueBySlug = new Map(issues.map((issue) => [issue.slug, issue]));
-      const issueByNumber = new Map(issues.map((issue) => [issue.number, issue]));
-      const publishedIssueFor = (item) => issueBySlug.get(item.issue_slug) || issueByNumber.get(item.issue_number);
-      const publishedStories = stories.filter(publishedIssueFor);
+      const issueByNumber = new Map(issues.map((issue) => [Number(issue.number), issue]));
+      const publishedIssueFor = (item) => issueBySlug.get(item.issue_slug) || issueByNumber.get(Number(item.issue_number));
+      const publishedStories = stories.filter((story) => Boolean(publishedIssueFor(story)));
       const out = [];
 
       issues.forEach((issue) => {
@@ -48,19 +46,10 @@ export default function SearchOverlay({ open, onClose }) {
         const searchable = [story.title, story.subtitle, story.author_name, story.category, story.rubrica, story.excerpt, story.full_text, story.tags || [], story.mood_tags || [], story.topic_tags || [], story.form];
         if (matchesAny(searchable, query)) {
           const issue = publishedIssueFor(story);
-          out.push({ type: 'Story', label: (story.rubrica || story.category || 'STORY').toUpperCase(), title: story.title, meta: `${story.author_name || 'Author awaiting catalogue'} · Issue ${String(issue.number).padStart(2, '0')}${story.page_number ? `, p.${story.page_number}` : ''}`, to: `/archive/issue/${issue.slug}/story/${story.slug}` });
+          const authorMatch = match(story.author_name, query);
+          out.push({ type: 'Story', label: authorMatch ? 'AUTHOR' : (story.rubrica || story.category || 'STORY').toUpperCase(), title: story.title, meta: `${story.author_name || 'Author awaiting catalogue'} · Issue ${String(issue.number).padStart(2, '0')}${story.page_number ? `, p.${story.page_number}` : ''}`, to: `/archive/issue/${issue.slug}/story/${story.slug}` });
         }
       });
-      illus.filter(publishedIssueFor).forEach((item) => {
-        if (matchesAny([item.title, item.illustrator_name, item.description, item.inspiration], query)) {
-          const issue = publishedIssueFor(item);
-          out.push({ type: 'Illustration', label: 'ILLUSTRATION', title: item.title, meta: `${item.illustrator_name} · Issue ${String(issue.number).padStart(2, '0')}, p.${item.page_number}`, to: `/archive/issue/${issue.slug}` });
-        }
-      });
-      people.forEach((person) => matchesAny([person.name, person.primary_role, person.roles || [], person.interests || []], query)
-        ? out.push({ type: 'Person', label: (person.primary_role || 'CONTRIBUTOR').toUpperCase(), title: person.name, meta: person.primary_role, to: `/people/${person.id}` }) : null);
-      rubrici.forEach((rubrica) => matchesAny([rubrica.name, rubrica.description, rubrica.topics || []], query)
-        ? out.push({ type: 'Rubrică', label: 'RUBRICĂ', title: rubrica.name, meta: rubrica.description, to: '/contents' }) : null);
       setResults(out);
     } catch { setResults([]); }
     setLoading(false);
