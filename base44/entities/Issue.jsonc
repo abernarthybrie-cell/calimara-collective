@@ -27,6 +27,12 @@
         "type": "string"
       }
     },
+    "archive_images": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
     "description": {
       "type": "string"
     },

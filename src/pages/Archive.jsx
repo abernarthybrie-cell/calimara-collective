@@ -5,9 +5,9 @@ import Stamp from '@/components/Stamp';
 
 // per-folder rhythm — height (px), overlap with the next (px), left offset (%), width (%), rotation (deg)
 const FOLDER_RHYTHM = [
-  { h: 350, ov: 242, left: 2,  w: 86, rot: -0.5 },
-  { h: 350, ov: 238, left: 12, w: 88, rot: 0.45 },
-  { h: 350, ov: 240, left: -1, w: 91, rot: -0.35 },
+  { h: 350, ov: 210, left: 2,  w: 86, rot: -0.5 },
+  { h: 350, ov: 206, left: 12, w: 88, rot: 0.45 },
+  { h: 350, ov: 208, left: -1, w: 91, rot: -0.35 },
   { h: 350, ov: 0,   left: 8,  w: 90, rot: 0.3 }
 ];
 
