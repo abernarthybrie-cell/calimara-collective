@@ -32,11 +32,13 @@ export default function IssueFolder({ issue, stories, illustrations, layout, isL
         </div>
       </div>
 
-      {/* replaceable documents, photographs and paper objects */}
-      <ArchiveEphemera images={archiveImages} issueNumber={num} />
+      {/* clipped pocket: contents can rise above the opening but never show below it */}
+      <div className="absolute -left-4 -right-4 -top-3 h-[calc(47%+0.75rem)] overflow-hidden z-20">
+        <ArchiveEphemera images={archiveImages} issueNumber={num} />
+      </div>
 
-      {/* front cover, lowered to reveal the archive between both covers */}
-      <div className="archive-front folder-paper absolute inset-x-0 top-[47%] bottom-0 z-30 rounded-[8px] border-t border-ink/15 shadow-[0_-7px_18px_rgba(0,0,0,0.24),0_18px_34px_rgba(0,0,0,0.42)]" style={{ backgroundColor: color.bg, color: color.ink }}>
+      {/* opaque front cover masks every part of the contents below its top edge */}
+      <div className="archive-front folder-paper absolute inset-x-0 top-[47%] bottom-0 z-30 opacity-100 rounded-[8px] border-t border-ink/15 shadow-[0_-7px_18px_rgba(0,0,0,0.24),0_18px_34px_rgba(0,0,0,0.42)]" style={{ backgroundColor: color.bg, color: color.ink }}>
         <span className="absolute bottom-3 left-4 label-mono text-[0.55rem] opacity-65">{issue.page_count} PP · FILED</span>
         <span className="absolute bottom-3 right-4 label-mono text-[0.55rem] opacity-65">OPEN →</span>
       </div>
