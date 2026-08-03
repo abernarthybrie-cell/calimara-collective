@@ -5,7 +5,7 @@ import { hasImage } from '@/lib/calimara';
 // Spread 1 = cover alone (page 1); spreads 2+ = two-page spreads.
 const spreadForPage = (p) => (p === 1 ? 1 : Math.floor(p / 2) + 1);
 
-export default function SpreadThumbnails({ pageImages, pageCount, currentSpread, onJump }) {
+export default function SpreadThumbnails({ pageImages, pageCount, currentSpread, currentPage, singlePage, onJump }) {
   const pages = Array.from({ length: pageCount }, (_, i) => i + 1);
 
   return (
@@ -15,11 +15,11 @@ export default function SpreadThumbnails({ pageImages, pageCount, currentSpread,
         {pages.map((p) => {
           const img = pageImages[p - 1];
           const spread = spreadForPage(p);
-          const active = spread === currentSpread;
+          const active = singlePage ? p === currentPage : spread === currentSpread;
           return (
             <button
               key={p}
-              onClick={() => onJump(spread)}
+              onClick={() => onJump(singlePage ? p : spread)}
               aria-label={`Jump to page ${p}`}
               className={`relative shrink-0 w-11 sm:w-12 aspect-[210/297] border bg-archive-bg2 transition-all focus-ring ${
                 active

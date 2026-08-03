@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Download } from 'lucide-react';
-import { motion } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
 import { formatMonthYear } from '@/lib/calimara';
 import ScanImage from '@/components/ScanImage';
 import PageZoom from '@/components/PageZoom';
 import SpreadThumbnails from '@/components/SpreadThumbnails';
+import TurningPage from '@/components/flipbook/TurningPage';
 
 export default function IssueDetail() {
   const { issueSlug } = useParams();
@@ -15,16 +15,27 @@ export default function IssueDetail() {
   const [illus, setIllus] = useState([]);
   const [loading, setLoading] = useState(true);
   const [spread, setSpread] = useState(1);
+  const [mobilePage, setMobilePage] = useState(1);
+  const [singlePage, setSinglePage] = useState(false);
   const [leftMargin, setLeftMargin] = useState(null);
   const [rightMargin, setRightMargin] = useState(null);
   const [turn, setTurn] = useState(null);
   const [zoom, setZoom] = useState(null);
 
   useEffect(() => {
+    const media = window.matchMedia('(max-width: 767px)');
+    const sync = () => setSinglePage(media.matches);
+    sync();
+    media.addEventListener('change', sync);
+    return () => media.removeEventListener('change', sync);
+  }, []);
+
+  useEffect(() => {
     setLoading(true);
     setLeftMargin(null);
     setRightMargin(null);
     setSpread(1);
+    setMobilePage(1);
     setTurn(null);
     Promise.all([
       base44.entities.Issue.filter({ slug: issueSlug }, 'number', 50),
@@ -53,21 +64,32 @@ export default function IssueDetail() {
   const pageContent = (pageNo) => ({ pageNo, image: pageNo ? pageImages[pageNo - 1] : null });
 
   const goNext = () => {
-    if (spread >= spreadCount || turn) return;
+    if (turn || (singlePage ? mobilePage >= pageCount : spread >= spreadCount)) return;
+    if (singlePage) {
+      const target = mobilePage + 1;
+      setTurn({ dir: 1, target, side: 'right', front: pageContent(mobilePage), back: pageContent(target), singlePage: true });
+      return;
+    }
     const target = spread + 1;
     const cur = pagesForSpread(spread);
     const nxt = pagesForSpread(target);
     setTurn({ dir: 1, target, side: 'right', front: pageContent(cur.right), back: pageContent(nxt.left) });
   };
   const goPrev = () => {
-    if (spread <= 1 || turn) return;
+    if (turn || (singlePage ? mobilePage <= 1 : spread <= 1)) return;
+    if (singlePage) {
+      const target = mobilePage - 1;
+      setTurn({ dir: -1, target, side: 'left', front: pageContent(mobilePage), back: pageContent(target), singlePage: true });
+      return;
+    }
     const target = spread - 1;
     const cur = pagesForSpread(spread);
     const prv = pagesForSpread(target);
     setTurn({ dir: -1, target, side: 'left', front: pageContent(cur.left), back: pageContent(prv.right) });
   };
   const onTurnDone = () => {
-    setSpread(turn.target);
+    if (turn.singlePage) setMobilePage(turn.target);
+    else setSpread(turn.target);
     setLeftMargin(null);
     setRightMargin(null);
     setTurn(null);
@@ -84,13 +106,14 @@ export default function IssueDetail() {
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [spread, spreadCount, turn, zoom]);
+  }, [spread, spreadCount, mobilePage, pageCount, singlePage, turn, zoom]);
 
   const turning = !!turn;
   const curPages = pagesForSpread(spread);
   const turnPages = turning ? pagesForSpread(turn.target) : null;
   const dispLeftNo = cap(turning ? (turn.dir === 1 ? curPages.left : turnPages.left) : curPages.left);
   const dispRightNo = cap(turning ? (turn.dir === 1 ? turnPages.right : curPages.right) : curPages.right);
+  const dispMobileNo = cap(turning ? turn.target : mobilePage);
 
   if (loading) return <div className="pt-32 px-6 label-mono text-ink-soft">opening the issue…</div>;
   if (!issue) return <div className="pt-32 px-6 font-hand text-2xl">That issue isn't in the archive.</div>;
@@ -125,31 +148,31 @@ export default function IssueDetail() {
             {/* book spread */}
             <div className="relative mx-auto" style={{ perspective: 2200 }}>
               <div className="relative flex shadow-2xl" style={{ transformStyle: 'preserve-3d' }}>
-                {dispLeftNo === null ? (
-                  <div className="w-[46vw] max-w-[540px] aspect-[210/297]" aria-hidden="true" />
-                ) : (
+                {singlePage ? (
                   <Page
-                    side="left"
-                    pageNo={dispLeftNo}
-                    image={pageImages[dispLeftNo - 1]}
-                    story={stories.find((s) => s.page_number === dispLeftNo)}
-                    illus={illus.filter((i) => i.page_number === dispLeftNo)}
-                    onAnnotate={setLeftMargin}
-                    onZoom={openZoom}
+                    side="right" pageNo={dispMobileNo} image={dispMobileNo ? pageImages[dispMobileNo - 1] : null}
+                    story={stories.find((s) => s.page_number === dispMobileNo)} illus={illus.filter((i) => i.page_number === dispMobileNo)}
+                    onAnnotate={setRightMargin} onZoom={openZoom}
+                    onTurn={(e) => {
+                      const bounds = e.currentTarget.getBoundingClientRect();
+                      e.clientX - bounds.left < bounds.width * 0.35 ? goPrev() : goNext();
+                    }}
                   />
+                ) : (
+                  <>
+                    {dispLeftNo === null ? <div className="w-[46vw] max-w-[540px] aspect-[210/297]" aria-hidden="true" /> : (
+                      <Page side="left" pageNo={dispLeftNo} image={pageImages[dispLeftNo - 1]}
+                        story={stories.find((s) => s.page_number === dispLeftNo)} illus={illus.filter((i) => i.page_number === dispLeftNo)}
+                        onAnnotate={setLeftMargin} onZoom={openZoom} onTurn={goPrev} />
+                    )}
+                    <div className="w-px bg-ink/30" style={{ boxShadow: '0 0 14px rgba(0,0,0,0.35)' }} />
+                    <Page side="right" pageNo={dispRightNo} image={dispRightNo ? pageImages[dispRightNo - 1] : null}
+                      story={stories.find((s) => s.page_number === dispRightNo)} illus={illus.filter((i) => i.page_number === dispRightNo)}
+                      onAnnotate={setRightMargin} onZoom={openZoom} onTurn={goNext} />
+                  </>
                 )}
-                <div className="w-px bg-ink/30" style={{ boxShadow: '0 0 14px rgba(0,0,0,0.35)' }} />
-                <Page
-                  side="right"
-                  pageNo={dispRightNo}
-                  image={dispRightNo ? pageImages[dispRightNo - 1] : null}
-                  story={stories.find((s) => s.page_number === dispRightNo)}
-                  illus={illus.filter((i) => i.page_number === dispRightNo)}
-                  onAnnotate={setRightMargin}
-                  onZoom={openZoom}
-                />
               </div>
-              {turn && <TurningPage turn={turn} onDone={onTurnDone} />}
+              {turn && <TurningPage turn={turn} onDone={onTurnDone} singlePage={singlePage} />}
             </div>
 
             <MarginPanel side="right" annotation={rightMargin} />
@@ -159,16 +182,16 @@ export default function IssueDetail() {
           <div className="mt-10 flex items-center justify-center gap-6">
             <button
               onClick={goPrev}
-              disabled={spread <= 1 || !!turn}
+              disabled={(singlePage ? mobilePage <= 1 : spread <= 1) || !!turn}
               aria-label="Previous spread"
               className="w-11 h-11 bg-archive-bg2 border border-archive-line flex items-center justify-center hover:bg-burgundy hover:text-paper disabled:opacity-30 focus-ring"
             >
               <ChevronLeft size={20} />
             </button>
-            <p className="label-mono text-archive-muted">SPREAD {spread} / {spreadCount}</p>
+            <p className="label-mono text-archive-muted">{singlePage ? `PAGE ${mobilePage} / ${pageCount}` : `SPREAD ${spread} / ${spreadCount}`}</p>
             <button
               onClick={goNext}
-              disabled={spread >= spreadCount || !!turn}
+              disabled={(singlePage ? mobilePage >= pageCount : spread >= spreadCount) || !!turn}
               aria-label="Next spread"
               className="w-11 h-11 bg-archive-bg2 border border-archive-line flex items-center justify-center hover:bg-burgundy hover:text-paper disabled:opacity-30 focus-ring"
             >
@@ -181,7 +204,9 @@ export default function IssueDetail() {
             pageImages={pageImages}
             pageCount={pageCount}
             currentSpread={spread}
-            onJump={(s) => { setSpread(s); setLeftMargin(null); setRightMargin(null); }}
+            currentPage={mobilePage}
+            singlePage={singlePage}
+            onJump={(target) => { singlePage ? setMobilePage(target) : setSpread(target); setLeftMargin(null); setRightMargin(null); }}
           />
         </div>
       </section>
@@ -198,15 +223,16 @@ export default function IssueDetail() {
   );
 }
 
-function Page({ side, pageNo, image, story, illus, onAnnotate, onZoom }) {
+function Page({ side, pageNo, image, story, illus, onAnnotate, onZoom, onTurn }) {
   const blank = pageNo === null;
   return (
     <div
-      className={`relative w-[46vw] max-w-[540px] aspect-[210/297] ${blank ? 'bg-archive-bg2' : 'bg-white'} ${blank || !image ? '' : 'cursor-zoom-in'}`}
+      className={`relative w-[88vw] md:w-[46vw] max-w-[540px] aspect-[210/297] ${blank ? 'bg-archive-bg2' : 'bg-white'} ${blank ? '' : 'cursor-pointer'}`}
       style={{
         boxShadow: blank ? 'none' : side === 'left' ? 'inset -12px 0 22px -12px rgba(0,0,0,0.3)' : 'inset 12px 0 22px -12px rgba(0,0,0,0.3)'
       }}
-      onClick={() => !blank && image && onZoom(pageNo, image)}
+      onClick={(e) => !blank && onTurn?.(e)}
+      onDoubleClick={() => !blank && image && onZoom(pageNo, image)}
     >
       {blank ? null : image ? (
         <ScanImage src={image} alt={`page ${pageNo}`} className="w-full h-full align-top" fittingType="fill" />
@@ -236,77 +262,6 @@ function Page({ side, pageNo, image, story, illus, onAnnotate, onZoom }) {
       ))}
 
       {!blank && <span className="absolute bottom-2 right-3 label-mono text-ink-soft/40 text-[0.55rem]">p.{pageNo}</span>}
-    </div>
-  );
-}
-
-function PageFace({ pageNo, image }) {
-  return (
-    <div className="relative w-full h-full bg-white">
-      {image ? (
-        <ScanImage src={image} alt={`page ${pageNo}`} className="w-full h-full align-top" fittingType="fill" />
-      ) : (
-        <div className="w-full h-full scan-placeholder flex items-center justify-center">
-          <span className="label-mono text-ink-soft/60">PAGE {pageNo}</span>
-        </div>
-      )}
-      <span className="absolute bottom-2 right-3 label-mono text-ink-soft/40 text-[0.55rem]">p.{pageNo}</span>
-    </div>
-  );
-}
-
-function TurningPage({ turn, onDone }) {
-  const { dir, side, front, back } = turn;
-  const origin = side === 'right' ? '0% 50%' : '100% 50%';
-  const posClass = side === 'right' ? 'left-1/2' : 'left-0';
-  const spineSide = side === 'right' ? 'left' : 'right';
-  const backSpineSide = side === 'right' ? 'right' : 'left';
-  const curlEase = [0.45, 0, 0.25, 1];
-  return (
-    <div
-      className={`absolute top-0 ${posClass} w-[46vw] max-w-[540px] aspect-[210/297] z-30`}
-      style={{ transformStyle: 'preserve-3d' }}
-    >
-      <motion.div
-        className="relative w-full h-full"
-        style={{ transformStyle: 'preserve-3d', transformOrigin: origin }}
-        initial={{ rotateY: 0 }}
-        animate={{ rotateY: dir === 1 ? -180 : 180 }}
-        transition={{ duration: 0.9, ease: curlEase }}
-        onAnimationComplete={onDone}
-      >
-        {/* front face — the page being turned */}
-        <div className="absolute inset-0" style={{ backfaceVisibility: 'hidden' }}>
-          <PageFace pageNo={front.pageNo} image={front.image} />
-          {/* curl shadow — darkens toward the spine as the page lifts, peaks mid-turn */}
-          <motion.div
-            className="absolute inset-0 pointer-events-none"
-            style={{ background: `linear-gradient(to ${spineSide}, rgba(0,0,0,0) 28%, rgba(0,0,0,0.6) 100%)` }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: [0, 0.9, 0] }}
-            transition={{ duration: 0.9, ease: curlEase }}
-          />
-          {/* specular sheen along the curl ridge */}
-          <motion.div
-            className="absolute inset-0 pointer-events-none"
-            style={{ background: `linear-gradient(to ${spineSide}, rgba(255,250,238,0.55) 0%, transparent 16%)` }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: [0, 0.75, 0] }}
-            transition={{ duration: 0.9, ease: curlEase }}
-          />
-        </div>
-        {/* back face — revealed as the page curls over */}
-        <div className="absolute inset-0" style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}>
-          <PageFace pageNo={back.pageNo} image={back.image} />
-          <motion.div
-            className="absolute inset-0 pointer-events-none"
-            style={{ background: `linear-gradient(to ${backSpineSide}, rgba(0,0,0,0) 40%, rgba(0,0,0,0.42) 100%)` }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: [0, 0, 0.65] }}
-            transition={{ duration: 0.9, ease: curlEase }}
-          />
-        </div>
-      </motion.div>
     </div>
   );
 }
