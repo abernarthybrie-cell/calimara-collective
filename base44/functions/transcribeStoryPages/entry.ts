@@ -9,7 +9,7 @@ export default async function(req) {
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
     if (user.role !== 'admin') return Response.json({ error: 'Forbidden' }, { status: 403 });
 
-    const { storyId } = await req.json();
+    const { storyId, startPageOverride, endPageOverride } = await req.json();
     if (typeof storyId !== 'string' || !storyId) {
       return Response.json({ error: 'storyId is required' }, { status: 400 });
     }
@@ -23,8 +23,13 @@ export default async function(req) {
 
     const issueStories = await base44.asServiceRole.entities.Story.filter({ issue_number: story.issue_number }, 'page_number', 500);
     const nextStory = issueStories.find((item) => Number(item.page_number) > Number(story.page_number));
-    const startPage = Number(story.page_number);
-    const endPage = Math.min(nextStory ? Number(nextStory.page_number) - 1 : issue.page_images.length, startPage + 5);
+    const catalogueStart = Number(story.page_number);
+    const startPage = Number.isInteger(startPageOverride) ? startPageOverride : catalogueStart;
+    const catalogueEnd = nextStory ? Number(nextStory.page_number) - 1 : issue.page_images.length;
+    const endPage = Number.isInteger(endPageOverride) ? endPageOverride : Math.min(catalogueEnd, startPage + 5);
+    if (startPage < 1 || endPage < startPage || endPage - startPage > 5) {
+      return Response.json({ error: 'Page range must contain 1 to 6 pages' }, { status: 400 });
+    }
     const pageImages = (issue.page_images || []).slice(startPage - 1, endPage).filter(Boolean);
 
     if (!pageImages.length) return Response.json({ error: 'No page scans available', startPage, endPage }, { status: 400 });
@@ -34,13 +39,14 @@ export default async function(req) {
     const content = [
       {
         type: 'text',
-        text: `Transcribe the complete text of the following consecutive magazine pages for the story titled "${story.title}". Preserve the printed wording exactly, including original spelling, capitalization, punctuation, diacritics, paragraph breaks, headings, bylines, captions, and language. Do not translate, summarize, correct, explain, or add markdown. Omit only repeated running page numbers and purely decorative marks. Return only the transcription, in page order.`
+        text: `Extract only the body text of the magazine work titled "${story.title}" from these pages. The extracted body must clearly match the title's subject; never substitute a neighboring article. The exact catalogue title may be absent, but the body itself must concern the same subject. If no matching body is visible, return exactly NO_MATCH. Exclude the title itself, author/byline, page numbers, headers, captions, pull quotes, advertisements, credits, labels, and unrelated text. Preserve the body wording exactly, including original spelling, capitalization, punctuation, diacritics, and language. Do not translate, summarize, correct, explain, or add markdown. For prose, return unformatted plain text only. If the work is a poem, preserve its original line breaks and stanza breaks. Return only the matching body text, in reading order.`
       },
       ...pageImages.map((image) => ({ type: 'image', image }))
     ];
     const { text } = await generateText({ model: models('automatic'), messages: [{ role: 'user', content }] });
     const transcription = text.trim();
-    if (!transcription) return Response.json({ error: 'No text was extracted' }, { status: 422 });
+    const refusal = /(?:^NO_MATCH$|requested (?:work|text) (?:was not found|does not appear)|i am sorry)/i.test(transcription);
+    if (!transcription || refusal) return Response.json({ error: 'No matching body text was extracted' }, { status: 422 });
 
     await base44.asServiceRole.entities.Story.update(story.id, { full_text: transcription });
     return Response.json({ storyId: story.id, title: story.title, startPage, endPage, pageCount: pageImages.length, characterCount: transcription.length });
