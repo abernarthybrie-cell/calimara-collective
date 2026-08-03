@@ -29,6 +29,15 @@
     "page_number": {
       "type": "number"
     },
+    "artifact_start_page": {
+      "type": "number"
+    },
+    "artifact_pages": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
     "full_text": {
       "type": "string"
     },

@@ -54,10 +54,12 @@ export default function StoryDetail() {
   const issuePages = issue && issue.page_images || [];
   const nextStory = issueStories.find((item) => Number(item.page_number) > Number(story.page_number));
   const storyEndPage = nextStory ? Number(nextStory.page_number) - 1 : issuePages.length;
-  const originalPages = story.page_number ?
+  const derivedPages = story.page_number ?
   issuePages.slice(Number(story.page_number) - 1, storyEndPage).filter(Boolean) :
   [];
+  const originalPages = story.artifact_pages?.length ? [...story.artifact_pages] : derivedPages;
   if (!originalPages.length && story.page_scan) originalPages.push(story.page_scan);
+  const artifactStartPage = Number(story.artifact_start_page || story.page_number);
   const originalPage = originalPages[artifactPage];
 
   return (
@@ -133,7 +135,7 @@ export default function StoryDetail() {
                   index={artifactPage}
                   onChange={setArtifactPage}
                   onZoom={() => setPageZoom(true)}
-                  startPage={Number(story.page_number)} /> :
+                  startPage={artifactStartPage} /> :
 
 
                 <ScanImage src="" alt="Original page scan awaiting upload" objectNumber={`p.${story.page_number}`} className="aspect-[210/297] w-full shadow-xl border-4 border-ink/60" fittingType="fit" />
@@ -175,7 +177,7 @@ export default function StoryDetail() {
       </article>
       <ReadingProgress targetRef={readingRef} />
       {pageZoom && originalPage &&
-      <PageZoom pageNo={Number(story.page_number) + artifactPage} image={originalPage} title={story.title} onClose={() => setPageZoom(false)} />
+      <PageZoom pageNo={artifactStartPage + artifactPage} image={originalPage} title={story.title} onClose={() => setPageZoom(false)} />
       }
     </div>);
 
