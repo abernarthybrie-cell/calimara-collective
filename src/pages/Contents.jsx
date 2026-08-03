@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import Stamp from '@/components/Stamp';
+import ContentsFilters from '@/components/ContentsFilters';
 
 const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI'];
 
@@ -9,6 +10,8 @@ export default function Contents() {
   const [stories, setStories] = useState([]);
   const [rubrici, setRubrici] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [authorFilter, setAuthorFilter] = useState('');
+  const [issueFilter, setIssueFilter] = useState('');
 
   useEffect(() => {
     Promise.all([
@@ -21,6 +24,15 @@ export default function Contents() {
     }).catch(() => setLoading(false));
   }, []);
 
+  const authorOptions = useMemo(() => [...new Set(stories.flatMap((story) =>
+    (story.author_name || '').split('&').map((name) => name.trim()).filter(Boolean)
+  ))].sort(), [stories]);
+  const issueOptions = useMemo(() => [...new Set(stories.map((story) => story.issue_number).filter(Boolean))].sort((a, b) => a - b), [stories]);
+  const filteredStories = useMemo(() => stories.filter((story) => {
+    const authors = (story.author_name || '').split('&').map((name) => name.trim());
+    return (!authorFilter || authors.includes(authorFilter)) && (!issueFilter || String(story.issue_number) === issueFilter);
+  }), [stories, authorFilter, issueFilter]);
+
   // Group stories by rubrica. Known rubrici come first (in their defined order),
   // then any rubrica names that appear on stories but aren't in the entity,
   // then a final bucket for stories with no rubrica at all.
@@ -29,7 +41,7 @@ export default function Contents() {
     const knownNames = new Set(known.map((r) => r.name));
     const byRubrica = {};
     const noRubrica = [];
-    stories.forEach((s) => {
+    filteredStories.forEach((s) => {
       if (!s.rubrica) {noRubrica.push(s);return;}
       (byRubrica[s.rubrica] = byRubrica[s.rubrica] || []).push(s);
     });
@@ -43,11 +55,13 @@ export default function Contents() {
       (a, b) => (a.issue_number || 0) - (b.issue_number || 0) || (a.page_number || 0) - (b.page_number || 0)
     ));
     return ordered;
-  }, [stories, rubrici]);
+  }, [filteredStories, rubrici]);
 
   const authorCount = useMemo(() => new Set(
     stories.flatMap((story) => (story.author_name || '').split('&').map((name) => name.trim()).filter(Boolean))
   ).size, [stories]);
+  const filtersActive = Boolean(authorFilter || issueFilter);
+  const displaySections = filtersActive ? sections.filter((section) => section.stories.length > 0) : sections;
 
   if (loading) return <div className="pt-32 px-6 label-mono text-ink-soft">opening the contents…</div>;
 
@@ -67,6 +81,14 @@ export default function Contents() {
               <Stamp className="text-burgundy">{stories.length} PIECES</Stamp>
               <Stamp className="text-cyanotype">{authorCount} AUTHORS</Stamp>
               <Stamp className="text-cyanotype">{sections.length} RUBRICS</Stamp>
+              <ContentsFilters
+                authors={authorOptions}
+                issues={issueOptions}
+                author={authorFilter}
+                issue={issueFilter}
+                onAuthor={setAuthorFilter}
+                onIssue={setIssueFilter}
+              />
             </div>
           </div>
         </div>
@@ -75,11 +97,11 @@ export default function Contents() {
       {/* the contents itself */}
       <section className="pb-20">
         <div className="mx-auto max-w-[900px] px-6 lg:px-10">
-          {sections.length === 0 ?
-          <p className="font-hand text-2xl text-ink-soft text-center py-16">The contents are still being catalogued — check back soon.</p> :
+          {displaySections.length === 0 ?
+          <p className="font-hand text-2xl text-ink-soft text-center py-16">{filtersActive ? 'No pieces match these filters.' : 'The contents are still being catalogued — check back soon.'}</p> :
 
           <div className="space-y-12">
-              {sections.map((sec, i) =>
+              {displaySections.map((sec, i) =>
             <div key={sec.name} className="relative">
                   <div className="mb-4 pb-2 border-b-2 border-ink/20">
                     <div className="flex items-baseline gap-3">
