@@ -7,20 +7,24 @@ import ScanImage from '@/components/ScanImage';
 import Stamp from '@/components/Stamp';
 import ReadingProgress from '@/components/ReadingProgress';
 import PageZoom from '@/components/PageZoom';
+import StoryPageStack from '@/components/StoryPageStack';
 
 export default function StoryDetail() {
   const { issueSlug, slug } = useParams();
   const [story, setStory] = useState(null);
   const [issue, setIssue] = useState(null);
   const [related, setRelated] = useState([]);
+  const [issueStories, setIssueStories] = useState([]);
   const [illus, setIllus] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showText, setShowText] = useState(false);
   const [pageZoom, setPageZoom] = useState(false);
+  const [artifactPage, setArtifactPage] = useState(0);
   const readingRef = useRef(null);
 
   useEffect(() => {
     setLoading(true);
+    setArtifactPage(0);
     Promise.all([
       base44.entities.Story.filter({ slug }, 'page_number', 50),
       base44.entities.Issue.filter({ slug: issueSlug }, 'number', 50),
@@ -34,6 +38,7 @@ export default function StoryDetail() {
           base44.entities.Story.filter({ issue_slug: `issue-${num}` }, 'page_number', 200),
           base44.entities.Illustration.filter({ related_story_slug: slug }, 'page_number', 50),
         ]);
+        setIssueStories(allStories);
         setRelated(allStories.filter((x) => x.slug !== slug).slice(0, 4));
         setIllus(allIllus);
       }
@@ -45,9 +50,15 @@ export default function StoryDetail() {
   if (!story) return <div className="pt-32 px-6 font-hand text-2xl">That story isn't in the archive.</div>;
 
   const num = String(story.issue_number).padStart(2,'0');
-  // the original printed page, pulled straight from the issue's uploaded scans
+  // Consecutive printed pages assigned to this story, ending before the next story begins.
   const issuePages = (issue && issue.page_images) || [];
-  const originalPage = (story.page_number && issuePages[story.page_number - 1]) || story.page_scan;
+  const nextStory = issueStories.find((item) => Number(item.page_number) > Number(story.page_number));
+  const storyEndPage = nextStory ? Number(nextStory.page_number) - 1 : issuePages.length;
+  const originalPages = story.page_number
+    ? issuePages.slice(Number(story.page_number) - 1, storyEndPage).filter(Boolean)
+    : [];
+  if (!originalPages.length && story.page_scan) originalPages.push(story.page_scan);
+  const originalPage = originalPages[artifactPage];
 
   return (
     <div className="pt-14 sm:pt-16">
@@ -116,16 +127,18 @@ export default function StoryDetail() {
             <aside className="space-y-8">
               <div>
                 <p className="label-mono text-ink-soft/60 mb-2">ORIGINAL PAGE · ARTIFACT</p>
-                <button
-                  type="button"
-                  onClick={() => originalPage && setPageZoom(true)}
-                  disabled={!originalPage}
-                  aria-label={originalPage ? `Enlarge original page ${story.page_number}` : 'Original page scan awaiting upload'}
-                  className={`block w-full focus-ring ${originalPage ? 'cursor-zoom-in' : 'cursor-default'}`}
-                >
-                  <ScanImage src={originalPage} alt="Original printed page" objectNumber={`p.${story.page_number}`} className="aspect-[210/297] w-full shadow-xl border border-ink/15" fittingType="fit" />
-                </button>
-                <p className="font-hand text-sm text-ink-soft mt-1">as it appears in the printed issue</p>
+                {originalPages.length > 0 ? (
+                  <StoryPageStack
+                    pages={originalPages}
+                    index={artifactPage}
+                    onChange={setArtifactPage}
+                    onZoom={() => setPageZoom(true)}
+                    startPage={Number(story.page_number)}
+                  />
+                ) : (
+                  <ScanImage src="" alt="Original page scan awaiting upload" objectNumber={`p.${story.page_number}`} className="aspect-[210/297] w-full shadow-xl border border-ink/15" fittingType="fit" />
+                )}
+                <p className="font-hand text-sm text-ink-soft mt-2">as it appears in the printed issue</p>
               </div>
 
               <Marginalia title="BEHIND THE PAGE" body={story.behind_the_scenes || 'Production notes awaiting the editorial archive.'} placeholder={!story.behind_the_scenes} />
@@ -162,7 +175,7 @@ export default function StoryDetail() {
       </article>
       <ReadingProgress targetRef={readingRef} />
       {pageZoom && originalPage && (
-        <PageZoom pageNo={story.page_number} image={originalPage} title={story.title} onClose={() => setPageZoom(false)} />
+        <PageZoom pageNo={Number(story.page_number) + artifactPage} image={originalPage} title={story.title} onClose={() => setPageZoom(false)} />
       )}
     </div>
   );
