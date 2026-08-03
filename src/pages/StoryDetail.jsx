@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { formatDate } from '@/lib/calimara';
 import ScanImage from '@/components/ScanImage';
 import Stamp from '@/components/Stamp';
+import ReadingProgress from '@/components/ReadingProgress';
 
 export default function StoryDetail() {
   const { issueSlug, slug } = useParams();
@@ -14,6 +15,7 @@ export default function StoryDetail() {
   const [illus, setIllus] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showText, setShowText] = useState(false);
+  const readingRef = useRef(null);
 
   useEffect(() => {
     setLoading(true);
@@ -53,7 +55,7 @@ export default function StoryDetail() {
 
           <div className="mt-8 grid md:grid-cols-[1fr_20rem] gap-12">
             {/* main reading column */}
-            <div>
+            <div ref={readingRef}>
               <p className="label-mono text-burgundy">{story.category}{story.rubrica ? ` · ${story.rubrica}` : ''} · p.{story.page_number}</p>
               <h1 className="font-heading text-4xl md:text-6xl mt-3 leading-[1.05]">{story.title}</h1>
               {story.subtitle && <p className="font-heading italic text-2xl text-ink-soft mt-2">{story.subtitle}</p>}
@@ -152,6 +154,7 @@ export default function StoryDetail() {
           )}
         </div>
       </article>
+      <ReadingProgress targetRef={readingRef} />
     </div>
   );
 }
