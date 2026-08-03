@@ -17,7 +17,7 @@ export default function StoryPageStack({ pages, index, onChange, onZoom, startPa
           aria-label={`Enlarge original page ${pageNumber}`}
           className="relative block w-full cursor-zoom-in bg-paper focus-ring"
         >
-          <ScanImage src={pages[index]} alt={`Original printed page ${pageNumber}`} objectNumber={`p.${pageNumber}`} className="aspect-[210/297] w-full shadow-xl border border-ink/15" fittingType="fit" />
+          <ScanImage src={pages[index]} alt={`Original printed page ${pageNumber}`} objectNumber={`p.${pageNumber}`} className="aspect-[210/297] w-full shadow-xl border-4 border-ink/60" fittingType="fit" />
         </button>
       </div>
       {hasMany && (

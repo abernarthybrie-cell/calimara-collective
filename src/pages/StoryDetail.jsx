@@ -136,7 +136,7 @@ export default function StoryDetail() {
                     startPage={Number(story.page_number)}
                   />
                 ) : (
-                  <ScanImage src="" alt="Original page scan awaiting upload" objectNumber={`p.${story.page_number}`} className="aspect-[210/297] w-full shadow-xl border border-ink/15" fittingType="fit" />
+                  <ScanImage src="" alt="Original page scan awaiting upload" objectNumber={`p.${story.page_number}`} className="aspect-[210/297] w-full shadow-xl border-4 border-ink/60" fittingType="fit" />
                 )}
                 <p className="font-hand text-sm text-ink-soft mt-2">as it appears in the printed issue</p>
               </div>
