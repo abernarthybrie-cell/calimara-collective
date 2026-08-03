@@ -5,10 +5,10 @@ import Stamp from '@/components/Stamp';
 
 // per-folder rhythm — height (px), overlap with the next (px), left offset (%), width (%), rotation (deg)
 const FOLDER_RHYTHM = [
-  { h: 350, ov: 112, left: -4, w: 92, rot: -1.2 },
-  { h: 360, ov: 118, left: 14, w: 88, rot: 1.5 },
-  { h: 345, ov: 108, left: -6, w: 91, rot: -1.8 },
-  { h: 365, ov: 0,   left: 12, w: 89, rot: 1.1 }
+  { h: 350, ov: 242, left: 2,  w: 86, rot: -0.5 },
+  { h: 350, ov: 238, left: 12, w: 88, rot: 0.45 },
+  { h: 350, ov: 240, left: -1, w: 91, rot: -0.35 },
+  { h: 350, ov: 0,   left: 8,  w: 90, rot: 0.3 }
 ];
 
 // clutter tucked between folders — type, left (%), width (px), rotation, tuck (behind next or in front)
@@ -78,7 +78,7 @@ export default function Archive() {
               <p className="label-mono text-dusty-yellow mb-2">— A PILE OF FOLDERS —</p>
               <h1 className="font-heading text-5xl md:text-7xl">ARCHIVE</h1>
             </div>
-            <Stamp className="text-dusty-yellow">{issues.length} ISSUES. FILED</Stamp>
+            <Stamp className="text-dusty-yellow">{issues.length} ISSUES · FILED</Stamp>
           </div>
         </div>
       </section>
@@ -93,12 +93,7 @@ export default function Archive() {
 
           {!loading && issues.length > 0 && (
             <div className="relative" style={{ height: totalHeight }}>
-              {/* clutter fragments tucked between folders */}
-              {clutter.map((c, i) => (
-                <ClutterFragment key={`c-${i}`} {...c} />
-              ))}
-
-              {/* the folders */}
+              {/* the folders — each contains its own layered physical ephemera */}
               {issues.map((it, i) => (
                 <IssueFolder
                   key={it.id}

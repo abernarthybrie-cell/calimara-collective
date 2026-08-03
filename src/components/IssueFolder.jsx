@@ -31,9 +31,9 @@ export default function IssueFolder({ issue, stories, illustrations, layout, isL
       style={{ position: 'absolute', top, left: `${left}%`, width: `${width}%`, height, zIndex: hovered ? 60 : z, transform: `rotate(${rotate}deg)` }}
     >
       {/* back cover and its long alternating tab */}
-      <div className="archive-paper absolute inset-x-0 top-8 bottom-3 rounded-[10px] shadow-[0_18px_38px_rgba(0,0,0,0.42)]" style={{ background: color.bg }}>
-        <div className={`absolute -top-11 h-14 min-w-[62%] max-w-[82%] px-5 md:px-7 rounded-t-[10px] flex items-center ${tabRight ? 'right-0 justify-end text-right' : 'left-0'}`} style={{ background: color.bg, color: color.ink }}>
-          <div className="flex items-baseline gap-3 min-w-0"><span className="label-mono opacity-70 shrink-0">ISSUE {num}</span><h2 className="font-heading text-base md:text-2xl leading-none whitespace-nowrap">{issue.title}</h2></div>
+      <div className="folder-paper absolute inset-x-0 top-8 bottom-3 rounded-[10px] shadow-[0_18px_38px_rgba(0,0,0,0.42)]" style={{ background: color.bg }}>
+        <div className={`folder-paper absolute -top-11 h-14 w-[78%] px-5 md:px-7 rounded-t-[10px] flex items-center ${tabRight ? 'right-0 justify-end text-right' : 'left-0 justify-start text-left'}`} style={{ backgroundColor: color.bg, color: color.ink }}>
+          <div className="flex items-baseline gap-3 min-w-0"><span className="label-mono opacity-70 shrink-0">ISSUE {num}</span><h2 className="font-mono text-[0.62rem] sm:text-xs md:text-sm leading-none whitespace-nowrap">{issue.title}</h2></div>
         </div>
       </div>
 
@@ -41,7 +41,7 @@ export default function IssueFolder({ issue, stories, illustrations, layout, isL
       <ArchiveEphemera images={images} issueNumber={num} />
 
       {/* front cover, lowered to reveal the archive between both covers */}
-      <div className="archive-paper absolute inset-x-0 top-[46%] bottom-0 z-30 rounded-[8px] shadow-[0_-9px_24px_rgba(0,0,0,0.24),0_18px_34px_rgba(0,0,0,0.42)] transition-shadow duration-300 group-hover:shadow-[0_-12px_28px_rgba(0,0,0,0.3),0_24px_44px_rgba(0,0,0,0.5)]" style={{ background: color.bg, color: color.ink }}>
+      <div className="archive-front folder-paper absolute inset-x-0 top-[47%] bottom-0 z-30 rounded-[8px] border-t border-ink/15 shadow-[0_-7px_18px_rgba(0,0,0,0.24),0_18px_34px_rgba(0,0,0,0.42)]" style={{ backgroundColor: color.bg, color: color.ink }}>
         <span className="absolute bottom-3 left-4 label-mono text-[0.55rem] opacity-65">{issue.page_count} PP · FILED</span>
         <span className="absolute bottom-3 right-4 label-mono text-[0.55rem] opacity-65">OPEN →</span>
       </div>
