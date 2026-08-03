@@ -56,49 +56,51 @@ export default function StoryDetail() {
           <div className="mt-8 grid md:grid-cols-[1fr_20rem] gap-12">
             {/* main reading column */}
             <div ref={readingRef}>
-              <p className="label-mono text-burgundy">{story.category}{story.rubrica ? ` · ${story.rubrica}` : ''} · p.{story.page_number}</p>
+              <p className="label-mono text-burgundy">{story.category || story.rubrica || 'UNCATALOGUED'}{story.category && story.rubrica ? ` · ${story.rubrica}` : ''} · p.{story.page_number}</p>
               <h1 className="font-heading text-4xl md:text-6xl mt-3 leading-[1.05]">{story.title}</h1>
-              {story.subtitle && <p className="font-heading italic text-2xl text-ink-soft mt-2">{story.subtitle}</p>}
-              <div className="mt-5 flex items-center gap-3">
+              <p className={`font-heading italic text-2xl mt-2 ${story.subtitle ? 'text-ink-soft' : 'text-ink-soft/45'}`}>
+                {story.subtitle || 'subtitle awaiting catalogue'}
+              </p>
+              <div className="mt-5 flex items-center gap-3 flex-wrap">
                 <Link to={`/people/${encodeURIComponent(story.author_name)}`} className="font-body text-lg text-burgundy hover:ink-underline focus-ring">by {story.author_name}</Link>
-                <span className="label-mono text-ink-soft/60">· {formatDate(story.publication_date)}</span>
+                <span className="label-mono text-ink-soft/60">· {story.publication_date ? formatDate(story.publication_date) : 'DATE AWAITING CATALOGUE'}</span>
               </div>
 
               {/* description — written by the author or the editor */}
-              {story.excerpt && (
-                <p className="mt-6 font-body text-lg italic text-ink-soft leading-relaxed max-w-prose border-l-2 border-burgundy/40 pl-4">
-                  {story.excerpt}
-                </p>
-              )}
+              <p className={`mt-6 font-body text-lg italic leading-relaxed max-w-prose border-l-2 pl-4 ${story.excerpt ? 'text-ink-soft border-burgundy/40' : 'text-ink-soft/45 border-ink/20'}`}>
+                {story.excerpt || 'Excerpt awaiting transcription from the printed issue.'}
+              </p>
 
               {/* read the plain text */}
-              {story.full_text && (
-                <div className="mt-8">
-                  <button
-                    onClick={() => setShowText((v) => !v)}
-                    className="label-mono border border-ink/30 px-4 py-2 hover:bg-paper-deep focus-ring inline-flex items-center gap-2"
-                  >
-                    {showText ? 'HIDE THE PLAIN TEXT' : 'READ THE PLAIN TEXT'}
-                  </button>
-                  {showText && (
-                    <div className="mt-6 font-body text-xl leading-[1.75] text-ink whitespace-pre-line max-w-prose animate-fade-in">
-                      {story.full_text}
-                    </div>
-                  )}
-                </div>
-              )}
+              <div className="mt-8">
+                <button
+                  onClick={() => story.full_text && setShowText((v) => !v)}
+                  disabled={!story.full_text}
+                  className="label-mono border border-ink/30 px-4 py-2 hover:bg-paper-deep focus-ring inline-flex items-center gap-2 disabled:cursor-not-allowed disabled:text-ink-soft/45 disabled:border-ink/15"
+                >
+                  {story.full_text ? (showText ? 'HIDE THE PLAIN TEXT' : 'READ THE PLAIN TEXT') : 'PLAIN TEXT AWAITING TRANSCRIPTION'}
+                </button>
+                {showText && story.full_text && (
+                  <div className="mt-6 font-body text-xl leading-[1.75] text-ink whitespace-pre-line max-w-prose animate-fade-in">
+                    {story.full_text}
+                  </div>
+                )}
+              </div>
 
               {/* illustrations within */}
-              {illus.length > 0 && (
-                <div className="mt-10 grid grid-cols-2 gap-4">
-                  {illus.map((il) => (
-                    <figure key={il.id}>
-                      <ScanImage src={il.image} alt={il.title} objectNumber={`p.${il.page_number}`} className="aspect-[4/3] w-full border border-ink/15" />
-                      <figcaption className="font-hand text-base mt-1">{il.title} — {il.illustrator_name}</figcaption>
-                    </figure>
-                  ))}
-                </div>
-              )}
+              <div className="mt-10 grid sm:grid-cols-2 gap-4">
+                {illus.length > 0 ? illus.map((il) => (
+                  <figure key={il.id}>
+                    <ScanImage src={il.image} alt={il.title} objectNumber={`p.${il.page_number}`} className="aspect-[4/3] w-full border border-ink/15" />
+                    <figcaption className="font-hand text-base mt-1">{il.title} — {il.illustrator_name}</figcaption>
+                  </figure>
+                )) : (
+                  <figure>
+                    <ScanImage src="" alt="Illustration awaiting scan" objectNumber={`p.${story.page_number}`} className="aspect-[4/3] w-full border border-ink/15" />
+                    <figcaption className="font-hand text-base text-ink-soft/50 mt-1">illustration and credit awaiting catalogue</figcaption>
+                  </figure>
+                )}
+              </div>
 
               {/* supporting photos */}
               {(story.images||[]).length > 0 && (
@@ -116,24 +118,18 @@ export default function StoryDetail() {
                 <p className="font-hand text-sm text-ink-soft mt-1">as it appears in the printed issue</p>
               </div>
 
-              {story.behind_the_scenes && (
-                <Marginalia title="BEHIND THE PAGE" body={story.behind_the_scenes} />
-              )}
-              {story.inspiration && (
-                <Marginalia title="INSPIRED BY" body={story.inspiration} />
-              )}
-              {story.editorial_note && (
-                <Marginalia title="EDITORIAL NOTE" body={story.editorial_note} hand />
-              )}
+              <Marginalia title="BEHIND THE PAGE" body={story.behind_the_scenes || 'Production notes awaiting the editorial archive.'} placeholder={!story.behind_the_scenes} />
+              <Marginalia title="INSPIRED BY" body={story.inspiration || 'The contributor’s note of inspiration is awaiting catalogue.'} placeholder={!story.inspiration} />
+              <Marginalia title="EDITORIAL NOTE" body={story.editorial_note || 'Editorial note awaiting transcription.'} hand placeholder={!story.editorial_note} />
 
-              {(story.tags||[]).length > 0 && (
-                <div>
-                  <p className="label-mono text-ink-soft/60 mb-2">TAGS</p>
-                  <div className="flex flex-wrap gap-2">
-                    {story.tags.map((t) => <span key={t} className="stamp text-cyanotype">{t}</span>)}
-                  </div>
+              <div>
+                <p className="label-mono text-ink-soft/60 mb-2">TAGS</p>
+                <div className="flex flex-wrap gap-2">
+                  {(story.tags || []).length > 0
+                    ? story.tags.map((t) => <span key={t} className="stamp text-cyanotype">{t}</span>)
+                    : <span className="stamp text-ink-soft/45">AWAITING TAGS</span>}
                 </div>
-              )}
+              </div>
             </aside>
           </div>
 
@@ -159,11 +155,11 @@ export default function StoryDetail() {
   );
 }
 
-function Marginalia({ title, body, hand }) {
+function Marginalia({ title, body, hand, placeholder }) {
   return (
-    <div className="bg-paper-deep border-l-2 border-burgundy pl-4 py-2">
-      <p className="label-mono text-burgundy">{title}</p>
-      <p className={`${hand ? 'font-hand text-xl' : 'font-body text-base'} text-ink mt-1 leading-snug`}>{body}</p>
+    <div className={`bg-paper-deep border-l-2 pl-4 py-2 ${placeholder ? 'border-ink/20' : 'border-burgundy'}`}>
+      <p className={`label-mono ${placeholder ? 'text-ink-soft/55' : 'text-burgundy'}`}>{title}</p>
+      <p className={`${hand ? 'font-hand text-xl' : 'font-body text-base'} ${placeholder ? 'text-ink-soft/50 italic' : 'text-ink'} mt-1 leading-snug`}>{body}</p>
     </div>
   );
 }
