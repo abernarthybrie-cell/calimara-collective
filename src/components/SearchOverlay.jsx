@@ -3,10 +3,13 @@ import { Link } from 'react-router-dom';
 import { X, Search as SearchIcon } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
-const match = (val, q) => {
-  if (!val) return false;
-  return String(val).toLowerCase().includes(q.toLowerCase());
-};
+const normalize = (value) => String(value || '')
+  .normalize('NFD')
+  .replace(/[\u0300-\u036f]/g, '')
+  .toLowerCase();
+
+const match = (val, q) => normalize(val).includes(normalize(q));
+const matchesAny = (values, q) => values.flat().some((value) => match(value, q));
 
 export default function SearchOverlay({ open, onClose }) {
   const [q, setQ] = useState('');
@@ -22,19 +25,42 @@ export default function SearchOverlay({ open, onClose }) {
     setLoading(true); setSearched(true);
     try {
       const [issues, stories, illus, people, rubrici] = await Promise.all([
-        base44.entities.Issue.list(),
-        base44.entities.Story.list(),
-        base44.entities.Illustration.list(),
-        base44.entities.Person.list(),
-        base44.entities.Rubrica.list(),
+        base44.entities.Issue.filter({ status: 'published' }, 'number', 100),
+        base44.entities.Story.list('page_number', 500),
+        base44.entities.Illustration.list('page_number', 500),
+        base44.entities.Person.list('name', 500),
+        base44.entities.Rubrica.list('order', 100),
       ]);
       if (id !== reqId.current) return;
+
+      const issueBySlug = new Map(issues.map((issue) => [issue.slug, issue]));
+      const issueByNumber = new Map(issues.map((issue) => [issue.number, issue]));
+      const publishedIssueFor = (item) => issueBySlug.get(item.issue_slug) || issueByNumber.get(item.issue_number);
+      const publishedStories = stories.filter(publishedIssueFor);
       const out = [];
-      issues.forEach((r) => match(r.title, query) || match(r.theme, query) ? out.push({ type: 'Issue', label: `ISSUE ${String(r.number).padStart(2,'0')}`, title: r.title, meta: r.theme, to: `/archive/issue-${String(r.number).padStart(2,'0')}` }) : null);
-      stories.forEach((r) => match(r.title, query) || match(r.author_name, query) || (r.tags||[]).some(t=>match(t,query)) ? out.push({ type: 'Story', label: r.category?.toUpperCase() || 'STORY', title: r.title, meta: `${r.author_name} · Issue ${String(r.issue_number).padStart(2,'0')}, p.${r.page_number}`, to: `/archive/issue-${String(r.issue_number).padStart(2,'0')}/story/${r.slug}` }) : null);
-      illus.forEach((r) => match(r.title, query) || match(r.illustrator_name, query) ? out.push({ type: 'Illustration', label: 'ILLUSTRATION', title: r.title, meta: `${r.illustrator_name} · Issue ${String(r.issue_number).padStart(2,'0')}, p.${r.page_number}`, to: `/archive/issue-${String(r.issue_number).padStart(2,'0')}` }) : null);
-      people.forEach((r) => match(r.name, query) || match(r.primary_role, query) ? out.push({ type: 'Person', label: (r.primary_role||'CONTRIBUTOR').toUpperCase(), title: r.name, meta: r.primary_role, to: `/people/${encodeURIComponent(r.name)}` }) : null);
-      rubrici.forEach((r) => match(r.name, query) ? out.push({ type: 'Rubrică', label: 'RUBRICĂ', title: r.name, meta: r.content_type, to: `/join#rubrica-${r.slug}` }) : null);
+
+      issues.forEach((issue) => {
+        if (matchesAny([issue.title, issue.theme, issue.description, issue.contributor_names || []], query)) {
+          out.push({ type: 'Issue', label: `ISSUE ${String(issue.number).padStart(2, '0')}`, title: issue.title, meta: issue.theme, to: `/archive/issue/${issue.slug}` });
+        }
+      });
+      publishedStories.forEach((story) => {
+        const searchable = [story.title, story.subtitle, story.author_name, story.category, story.rubrica, story.excerpt, story.full_text, story.tags || [], story.mood_tags || [], story.topic_tags || [], story.form];
+        if (matchesAny(searchable, query)) {
+          const issue = publishedIssueFor(story);
+          out.push({ type: 'Story', label: (story.rubrica || story.category || 'STORY').toUpperCase(), title: story.title, meta: `${story.author_name || 'Author awaiting catalogue'} · Issue ${String(issue.number).padStart(2, '0')}${story.page_number ? `, p.${story.page_number}` : ''}`, to: `/archive/issue/${issue.slug}/story/${story.slug}` });
+        }
+      });
+      illus.filter(publishedIssueFor).forEach((item) => {
+        if (matchesAny([item.title, item.illustrator_name, item.description, item.inspiration], query)) {
+          const issue = publishedIssueFor(item);
+          out.push({ type: 'Illustration', label: 'ILLUSTRATION', title: item.title, meta: `${item.illustrator_name} · Issue ${String(issue.number).padStart(2, '0')}, p.${item.page_number}`, to: `/archive/issue/${issue.slug}` });
+        }
+      });
+      people.forEach((person) => matchesAny([person.name, person.primary_role, person.roles || [], person.interests || []], query)
+        ? out.push({ type: 'Person', label: (person.primary_role || 'CONTRIBUTOR').toUpperCase(), title: person.name, meta: person.primary_role, to: `/people/${person.id}` }) : null);
+      rubrici.forEach((rubrica) => matchesAny([rubrica.name, rubrica.description, rubrica.topics || []], query)
+        ? out.push({ type: 'Rubrică', label: 'RUBRICĂ', title: rubrica.name, meta: rubrica.description, to: '/contents' }) : null);
       setResults(out);
     } catch { setResults([]); }
     setLoading(false);
@@ -52,7 +78,7 @@ export default function SearchOverlay({ open, onClose }) {
             autoFocus
             value={q}
             onChange={(e) => run(e.target.value)}
-            placeholder="Search stories, poems, authors, issues…"
+            placeholder="Search stories, authors, topics, issues…"
             className="flex-1 bg-transparent outline-none font-body text-lg placeholder:text-ink-soft/50"
           />
           <button onClick={onClose} aria-label="Close search" className="focus-ring p-1 text-ink hover:text-burgundy"><X size={20} /></button>
@@ -79,7 +105,7 @@ export default function SearchOverlay({ open, onClose }) {
             </ul>
           )}
           {!loading && !searched && (
-            <p className="px-5 py-6 label-mono text-ink-soft/70">FOUND IN: archive · people · rubrici · stories · issues</p>
+            <p className="px-5 py-6 label-mono text-ink-soft/70">SEARCH ALL PUBLISHED ISSUES · STORIES · AUTHORS · TOPICS</p>
           )}
         </div>
       </div>
