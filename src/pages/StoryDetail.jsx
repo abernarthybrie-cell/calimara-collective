@@ -6,6 +6,7 @@ import { formatDate } from '@/lib/calimara';
 import ScanImage from '@/components/ScanImage';
 import Stamp from '@/components/Stamp';
 import ReadingProgress from '@/components/ReadingProgress';
+import PageZoom from '@/components/PageZoom';
 
 export default function StoryDetail() {
   const { issueSlug, slug } = useParams();
@@ -15,6 +16,7 @@ export default function StoryDetail() {
   const [illus, setIllus] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showText, setShowText] = useState(false);
+  const [pageZoom, setPageZoom] = useState(false);
   const readingRef = useRef(null);
 
   useEffect(() => {
@@ -114,7 +116,15 @@ export default function StoryDetail() {
             <aside className="space-y-8">
               <div>
                 <p className="label-mono text-ink-soft/60 mb-2">ORIGINAL PAGE · ARTIFACT</p>
-                <ScanImage src={originalPage} alt="Original printed page" objectNumber={`p.${story.page_number}`} className="aspect-[3/4] w-full shadow-xl border border-ink/15" fittingType="fit" />
+                <button
+                  type="button"
+                  onClick={() => originalPage && setPageZoom(true)}
+                  disabled={!originalPage}
+                  aria-label={originalPage ? `Enlarge original page ${story.page_number}` : 'Original page scan awaiting upload'}
+                  className={`block w-full focus-ring ${originalPage ? 'cursor-zoom-in' : 'cursor-default'}`}
+                >
+                  <ScanImage src={originalPage} alt="Original printed page" objectNumber={`p.${story.page_number}`} className="aspect-[210/297] w-full shadow-xl border border-ink/15" fittingType="fit" />
+                </button>
                 <p className="font-hand text-sm text-ink-soft mt-1">as it appears in the printed issue</p>
               </div>
 
@@ -151,6 +161,9 @@ export default function StoryDetail() {
         </div>
       </article>
       <ReadingProgress targetRef={readingRef} />
+      {pageZoom && originalPage && (
+        <PageZoom pageNo={story.page_number} image={originalPage} title={story.title} onClose={() => setPageZoom(false)} />
+      )}
     </div>
   );
 }
