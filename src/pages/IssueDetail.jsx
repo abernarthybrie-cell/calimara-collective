@@ -7,6 +7,8 @@ import ScanImage from '@/components/ScanImage';
 import PageZoom from '@/components/PageZoom';
 import SpreadThumbnails from '@/components/SpreadThumbnails';
 import TurningPage from '@/components/flipbook/TurningPage';
+import PageBookmarkButton from '@/components/PageBookmarkButton';
+import SavedPageBookmark from '@/components/SavedPageBookmark';
 
 export default function IssueDetail() {
   const { issueSlug } = useParams();
@@ -21,6 +23,7 @@ export default function IssueDetail() {
   const [rightMargin, setRightMargin] = useState(null);
   const [turn, setTurn] = useState(null);
   const [zoom, setZoom] = useState(null);
+  const [bookmarkedPage, setBookmarkedPage] = useState(null);
 
   useEffect(() => {
     const media = window.matchMedia('(max-width: 767px)');
@@ -29,6 +32,11 @@ export default function IssueDetail() {
     media.addEventListener('change', sync);
     return () => media.removeEventListener('change', sync);
   }, []);
+
+  useEffect(() => {
+    const saved = Number(window.localStorage.getItem(`calimara:issue-bookmark:${issueSlug}`));
+    setBookmarkedPage(saved > 0 ? saved : null);
+  }, [issueSlug]);
 
   useEffect(() => {
     setLoading(true);
@@ -95,6 +103,22 @@ export default function IssueDetail() {
     setTurn(null);
   };
   const openZoom = (pageNo, image) => setZoom({ pageNo, image, title: issue?.title });
+  const saveBookmark = (pageNo) => {
+    window.localStorage.setItem(`calimara:issue-bookmark:${issueSlug}`, String(pageNo));
+    setBookmarkedPage(pageNo);
+  };
+  const clearBookmark = () => {
+    window.localStorage.removeItem(`calimara:issue-bookmark:${issueSlug}`);
+    setBookmarkedPage(null);
+  };
+  const jumpToBookmark = () => {
+    if (!bookmarkedPage || bookmarkedPage > pageCount) return;
+    setTurn(null);
+    setLeftMargin(null);
+    setRightMargin(null);
+    if (singlePage) setMobilePage(bookmarkedPage);
+    else setSpread(bookmarkedPage === 1 ? 1 : Math.floor(bookmarkedPage / 2) + 1);
+  };
 
   useEffect(() => {
     const onKey = (e) => {
@@ -153,6 +177,7 @@ export default function IssueDetail() {
                     side="right" pageNo={dispMobileNo} image={dispMobileNo ? pageImages[dispMobileNo - 1] : null}
                     story={stories.find((s) => s.page_number === dispMobileNo)} illus={illus.filter((i) => i.page_number === dispMobileNo)}
                     onAnnotate={setRightMargin} onZoom={openZoom}
+                    bookmarkedPage={bookmarkedPage} onBookmark={saveBookmark}
                     onTurn={(e) => {
                       const bounds = e.currentTarget.getBoundingClientRect();
                       e.clientX - bounds.left < bounds.width * 0.35 ? goPrev() : goNext();
@@ -163,12 +188,14 @@ export default function IssueDetail() {
                     {dispLeftNo === null ? <div className="w-[46vw] max-w-[540px] aspect-[210/297]" aria-hidden="true" /> : (
                       <Page side="left" pageNo={dispLeftNo} image={pageImages[dispLeftNo - 1]}
                         story={stories.find((s) => s.page_number === dispLeftNo)} illus={illus.filter((i) => i.page_number === dispLeftNo)}
-                        onAnnotate={setLeftMargin} onZoom={openZoom} onTurn={goPrev} />
+                        onAnnotate={setLeftMargin} onZoom={openZoom} onTurn={goPrev}
+                        bookmarkedPage={bookmarkedPage} onBookmark={saveBookmark} />
                     )}
                     <div className="w-px bg-ink/30" style={{ boxShadow: '0 0 14px rgba(0,0,0,0.35)' }} />
                     <Page side="right" pageNo={dispRightNo} image={dispRightNo ? pageImages[dispRightNo - 1] : null}
                       story={stories.find((s) => s.page_number === dispRightNo)} illus={illus.filter((i) => i.page_number === dispRightNo)}
-                      onAnnotate={setRightMargin} onZoom={openZoom} onTurn={goNext} />
+                      onAnnotate={setRightMargin} onZoom={openZoom} onTurn={goNext}
+                      bookmarkedPage={bookmarkedPage} onBookmark={saveBookmark} />
                   </>
                 )}
               </div>
@@ -198,6 +225,7 @@ export default function IssueDetail() {
               <ChevronRight size={20} />
             </button>
           </div>
+          <SavedPageBookmark pageNo={bookmarkedPage} onReturn={jumpToBookmark} onClear={clearBookmark} />
           <p className="mt-4 text-center font-hand text-lg text-archive-fg/40">the interactive magazine reader — content will be filed in soon</p>
 
           <SpreadThumbnails
@@ -223,7 +251,7 @@ export default function IssueDetail() {
   );
 }
 
-function Page({ side, pageNo, image, story, illus, onAnnotate, onZoom, onTurn }) {
+function Page({ side, pageNo, image, story, illus, onAnnotate, onZoom, onTurn, bookmarkedPage, onBookmark }) {
   const blank = pageNo === null;
   return (
     <div
@@ -241,6 +269,8 @@ function Page({ side, pageNo, image, story, illus, onAnnotate, onZoom, onTurn })
           <span className="label-mono text-ink-soft/60">PAGE {pageNo}</span>
         </div>
       )}
+
+      {!blank && <PageBookmarkButton pageNo={pageNo} active={bookmarkedPage === pageNo} onSave={onBookmark} />}
 
       {/* interactive hotspots — wired to real data, ready for more */}
       {!blank && story && (
