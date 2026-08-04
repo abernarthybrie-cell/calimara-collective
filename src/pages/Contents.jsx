@@ -134,7 +134,7 @@ export default function Contents() {
                             <Link
                           to={`/archive/issue/${issueSlug}/story/${s.slug}`}
                           className="group flex flex-1 items-center gap-3 py-2 hover:bg-paper-deep/60 transition-colors focus-ring px-1 [font-family:'EB_Garamond',_serif] font-bold">
-                              <span className="text-lg leading-tight group-hover:text-burgundy transition-colors [font-family:'Impact_Label',_sans-serif] font-normal">{s.title.replace(/\bplaceholder\b/gi, '').trim()}</span>
+                              <span className="text-lg leading-tight group-hover:text-burgundy transition-colors font-normal [font-family:'LUCKY_TYPEWRITER',_sans-serif] uppercase">{s.title.replace(/\bplaceholder\b/gi, '').trim()}</span>
                               {s.author_name && s.author_name.split('&').map((n, i) =>
                           <span key={i} className="text-base text-ink-soft/70 whitespace-nowrap [font-family:'Impact_Label',_sans-serif] font-normal">{n.trim()}{i < s.author_name.split('&').length - 1 ? ' &' : ''}</span>
                           )}
