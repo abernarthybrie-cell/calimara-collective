@@ -70,6 +70,13 @@
   font-display: swap;
   src: url('./assets/fonts/jennifer-lynne-9295418b-400-normal.woff2') format('woff2');
 }
+@font-face {
+  font-family: 'Lighthouse';
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url('./assets/fonts/lighthouse-b370de14-400-normal.woff2') format('woff2');
+}
 /* base44-workspace-fonts:end */
 
 @tailwind base;
