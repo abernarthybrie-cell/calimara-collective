@@ -11,7 +11,7 @@ const SOURCES = {
 const TARGET = /[ÎÂĂȘȚŞ']/;
 const masks = new Map();
 
-function cutOut(url, inverse = false) {
+function cutOut(url, inverse = false, retried = false) {
   return new Promise((resolve, reject) => {
     const image = new Image();
     image.crossOrigin = 'anonymous';
@@ -44,7 +44,10 @@ function cutOut(url, inverse = false) {
         const x = i % width; const y = Math.floor(i / width);
         left = Math.min(left, x); right = Math.max(right, x); top = Math.min(top, y); bottom = Math.max(bottom, y);
       }
-      if (left > right) return reject(new Error('No glyph found'));
+      if (left > right) {
+        if (!retried) return cutOut(url, !inverse, true).then(resolve, reject);
+        return resolve(null);
+      }
       const output = document.createElement('canvas');
       output.width = right - left + 5; output.height = bottom - top + 5;
       const out = output.getContext('2d');
@@ -90,7 +93,7 @@ function scan(root) {
 
 export async function installMadeOfScarsGlyphs() {
   const loaded = await Promise.all(Object.entries(SOURCES).map(async ([character, url]) => [character, await cutOut(url, character === "'")]));
-  loaded.forEach(([character, mask]) => masks.set(character, mask));
+  loaded.forEach(([character, mask]) => { if (mask) masks.set(character, mask); });
   scan(document.body);
   const observer = new MutationObserver((changes) => changes.forEach((change) => {
     if (change.type === 'characterData') scan(change.target);
