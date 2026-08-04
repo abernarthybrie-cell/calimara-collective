@@ -63,7 +63,7 @@ export default function StoryDetail() {
   const originalPage = originalPages[artifactPage];
 
   return (
-    <div className="pt-14 sm:pt-16">
+    <div className="story-paper-texture grain grain-light min-h-screen pt-14 sm:pt-16">
       <article className="py-14">
         <div className="mx-auto max-w-[1100px] px-6 lg:px-10">
           <Link to="/contents" className="label-mono text-burgundy hover:text-ink focus-ring inline-flex items-center gap-1"><ArrowLeft size={14} /> BACK TO CONTENTS</Link>

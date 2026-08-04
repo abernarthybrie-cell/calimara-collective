@@ -202,6 +202,15 @@
   }
   .grain-light::after { opacity: 0.04; }
 
+  .story-paper-texture {
+    background-color: hsl(var(--paper));
+    background-image:
+      radial-gradient(circle at 18% 22%, hsl(var(--paper-deep) / 0.2) 0 1px, transparent 1.5px),
+      radial-gradient(circle at 76% 68%, hsl(var(--ink) / 0.025) 0 0.8px, transparent 1.3px),
+      repeating-linear-gradient(96deg, transparent 0 7px, hsl(var(--ink) / 0.012) 7px 8px);
+    background-size: 9px 9px, 13px 13px, 100% 11px;
+  }
+
   .font-hand { font-family: var(--font-hand); }
   .font-mono-c { font-family: var(--font-mono); }
   .font-ui { font-family: var(--font-ui); }
