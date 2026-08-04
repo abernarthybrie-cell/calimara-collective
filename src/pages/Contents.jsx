@@ -28,12 +28,12 @@ export default function Contents() {
       setIssues(i);
       setLoading(false);
     }).catch(() => setLoading(false));
-    base44.auth.isAuthenticated().then((authenticated) => authenticated ? base44.auth.me() : null)
-      .then((user) => setIsAdmin(user?.role === 'admin')).catch(() => setIsAdmin(false));
+    base44.auth.isAuthenticated().then((authenticated) => authenticated ? base44.auth.me() : null).
+    then((user) => setIsAdmin(user?.role === 'admin')).catch(() => setIsAdmin(false));
   }, []);
 
   const authorOptions = useMemo(() => [...new Set(stories.flatMap((story) =>
-    (story.author_name || '').split('&').map((name) => name.trim()).filter(Boolean)
+  (story.author_name || '').split('&').map((name) => name.trim()).filter(Boolean)
   ))].sort(), [stories]);
   const issueOptions = useMemo(() => [...new Set(stories.map((story) => story.issue_number).filter(Boolean))].sort((a, b) => a - b), [stories]);
   const filteredStories = useMemo(() => stories.filter((story) => {
@@ -95,8 +95,8 @@ export default function Contents() {
                 author={authorFilter}
                 issue={issueFilter}
                 onAuthor={setAuthorFilter}
-                onIssue={setIssueFilter}
-              />
+                onIssue={setIssueFilter} />
+              
             </div>
           </div>
         </div>
@@ -132,12 +132,12 @@ export default function Contents() {
                     <li key={s.id}>
                           <div className="flex items-center gap-2">
                             <Link
-                              to={`/archive/issue/${issueSlug}/story/${s.slug}`}
-                              className="group flex flex-1 items-center gap-3 py-2 hover:bg-paper-deep/60 transition-colors focus-ring px-1">
+                          to={`/archive/issue/${issueSlug}/story/${s.slug}`}
+                          className="group flex flex-1 items-center gap-3 py-2 hover:bg-paper-deep/60 transition-colors focus-ring px-1 [font-family:'EB_Garamond',_serif] font-bold">
                               <span className="text-lg leading-tight group-hover:text-burgundy transition-colors [font-family:'Impact_Label',_sans-serif] font-normal">{s.title.replace(/\bplaceholder\b/gi, '').trim()}</span>
-                              {s.author_name && s.author_name.split('&').map((n, i) => (
-                                <span key={i} className="text-base text-ink-soft/70 whitespace-nowrap [font-family:'Impact_Label',_sans-serif] font-normal">{n.trim()}{i < s.author_name.split('&').length - 1 ? ' &' : ''}</span>
-                              ))}
+                              {s.author_name && s.author_name.split('&').map((n, i) =>
+                          <span key={i} className="text-base text-ink-soft/70 whitespace-nowrap [font-family:'Impact_Label',_sans-serif] font-normal">{n.trim()}{i < s.author_name.split('&').length - 1 ? ' &' : ''}</span>
+                          )}
                               <span className="flex-1 border-b border-dotted border-ink/20 mb-[3px] min-w-[20px]" />
                               {meta && <span className="label-mono text-ink-soft/70 whitespace-nowrap [font-family:'Impact_Label_Reversed',_sans-serif] font-normal">{meta}</span>}
                             </Link>
@@ -157,8 +157,8 @@ export default function Contents() {
         story={editingStory}
         issue={issues.find((issue) => issue.slug === editingStory.issue_slug || issue.number === editingStory.issue_number)}
         onClose={() => setEditingStory(null)}
-        onSaved={(updated) => { setStories((items) => items.map((item) => item.id === updated.id ? updated : item)); setEditingStory(null); }}
-      />}
+        onSaved={(updated) => {setStories((items) => items.map((item) => item.id === updated.id ? updated : item));setEditingStory(null);}} />
+      }
     </div>);
 
 }
