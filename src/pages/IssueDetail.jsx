@@ -46,10 +46,10 @@ export default function IssueDetail() {
     setMobilePage(1);
     setTurn(null);
     Promise.all([
-      base44.entities.Issue.filter({ slug: issueSlug }, 'number', 50),
-      base44.entities.Story.filter({ issue_slug: issueSlug }, 'page_number', 200),
-      base44.entities.Illustration.filter({ issue_slug: issueSlug }, 'page_number', 200)
-    ]).then(([iss, st, il]) => {
+    base44.entities.Issue.filter({ slug: issueSlug }, 'number', 50),
+    base44.entities.Story.filter({ issue_slug: issueSlug }, 'page_number', 200),
+    base44.entities.Illustration.filter({ issue_slug: issueSlug }, 'page_number', 200)]
+    ).then(([iss, st, il]) => {
       setIssue(iss[0] || null);
       setStories(st);
       setIllus(il);
@@ -61,10 +61,10 @@ export default function IssueDetail() {
   const pageImages = issue?.page_images || [];
   const num = issue ? String(issue.number).padStart(2, '0') : '—';
   // spread 1 is the cover alone (right page only); spreads 2+ are two-page spreads
-  const pagesForSpread = (s) => (s === 1 ? { left: null, right: 1 } : { left: (s - 1) * 2, right: (s - 1) * 2 + 1 });
+  const pagesForSpread = (s) => s === 1 ? { left: null, right: 1 } : { left: (s - 1) * 2, right: (s - 1) * 2 + 1 };
   const spreadCount = 1 + Math.max(0, Math.ceil((pageCount - 1) / 2));
 
-  const cap = (n) => (n && n <= pageCount ? n : null);
+  const cap = (n) => n && n <= pageCount ? n : null;
   const { left: rawLeft, right: rawRight } = pagesForSpread(spread);
   const leftPageNo = cap(rawLeft);
   const rightPageNo = cap(rawRight);
@@ -96,8 +96,8 @@ export default function IssueDetail() {
     setTurn({ dir: -1, target, side: 'left', front: pageContent(cur.left), back: pageContent(prv.right) });
   };
   const onTurnDone = () => {
-    if (turn.singlePage) setMobilePage(turn.target);
-    else setSpread(turn.target);
+    if (turn.singlePage) setMobilePage(turn.target);else
+    setSpread(turn.target);
     setLeftMargin(null);
     setRightMargin(null);
     setTurn(null);
@@ -116,8 +116,8 @@ export default function IssueDetail() {
     setTurn(null);
     setLeftMargin(null);
     setRightMargin(null);
-    if (singlePage) setMobilePage(bookmarkedPage);
-    else setSpread(bookmarkedPage === 1 ? 1 : Math.floor(bookmarkedPage / 2) + 1);
+    if (singlePage) setMobilePage(bookmarkedPage);else
+    setSpread(bookmarkedPage === 1 ? 1 : Math.floor(bookmarkedPage / 2) + 1);
   };
 
   useEffect(() => {
@@ -125,8 +125,8 @@ export default function IssueDetail() {
       if (zoom) return;
       const tag = e.target?.tagName;
       if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
-      if (e.key === 'ArrowRight') goNext();
-      else if (e.key === 'ArrowLeft') goPrev();
+      if (e.key === 'ArrowRight') goNext();else
+      if (e.key === 'ArrowLeft') goPrev();
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
@@ -135,15 +135,15 @@ export default function IssueDetail() {
   const turning = !!turn;
   const curPages = pagesForSpread(spread);
   const turnPages = turning ? pagesForSpread(turn.target) : null;
-  const dispLeftNo = cap(turning ? (turn.dir === 1 ? curPages.left : turnPages.left) : curPages.left);
-  const dispRightNo = cap(turning ? (turn.dir === 1 ? turnPages.right : curPages.right) : curPages.right);
+  const dispLeftNo = cap(turning ? turn.dir === 1 ? curPages.left : turnPages.left : curPages.left);
+  const dispRightNo = cap(turning ? turn.dir === 1 ? turnPages.right : curPages.right : curPages.right);
   const dispMobileNo = cap(turning ? turn.target : mobilePage);
 
   if (loading) return <div className="pt-32 px-6 label-mono text-ink-soft">opening the issue…</div>;
   if (!issue) return <div className="pt-32 px-6 font-hand text-2xl">That issue isn't in the archive.</div>;
 
   return (
-    <div className="pt-14 sm:pt-16 min-h-screen bg-archive-bg text-archive-fg grain">
+    <div className="pt-14 sm:pt-16 min-h-screen text-archive-fg grain bg-[hsl(var(--archive-bg))]">
       {/* header */}
       <header className="pt-12 pb-8">
         <div className="mx-auto max-w-[1400px] px-6 lg:px-10">
@@ -154,11 +154,11 @@ export default function IssueDetail() {
               <h1 className="font-heading text-4xl md:text-6xl mt-2">{issue.title}</h1>
               <p className="label-mono text-archive-fg/60 mt-2">THEME · {issue.theme} · {issue.page_count} PAGES</p>
             </div>
-            {issue.allow_download && issue.pdf_url && (
-              <a href={issue.pdf_url} download className="label-mono border border-archive-line px-3 py-2 hover:bg-archive-bg2 focus-ring inline-flex items-center gap-1.5">
+            {issue.allow_download && issue.pdf_url &&
+            <a href={issue.pdf_url} download className="label-mono border border-archive-line px-3 py-2 hover:bg-archive-bg2 focus-ring inline-flex items-center gap-1.5">
                 <Download size={13} /> DOWNLOAD PDF
               </a>
-            )}
+            }
           </div>
         </div>
       </header>
@@ -172,32 +172,32 @@ export default function IssueDetail() {
             {/* book spread */}
             <div className="relative mx-auto" style={{ perspective: 2200 }}>
               <div className="relative flex shadow-2xl" style={{ transformStyle: 'preserve-3d' }}>
-                {singlePage ? (
-                  <Page
-                    side="right" pageNo={dispMobileNo} image={dispMobileNo ? pageImages[dispMobileNo - 1] : null}
-                    story={stories.find((s) => s.page_number === dispMobileNo)} illus={illus.filter((i) => i.page_number === dispMobileNo)}
-                    onAnnotate={setRightMargin} onZoom={openZoom}
-                    bookmarkedPage={bookmarkedPage} onBookmark={saveBookmark}
-                    onTurn={(e) => {
-                      const bounds = e.currentTarget.getBoundingClientRect();
-                      e.clientX - bounds.left < bounds.width * 0.35 ? goPrev() : goNext();
-                    }}
-                  />
-                ) : (
-                  <>
-                    {dispLeftNo === null ? <div className="w-[46vw] max-w-[540px] aspect-[210/297]" aria-hidden="true" /> : (
-                      <Page side="left" pageNo={dispLeftNo} image={pageImages[dispLeftNo - 1]}
-                        story={stories.find((s) => s.page_number === dispLeftNo)} illus={illus.filter((i) => i.page_number === dispLeftNo)}
-                        onAnnotate={setLeftMargin} onZoom={openZoom} onTurn={goPrev}
-                        bookmarkedPage={bookmarkedPage} onBookmark={saveBookmark} />
-                    )}
+                {singlePage ?
+                <Page
+                  side="right" pageNo={dispMobileNo} image={dispMobileNo ? pageImages[dispMobileNo - 1] : null}
+                  story={stories.find((s) => s.page_number === dispMobileNo)} illus={illus.filter((i) => i.page_number === dispMobileNo)}
+                  onAnnotate={setRightMargin} onZoom={openZoom}
+                  bookmarkedPage={bookmarkedPage} onBookmark={saveBookmark}
+                  onTurn={(e) => {
+                    const bounds = e.currentTarget.getBoundingClientRect();
+                    e.clientX - bounds.left < bounds.width * 0.35 ? goPrev() : goNext();
+                  }} /> :
+
+
+                <>
+                    {dispLeftNo === null ? <div className="w-[46vw] max-w-[540px] aspect-[210/297]" aria-hidden="true" /> :
+                  <Page side="left" pageNo={dispLeftNo} image={pageImages[dispLeftNo - 1]}
+                  story={stories.find((s) => s.page_number === dispLeftNo)} illus={illus.filter((i) => i.page_number === dispLeftNo)}
+                  onAnnotate={setLeftMargin} onZoom={openZoom} onTurn={goPrev}
+                  bookmarkedPage={bookmarkedPage} onBookmark={saveBookmark} />
+                  }
                     <div className="w-px bg-ink/30" style={{ boxShadow: '0 0 14px rgba(0,0,0,0.35)' }} />
                     <Page side="right" pageNo={dispRightNo} image={dispRightNo ? pageImages[dispRightNo - 1] : null}
-                      story={stories.find((s) => s.page_number === dispRightNo)} illus={illus.filter((i) => i.page_number === dispRightNo)}
-                      onAnnotate={setRightMargin} onZoom={openZoom} onTurn={goNext}
-                      bookmarkedPage={bookmarkedPage} onBookmark={saveBookmark} />
+                  story={stories.find((s) => s.page_number === dispRightNo)} illus={illus.filter((i) => i.page_number === dispRightNo)}
+                  onAnnotate={setRightMargin} onZoom={openZoom} onTurn={goNext}
+                  bookmarkedPage={bookmarkedPage} onBookmark={saveBookmark} />
                   </>
-                )}
+                }
               </div>
               {turn && <TurningPage turn={turn} onDone={onTurnDone} singlePage={singlePage} />}
             </div>
@@ -211,8 +211,8 @@ export default function IssueDetail() {
               onClick={goPrev}
               disabled={(singlePage ? mobilePage <= 1 : spread <= 1) || !!turn}
               aria-label="Previous spread"
-              className="w-11 h-11 bg-archive-bg2 border border-archive-line flex items-center justify-center hover:bg-burgundy hover:text-paper disabled:opacity-30 focus-ring"
-            >
+              className="w-11 h-11 bg-archive-bg2 border border-archive-line flex items-center justify-center hover:bg-burgundy hover:text-paper disabled:opacity-30 focus-ring">
+              
               <ChevronLeft size={20} />
             </button>
             <p className="label-mono text-archive-muted">{singlePage ? `PAGE ${mobilePage} / ${pageCount}` : `SPREAD ${spread} / ${spreadCount}`}</p>
@@ -220,8 +220,8 @@ export default function IssueDetail() {
               onClick={goNext}
               disabled={(singlePage ? mobilePage >= pageCount : spread >= spreadCount) || !!turn}
               aria-label="Next spread"
-              className="w-11 h-11 bg-archive-bg2 border border-archive-line flex items-center justify-center hover:bg-burgundy hover:text-paper disabled:opacity-30 focus-ring"
-            >
+              className="w-11 h-11 bg-archive-bg2 border border-archive-line flex items-center justify-center hover:bg-burgundy hover:text-paper disabled:opacity-30 focus-ring">
+              
               <ChevronRight size={20} />
             </button>
           </div>
@@ -234,21 +234,21 @@ export default function IssueDetail() {
             currentSpread={spread}
             currentPage={mobilePage}
             singlePage={singlePage}
-            onJump={(target) => { singlePage ? setMobilePage(target) : setSpread(target); setLeftMargin(null); setRightMargin(null); }}
-          />
+            onJump={(target) => {singlePage ? setMobilePage(target) : setSpread(target);setLeftMargin(null);setRightMargin(null);}} />
+          
         </div>
       </section>
 
-      {zoom && (
-        <PageZoom
-          pageNo={zoom.pageNo}
-          image={zoom.image}
-          title={zoom.title}
-          onClose={() => setZoom(null)}
-        />
-      )}
-    </div>
-  );
+      {zoom &&
+      <PageZoom
+        pageNo={zoom.pageNo}
+        image={zoom.image}
+        title={zoom.title}
+        onClose={() => setZoom(null)} />
+
+      }
+    </div>);
+
 }
 
 function Page({ side, pageNo, image, story, illus, onAnnotate, onZoom, onTurn, bookmarkedPage, onBookmark }) {
@@ -260,71 +260,71 @@ function Page({ side, pageNo, image, story, illus, onAnnotate, onZoom, onTurn, b
         boxShadow: blank ? 'none' : side === 'left' ? 'inset -12px 0 22px -12px rgba(0,0,0,0.3)' : 'inset 12px 0 22px -12px rgba(0,0,0,0.3)'
       }}
       onClick={(e) => !blank && onTurn?.(e)}
-      onDoubleClick={() => !blank && image && onZoom(pageNo, image)}
-    >
-      {blank ? null : image ? (
-        <ScanImage src={image} alt={`page ${pageNo}`} className="w-full h-full align-top" fittingType="fill" />
-      ) : (
-        <div className="w-full h-full scan-placeholder flex items-center justify-center">
+      onDoubleClick={() => !blank && image && onZoom(pageNo, image)}>
+      
+      {blank ? null : image ?
+      <ScanImage src={image} alt={`page ${pageNo}`} className="w-full h-full align-top" fittingType="fill" /> :
+
+      <div className="w-full h-full scan-placeholder flex items-center justify-center">
           <span className="label-mono text-ink-soft/60">PAGE {pageNo}</span>
         </div>
-      )}
+      }
 
       {!blank && <PageBookmarkButton pageNo={pageNo} active={bookmarkedPage === pageNo} onSave={onBookmark} />}
 
       {/* interactive hotspots — wired to real data, ready for more */}
-      {!blank && story && (
-        <Hotspot
-          x={68}
-          y={28}
-          label="THE TEXT"
-          onClick={() => onAnnotate({ label: 'THE TEXT', title: story.title, meta: `written by ${story.author_name}`, text: story.excerpt || story.editorial_note || '' })}
-        />
+      {!blank && story &&
+      <Hotspot
+        x={68}
+        y={28}
+        label="THE TEXT"
+        onClick={() => onAnnotate({ label: 'THE TEXT', title: story.title, meta: `written by ${story.author_name}`, text: story.excerpt || story.editorial_note || '' })} />
+
+      }
+      {!blank && illus.map((il, i) =>
+      <Hotspot
+        key={il.id}
+        x={28 + i * 12}
+        y={62}
+        label="THE IMAGE"
+        onClick={() => onAnnotate({ label: 'THE IMAGE', title: il.title, meta: `by ${il.illustrator_name}`, text: il.description || '' })} />
+
       )}
-      {!blank && illus.map((il, i) => (
-        <Hotspot
-          key={il.id}
-          x={28 + i * 12}
-          y={62}
-          label="THE IMAGE"
-          onClick={() => onAnnotate({ label: 'THE IMAGE', title: il.title, meta: `by ${il.illustrator_name}`, text: il.description || '' })}
-        />
-      ))}
 
       {!blank && <span className="absolute bottom-2 right-3 label-mono text-ink-soft/40 text-[0.55rem]">p.{pageNo}</span>}
-    </div>
-  );
+    </div>);
+
 }
 
 function Hotspot({ x, y, label, onClick }) {
   return (
-    <button onClick={(e) => { e.stopPropagation(); onClick(); }} className="absolute focus-ring group" style={{ left: `${x}%`, top: `${y}%` }} aria-label={label}>
+    <button onClick={(e) => {e.stopPropagation();onClick();}} className="absolute focus-ring group" style={{ left: `${x}%`, top: `${y}%` }} aria-label={label}>
       <span className="block w-5 h-5 rounded-full border-2 border-burgundy bg-paper/70 group-hover:bg-burgundy group-hover:scale-125 transition-all shadow" />
       <span className="absolute left-1/2 -translate-x-1/2 -bottom-6 whitespace-nowrap font-hand text-sm text-burgundy bg-paper px-1.5 border border-burgundy/40 opacity-0 group-hover:opacity-100 transition-opacity">
         {label}
       </span>
-    </button>
-  );
+    </button>);
+
 }
 
 function MarginPanel({ side, annotation }) {
   return (
     <aside className={`hidden md:block ${side === 'left' ? 'text-right' : 'text-left'}`}>
       <p className="label-mono text-dusty-yellow mb-3">{side === 'left' ? 'LEFT MARGIN' : 'RIGHT MARGIN'}</p>
-      {annotation ? (
-        <div className="bg-archive-bg2 border border-archive-line p-5 animate-fade-in">
+      {annotation ?
+      <div className="bg-archive-bg2 border border-archive-line p-5 animate-fade-in">
           <p className="label-mono text-burgundy">{annotation.label}</p>
           {annotation.title && <p className="font-heading text-xl mt-2">{annotation.title}</p>}
           {annotation.meta && <p className="label-mono text-archive-muted mt-1">{annotation.meta}</p>}
           {annotation.text && <p className="font-body text-archive-fg/80 mt-3 leading-relaxed">{annotation.text}</p>}
-        </div>
-      ) : (
-        <p className="font-hand text-lg text-archive-fg/40 leading-snug">
-          {side === 'left'
-            ? 'click an element in the magazine — its story appears here'
-            : 'contextual notes for the right page will appear here'}
+        </div> :
+
+      <p className="font-hand text-lg text-archive-fg/40 leading-snug">
+          {side === 'left' ?
+        'click an element in the magazine — its story appears here' :
+        'contextual notes for the right page will appear here'}
         </p>
-      )}
-    </aside>
-  );
+      }
+    </aside>);
+
 }
