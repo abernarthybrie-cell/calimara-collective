@@ -32,6 +32,12 @@
     "artifact_start_page": {
       "type": "number"
     },
+    "artifact_page_numbers": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      }
+    },
     "artifact_pages": {
       "type": "array",
       "items": {
@@ -97,5 +103,13 @@
   "required": [
     "title",
     "slug"
-  ]
+  ],
+  "rls": {
+    "read": {},
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
 }

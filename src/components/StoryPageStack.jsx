@@ -2,8 +2,8 @@ import React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import ScanImage from '@/components/ScanImage';
 
-export default function StoryPageStack({ pages, index, onChange, onZoom, startPage }) {
-  const pageNumber = startPage + index;
+export default function StoryPageStack({ pages, pageNumbers, index, onChange, onZoom, startPage }) {
+  const pageNumber = pageNumbers?.[index] || startPage + index;
   const hasMany = pages.length > 1;
 
   return (

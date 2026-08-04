@@ -135,7 +135,8 @@ export default function StoryDetail() {
                   index={artifactPage}
                   onChange={setArtifactPage}
                   onZoom={() => setPageZoom(true)}
-                  startPage={artifactStartPage} /> :
+                  startPage={artifactStartPage}
+                  pageNumbers={story.artifact_page_numbers} /> :
 
 
                 <ScanImage src="" alt="Original page scan awaiting upload" objectNumber={`p.${story.page_number}`} className="aspect-[210/297] w-full shadow-xl border-4 border-ink/60" fittingType="fit" />
@@ -177,7 +178,7 @@ export default function StoryDetail() {
       </article>
       <ReadingProgress targetRef={readingRef} />
       {pageZoom && originalPage &&
-      <PageZoom pageNo={artifactStartPage + artifactPage} image={originalPage} title={story.title} onClose={() => setPageZoom(false)} />
+      <PageZoom pageNo={story.artifact_page_numbers?.[artifactPage] || artifactStartPage + artifactPage} image={originalPage} title={story.title} onClose={() => setPageZoom(false)} />
       }
     </div>);
 

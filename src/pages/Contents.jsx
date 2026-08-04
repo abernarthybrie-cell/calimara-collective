@@ -3,12 +3,16 @@ import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import Stamp from '@/components/Stamp';
 import ContentsFilters from '@/components/ContentsFilters';
+import ArtifactPagePicker from '@/components/ArtifactPagePicker';
 
 const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI'];
 
 export default function Contents() {
   const [stories, setStories] = useState([]);
   const [rubrici, setRubrici] = useState([]);
+  const [issues, setIssues] = useState([]);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [editingStory, setEditingStory] = useState(null);
   const [loading, setLoading] = useState(true);
   const [authorFilter, setAuthorFilter] = useState('');
   const [issueFilter, setIssueFilter] = useState('');
@@ -16,12 +20,16 @@ export default function Contents() {
   useEffect(() => {
     Promise.all([
     base44.entities.Story.list(500),
-    base44.entities.Rubrica.list('order', 100)]
-    ).then(([s, r]) => {
+    base44.entities.Rubrica.list('order', 100),
+    base44.entities.Issue.list('number', 100)]
+    ).then(([s, r, i]) => {
       setStories(s);
       setRubrici(r);
+      setIssues(i);
       setLoading(false);
     }).catch(() => setLoading(false));
+    base44.auth.isAuthenticated().then((authenticated) => authenticated ? base44.auth.me() : null)
+      .then((user) => setIsAdmin(user?.role === 'admin')).catch(() => setIsAdmin(false));
   }, []);
 
   const authorOptions = useMemo(() => [...new Set(stories.flatMap((story) =>
@@ -122,16 +130,19 @@ export default function Contents() {
                   const meta = [s.issue_number ? `№${String(s.issue_number).padStart(2, '0')}` : null, s.page_number ? `p.${s.page_number}` : null].filter(Boolean).join(' · ');
                   return (
                     <li key={s.id}>
-                          <Link
-                        to={`/archive/issue/${issueSlug}/story/${s.slug}`}
-                        className="group flex items-center gap-3 py-2 hover:bg-paper-deep/60 transition-colors focus-ring px-1">
-                            <span className="text-lg leading-tight group-hover:text-burgundy transition-colors [font-family:'Impact_Label',_sans-serif] font-normal">{s.title.replace(/\bplaceholder\b/gi, '').trim()}</span>
-                            {s.author_name && s.author_name.split('&').map((n, i) => (
-                              <span key={i} className="text-base text-ink-soft/70 whitespace-nowrap [font-family:'Impact_Label',_sans-serif] font-normal">{n.trim()}{i < s.author_name.split('&').length - 1 ? ' &' : ''}</span>
-                            ))}
-                            <span className="flex-1 border-b border-dotted border-ink/20 mb-[3px] min-w-[20px]" />
-                            {meta && <span className="label-mono text-ink-soft/70 whitespace-nowrap [font-family:'Impact_Label_Reversed',_sans-serif] font-normal">{meta}</span>}
-                          </Link>
+                          <div className="flex items-center gap-2">
+                            <Link
+                              to={`/archive/issue/${issueSlug}/story/${s.slug}`}
+                              className="group flex flex-1 items-center gap-3 py-2 hover:bg-paper-deep/60 transition-colors focus-ring px-1">
+                              <span className="text-lg leading-tight group-hover:text-burgundy transition-colors [font-family:'Impact_Label',_sans-serif] font-normal">{s.title.replace(/\bplaceholder\b/gi, '').trim()}</span>
+                              {s.author_name && s.author_name.split('&').map((n, i) => (
+                                <span key={i} className="text-base text-ink-soft/70 whitespace-nowrap [font-family:'Impact_Label',_sans-serif] font-normal">{n.trim()}{i < s.author_name.split('&').length - 1 ? ' &' : ''}</span>
+                              ))}
+                              <span className="flex-1 border-b border-dotted border-ink/20 mb-[3px] min-w-[20px]" />
+                              {meta && <span className="label-mono text-ink-soft/70 whitespace-nowrap [font-family:'Impact_Label_Reversed',_sans-serif] font-normal">{meta}</span>}
+                            </Link>
+                            {isAdmin && <button onClick={() => setEditingStory(s)} className="label-mono border border-ink/25 px-2 py-1 hover:bg-paper-deep focus-ring whitespace-nowrap">EDIT PAGES</button>}
+                          </div>
                         </li>);
 
                 })}
@@ -142,6 +153,12 @@ export default function Contents() {
           }
         </div>
       </section>
+      {editingStory && <ArtifactPagePicker
+        story={editingStory}
+        issue={issues.find((issue) => issue.slug === editingStory.issue_slug || issue.number === editingStory.issue_number)}
+        onClose={() => setEditingStory(null)}
+        onSaved={(updated) => { setStories((items) => items.map((item) => item.id === updated.id ? updated : item)); setEditingStory(null); }}
+      />}
     </div>);
 
 }
