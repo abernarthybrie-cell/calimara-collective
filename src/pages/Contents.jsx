@@ -82,8 +82,8 @@ export default function Contents() {
             <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-28 h-7 tape" />
             <p className="label-mono text-burgundy">— TABLE OF CONTENTS —</p>
             <h1 className="font-display text-6xl md:text-8xl leading-[0.9] mt-2">Cuprins</h1>
-            <p className="font-heading italic text-xl text-ink-soft mt-4 max-w-xl leading-snug">
-              Every story we've published, gathered by rubric — browse the magazine by theme, the way you'd flip through a book's front matter.
+            <p className="italic text-xl text-ink-soft mt-4 max-w-xl leading-snug font-normal [font-family:'Made_Of_Scars',_Georgia,_serif]">Every story we've published, gathered by rubric — browse the magazine by theme, the way you'd flip through a book's front matter.
+
             </p>
             <div className="mt-5 flex flex-wrap items-center gap-3">
               <Stamp className="text-burgundy">{stories.length} PIECES</Stamp>
