@@ -5,6 +5,7 @@ import SiteNav from './SiteNav';
 import Footer from './Footer';
 import Drawer from './Drawer';
 import SearchOverlay from './SearchOverlay';
+import MadeOfScarsGlyphs from './MadeOfScarsGlyphs';
 
 function DrawerTrigger({ onClick }) {
   return (
@@ -39,6 +40,7 @@ export default function Layout() {
     <SettingsProvider>
       <CartProvider>
         <div className="min-h-screen flex flex-col">
+          <MadeOfScarsGlyphs />
           <SiteNav onOpenSearch={() => setSearchOpen(true)} onOpenDrawer={() => setDrawerOpen(true)} />
           <main className="flex-1">
             <Outlet context={{ openDrawer: () => setDrawerOpen(true), openSearch: () => setSearchOpen(true) }} />

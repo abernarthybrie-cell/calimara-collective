@@ -361,6 +361,23 @@
     background-size: 100% 100%;
   }
 
+  .mos-glyph {
+    display: inline-block;
+    width: calc(.9em * var(--mos-ratio));
+    height: .9em;
+    margin-inline: .015em;
+    vertical-align: -.08em;
+    background-color: currentColor;
+    -webkit-mask: var(--mos-mask) center / contain no-repeat;
+    mask: var(--mos-mask) center / contain no-repeat;
+  }
+  .mos-apostrophe {
+    width: calc(.42em * var(--mos-ratio));
+    height: .42em;
+    margin-inline: .025em;
+    vertical-align: .42em;
+  }
+
   .focus-ring:focus-visible {
     outline: 3px solid hsl(var(--cyanotype));
     outline-offset: 3px;
