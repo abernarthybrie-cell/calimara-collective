@@ -77,6 +77,13 @@
   font-display: swap;
   src: url('./assets/fonts/lighthouse-b370de14-400-normal.woff2') format('woff2');
 }
+@font-face {
+  font-family: 'LUCKY TYPEWRITER';
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url('./assets/fonts/lucky-typewriter-75b72bc2-400-normal.woff2') format('woff2');
+}
 /* base44-workspace-fonts:end */
 
 @tailwind base;
