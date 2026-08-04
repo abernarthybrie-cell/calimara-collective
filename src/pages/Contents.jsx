@@ -19,7 +19,7 @@ export default function Contents() {
 
   useEffect(() => {
     Promise.all([
-    base44.entities.Story.list(500),
+    base44.entities.Story.list('page_number', 500),
     base44.entities.Rubrica.list('order', 100),
     base44.entities.Issue.list('number', 100)]
     ).then(([s, r, i]) => {
