@@ -65,6 +65,7 @@ function cutOut(url, inverse = false, retried = false) {
 
 function replaceText(node) {
   if (!node.nodeValue || !TARGET.test(node.nodeValue)) return;
+  if (![...node.nodeValue].some((character) => masks.has(character))) return;
   const parent = node.parentElement;
   if (!parent || parent.closest('[data-mos-glyph], input, textarea, script, style, [contenteditable="true"]')) return;
   if (!getComputedStyle(parent).fontFamily.includes('Made Of Scars')) return;
