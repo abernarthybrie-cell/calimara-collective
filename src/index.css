@@ -98,13 +98,6 @@
   font-display: swap;
   src: url('./assets/fonts/bodoni-flf-c9da19f7-500-normal.woff2') format('woff2');
 }
-@font-face {
-  font-family: 'Bacon Kingdom';
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-  src: url('./assets/fonts/bacon-kingdom-6e13f7b5-400-normal.woff2') format('woff2');
-}
 /* base44-workspace-fonts:end */
 
 @tailwind base;
