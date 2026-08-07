@@ -98,13 +98,6 @@
   font-display: swap;
   src: url('./assets/fonts/bodoni-flf-c9da19f7-500-normal.woff2') format('woff2');
 }
-@font-face {
-  font-family: 'BodoniFLF';
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-  src: url('./assets/fonts/bodoni-flf-c9da19f7-700-normal.woff2') format('woff2');
-}
 /* base44-workspace-fonts:end */
 
 @tailwind base;
