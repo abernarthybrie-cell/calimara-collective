@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { Check, Loader2, X } from 'lucide-react';
 import { Image } from '@/components/ui/image';
-import { base44 } from '@/api/base44Client';
+import { db } from '@/api/client';
 
 export default function ArtifactPagePicker({ story, issue, onClose, onSaved }) {
   const initial = useMemo(() => story.artifact_page_numbers?.length ? story.artifact_page_numbers :
@@ -16,7 +16,7 @@ export default function ArtifactPagePicker({ story, issue, onClose, onSaved }) {
     try {
       const numbers = [...selected].sort((a, b) => a - b);
       const artifact_pages = numbers.map((n) => pages[n - 1]).filter(Boolean);
-      const updated = await base44.entities.Story.update(story.id, { artifact_pages, artifact_page_numbers: numbers, artifact_start_page: numbers[0] || story.page_number });
+      const updated = await db.entities.Story.update(story.id, { artifact_pages, artifact_page_numbers: numbers, artifact_start_page: numbers[0] || story.page_number });
       onSaved(updated);
     } catch { setError('Could not save the selected pages.'); setSaving(false); }
   };

@@ -1,0 +1,5 @@
+# Minimal Supabase CLI config for Edge Functions.
+# Project ref: hkvrkekzdabjkbwrdesw (eu-west-1)
+
+[functions.transcribe-story-pages]
+verify_jwt = true

@@ -3,12 +3,17 @@ import { useSize } from "@/hooks/use-size"
 import { cn } from "@/lib/utils"
 
 const FALLBACK_IMAGE_URL =
-  "https://static.wixstatic.com/media/12d367_4f26ccd17f8f4e3a8958306ea08c2332~mv2.png"
+  "https://media.calimara.online/static/media/12d367_4f26ccd17f8f4e3a8958306ea08c2332~mv2.png"
 
 // Wix Media Platform hosts whose images support /v1/ transform URLs
 // (resize, focal-point crop, and format conversion via the OUTPUT FILENAME
 // EXTENSION — a .webp output re-encodes JPG/PNG uploads to WebP on the fly).
-const WIX_MEDIA_HOSTS = ["media.base44.com", "static.wixstatic.com"]
+//
+// ponytail: now empty because every image moved to R2 (media.calimara.online), which serves plain
+// objects with no transform syntax. Images are therefore delivered at full size — fine at this
+// library's scale (235 files behind Cloudflare's cache), but if page weight becomes a problem the
+// upgrade path is Cloudflare Image Resizing, whose /cdn-cgi/image/ URLs would plug in here.
+const WIX_MEDIA_HOSTS = []
 // First-paint width before the container is measured.
 const DEFAULT_TRANSFORM_WIDTH = 1024
 const DEVICE_PIXEL_RATIOS = [1, 2, 3]
@@ -166,8 +171,8 @@ const ResponsiveImage = React.forwardRef(
 ResponsiveImage.displayName = "ResponsiveImage"
 
 /**
- * Image with built-in Wix Media Platform support: URLs on media.base44.com /
- * static.wixstatic.com are served resized to the rendered container (per
+ * Image with built-in Wix Media Platform support: URLs on a transform-capable host
+ * (see WIX_MEDIA_HOSTS) are served resized to the rendered container (per
  * device pixel ratio) and re-encoded to WebP; `fittingType="fill"` crops
  * server-side, optionally anchored at a focal point. Other URLs render as a
  * plain <img>. Failed loads swap to a fallback image.

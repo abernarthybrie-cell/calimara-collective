@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { base44 } from '@/api/base44Client';
+import { db } from '@/api/client';
 import { formatDate } from '@/lib/calimara';
 import Stamp from '@/components/Stamp';
 
@@ -8,7 +8,7 @@ const BORDER = { normal: 'border-archive-line', important: 'border-dusty-yellow'
 
 export default function Notices() {
   const [items, setItems] = useState([]);
-  useEffect(() => { base44.entities.TeamNotice.list('-created_date', 100).then(setItems).catch(() => {}); }, []);
+  useEffect(() => { db.entities.TeamNotice.list('-created_date', 100).then(setItems).catch(() => {}); }, []);
 
   return (
     <div className="space-y-6 animate-fade-in">

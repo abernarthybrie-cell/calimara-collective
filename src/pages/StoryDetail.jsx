@@ -1,16 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
-import { base44 } from '@/api/base44Client';
+import { ArrowLeft, Loader2 } from 'lucide-react';
+import { db } from '@/api/client';
+import { useAuth } from '@/lib/AuthContext';
 import { formatDate } from '@/lib/calimara';
 import ScanImage from '@/components/ScanImage';
-import Stamp from '@/components/Stamp';
 import ReadingProgress from '@/components/ReadingProgress';
 import PageZoom from '@/components/PageZoom';
 import StoryPageStack from '@/components/StoryPageStack';
 
 export default function StoryDetail() {
   const { issueSlug, slug } = useParams();
+  const { user } = useAuth();
   const [story, setStory] = useState(null);
   const [issue, setIssue] = useState(null);
   const [related, setRelated] = useState([]);
@@ -20,14 +21,17 @@ export default function StoryDetail() {
   const [showText, setShowText] = useState(false);
   const [pageZoom, setPageZoom] = useState(false);
   const [artifactPage, setArtifactPage] = useState(0);
+  const [transcribing, setTranscribing] = useState(false);
+  const [transcribeError, setTranscribeError] = useState('');
   const readingRef = useRef(null);
+  const isAdmin = user?.role === 'admin';
 
   useEffect(() => {
     setLoading(true);
     setArtifactPage(0);
     Promise.all([
-    base44.entities.Story.filter({ slug }, 'page_number', 50),
-    base44.entities.Issue.filter({ slug: issueSlug }, 'number', 50)]
+    db.entities.Story.filter({ slug }, 'page_number', 50),
+    db.entities.Issue.filter({ slug: issueSlug }, 'number', 50)]
     ).then(async ([st, iss]) => {
       const s = st[0] || null;
       setStory(s);
@@ -35,8 +39,8 @@ export default function StoryDetail() {
       if (s) {
         const num = String(s.issue_number).padStart(2, '0');
         const [allStories, allIllus] = await Promise.all([
-        base44.entities.Story.filter({ issue_slug: `issue-${num}` }, 'page_number', 200),
-        base44.entities.Illustration.filter({ related_story_slug: slug }, 'page_number', 50)]
+        db.entities.Story.filter({ issue_slug: `issue-${num}` }, 'page_number', 200),
+        db.entities.Illustration.filter({ related_story_slug: slug }, 'page_number', 50)]
         );
         setIssueStories(allStories);
         setRelated(allStories.filter((x) => x.slug !== slug).slice(0, 4));
@@ -87,16 +91,39 @@ export default function StoryDetail() {
               </p>
 
               {/* read the plain text */}
-              <div className="mt-8">
+              <div className="mt-8 flex flex-wrap items-center gap-3">
                 <button
                   onClick={() => story.full_text && setShowText((v) => !v)}
                   disabled={!story.full_text}
                   className="label-mono border border-ink/30 px-4 py-2 hover:bg-paper-deep focus-ring inline-flex items-center gap-2 disabled:cursor-not-allowed disabled:text-ink-soft/45 disabled:border-ink/15">
-                  
                   {story.full_text ? showText ? 'HIDE THE PLAIN TEXT' : 'READ THE PLAIN TEXT' : 'PLAIN TEXT AWAITING TRANSCRIPTION'}
                 </button>
+                {isAdmin && (
+                  <button
+                    onClick={async () => {
+                      setTranscribing(true);
+                      setTranscribeError('');
+                      try {
+                        await db.functions.invoke('transcribe-story-pages', { storyId: story.id });
+                        const [rows] = await Promise.all([db.entities.Story.filter({ id: story.id }, 'page_number', 1)]);
+                        if (rows[0]) setStory(rows[0]);
+                        setShowText(true);
+                      } catch (err) {
+                        setTranscribeError(err.message || 'Transcription failed');
+                      } finally {
+                        setTranscribing(false);
+                      }
+                    }}
+                    disabled={transcribing}
+                    className="label-mono border border-burgundy/40 text-burgundy px-4 py-2 hover:bg-paper-deep focus-ring inline-flex items-center gap-2 disabled:opacity-50"
+                  >
+                    {transcribing ? <Loader2 className="animate-spin" size={14} /> : null}
+                    {story.full_text ? 'RE-TRANSCRIBE' : 'TRANSCRIBE PAGES'}
+                  </button>
+                )}
+                {transcribeError && <p className="label-mono text-faded-red w-full">{transcribeError}</p>}
                 {showText && story.full_text &&
-                <div className="mt-6 font-body text-xl leading-[1.75] text-ink whitespace-pre-line max-w-prose animate-fade-in">
+                <div className="mt-6 font-body text-xl leading-[1.75] text-ink whitespace-pre-line max-w-prose animate-fade-in w-full">
                     {story.full_text}
                   </div>
                 }

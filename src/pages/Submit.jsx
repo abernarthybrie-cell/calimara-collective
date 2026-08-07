@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Send, Check } from 'lucide-react';
-import { base44 } from '@/api/base44Client';
+import { db } from '@/api/client';
 import { useSettings } from '@/lib/calimara';
 import Stamp from '@/components/Stamp';
 
@@ -16,7 +16,7 @@ export default function Submit() {
   const [file, setFile] = useState(null);
 
   useEffect(() => {
-    base44.entities.OpenCall.list('order', 50).then(setCalls).catch(() => {});
+    db.entities.OpenCall.list('order', 50).then(setCalls).catch(() => {});
   }, []);
 
   const featured = calls.find((c) => c.featured && c.status !== 'closed') || calls.find((c) => c.status === 'open') || calls.find((c) => c.status === 'closing_soon');
@@ -29,10 +29,10 @@ export default function Submit() {
     try {
       let file_url = '';
       if (file) {
-        const up = await base44.integrations.Core.UploadFile({ file });
+        const up = await db.integrations.Core.UploadFile({ file });
         file_url = up.file_url;
       }
-      await base44.entities.Submission.create({
+      await db.entities.Submission.create({
         ...form,
         file_url,
         date_submitted: new Date().toISOString().slice(0, 10),

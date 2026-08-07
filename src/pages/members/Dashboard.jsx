@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useOutletContext } from 'react-router-dom';
 import { CalendarClock, Users, Bell, MessageSquare, FileText, ExternalLink, ArrowRight, BookOpen } from 'lucide-react';
-import { base44 } from '@/api/base44Client';
+import { db } from '@/api/client';
 import { formatDate } from '@/lib/calimara';
 
 export default function Dashboard() {
@@ -13,10 +13,10 @@ export default function Dashboard() {
 
   useEffect(() => {
     Promise.all([
-      base44.entities.Issue.list('-number', 50),
-      base44.entities.Deadline.list('date', 100),
-      base44.entities.Meeting.list('date', 100),
-      base44.entities.TeamNotice.list('-created_date', 50),
+      db.entities.Issue.list('-number', 50),
+      db.entities.Deadline.list('date', 100),
+      db.entities.Meeting.list('date', 100),
+      db.entities.TeamNotice.list('-created_date', 50),
     ]).then(([i, d, m, n]) => { setIssues(i); setDeadlines(d); setMeetings(m); setNotices(n); }).catch(() => {});
   }, []);
 

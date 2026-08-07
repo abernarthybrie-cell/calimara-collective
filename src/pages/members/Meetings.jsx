@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { base44 } from '@/api/base44Client';
+import { db } from '@/api/client';
 import { formatDate } from '@/lib/calimara';
 import { Video, MapPin } from 'lucide-react';
 
 export default function Meetings() {
   const [items, setItems] = useState([]);
-  useEffect(() => { base44.entities.Meeting.list('date', 200).then(setItems).catch(() => {}); }, []);
+  useEffect(() => { db.entities.Meeting.list('date', 200).then(setItems).catch(() => {}); }, []);
   const today = new Date();
   const upcoming = items.filter((m) => new Date(m.date) >= today).sort((a, b) => new Date(a.date) - new Date(b.date));
   const past = items.filter((m) => new Date(m.date) < today).sort((a, b) => new Date(b.date) - new Date(a.date));

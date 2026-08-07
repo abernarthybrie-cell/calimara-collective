@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Shuffle, ArrowRight } from 'lucide-react';
-import { base44 } from '@/api/base44Client';
+import { db } from '@/api/client';
 import Stamp from '@/components/Stamp';
 import ScanImage from '@/components/ScanImage';
 import StoryCard from '@/components/StoryCard';
@@ -35,11 +35,11 @@ export default function ReadingRoom() {
 
   useEffect(() => {
     Promise.all([
-      base44.entities.Story.list(300),
-      base44.entities.Illustration.list(300),
-      base44.entities.ReadingTag.list('order', 200),
-      base44.entities.ReadingCollection.list('order', 100),
-      base44.entities.Rubrica.list('order', 100),
+      db.entities.Story.list(300),
+      db.entities.Illustration.list(300),
+      db.entities.ReadingTag.list('order', 200),
+      db.entities.ReadingCollection.list('order', 100),
+      db.entities.Rubrica.list('order', 100),
     ]).then(([s, i, t, c, r]) => {
       setStories(s); setIllus(i); setTags(t); setCollections(c); setRubrici(r);
     }).catch(() => {});

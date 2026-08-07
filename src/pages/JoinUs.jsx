@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Mail, Instagram, Phone } from 'lucide-react';
-import { base44 } from '@/api/base44Client';
+import { db } from '@/api/client';
 import { useSettings } from '@/lib/calimara';
 import Stamp from '@/components/Stamp';
 
@@ -15,10 +15,10 @@ export default function JoinUs() {
 
   useEffect(() => {
     Promise.all([
-      base44.entities.Role.list('order', 100),
-      base44.entities.Rubrica.list('order', 100),
-      base44.entities.Person.list(200),
-      base44.entities.Story.list(200),
+      db.entities.Role.list('order', 100),
+      db.entities.Rubrica.list('order', 100),
+      db.entities.Person.list(200),
+      db.entities.Story.list(200),
     ]).then(([r, ru, p, s]) => { setRoles(r); setRubrici(ru); setPeople(p); setStories(s); }).catch(()=>{});
   }, []);
 

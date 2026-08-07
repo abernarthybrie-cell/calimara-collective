@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { X, Search as SearchIcon } from 'lucide-react';
-import { base44 } from '@/api/base44Client';
+import { db } from '@/api/client';
 
 const normalize = (value) => String(value || '')
   .normalize('NFD')
@@ -25,8 +25,8 @@ export default function SearchOverlay({ open, onClose }) {
     setLoading(true); setSearched(true);
     try {
       const [allIssues, stories] = await Promise.all([
-        base44.entities.Issue.list('number', 100),
-        base44.entities.Story.list('page_number', 500),
+        db.entities.Issue.list('number', 100),
+        db.entities.Story.list('page_number', 500),
       ]);
       if (id !== reqId.current) return;
 

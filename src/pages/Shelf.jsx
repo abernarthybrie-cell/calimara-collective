@@ -1,8 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Shuffle, ArrowRight } from 'lucide-react';
-import { base44 } from '@/api/base44Client';
-import Stamp from '@/components/Stamp';
+import { db } from '@/api/client';
 import ScanImage from '@/components/ScanImage';
 
 const TYPE_HEADINGS = {
@@ -27,8 +26,8 @@ export default function Shelf() {
 
   useEffect(() => {
     Promise.all([
-      base44.entities.CulturalRecommendation.list('order', 300),
-      base44.entities.Person.list(300),
+      db.entities.CulturalRecommendation.list('order', 300),
+      db.entities.Person.list(300),
     ]).then(([r, p]) => { setRecs(r); setPeople(p); }).catch(() => {});
   }, []);
 

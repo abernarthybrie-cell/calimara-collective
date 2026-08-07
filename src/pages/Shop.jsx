@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { Plus, Minus, Trash2, X, ShoppingBag } from 'lucide-react';
-import { base44 } from '@/api/base44Client';
+import { db } from '@/api/client';
 import { useCart, formatPrice } from '@/lib/calimara';
 import ScanImage from '@/components/ScanImage';
 import Stamp from '@/components/Stamp';
@@ -13,7 +12,7 @@ export default function Shop() {
   const { add } = useCart();
 
   useEffect(() => {
-    base44.entities.Product.list(200).then(setProducts).finally(() => setLoading(false));
+    db.entities.Product.list(200).then(setProducts).finally(() => setLoading(false));
   }, []);
 
   const available = products.filter((p) => p.available && p.inventory !== 0);

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet, Link, NavLink, useLocation } from 'react-router-dom';
 import { LayoutDashboard, CalendarClock, Users, Bell, MessageSquare, BookOpen, LogOut, ExternalLink, Menu, X, ArrowLeft } from 'lucide-react';
-import { base44 } from '@/api/base44Client';
+import { db } from '@/api/client';
 
 const NAV = [
   { to: '/members', label: 'Dashboard', icon: LayoutDashboard, end: true },
@@ -19,12 +19,12 @@ export default function MembersLayout() {
   const loc = useLocation();
 
   useEffect(() => {
-    base44.auth.me().then(setUser).catch(() => {});
-    base44.entities.SiteSettings.list().then((r) => setNotion(r[0]?.notion_url || '')).catch(() => {});
+    db.auth.me().then(setUser).catch(() => {});
+    db.entities.SiteSettings.list().then((r) => setNotion(r[0]?.notion_url || '')).catch(() => {});
   }, []);
   useEffect(() => { setOpen(false); }, [loc.pathname]);
 
-  const logout = () => base44.auth.logout('/');
+  const logout = () => db.auth.logout('/');
 
   const name = user?.full_name || (user?.email ? user.email.split('@')[0] : 'member');
 
@@ -102,7 +102,7 @@ export default function MembersLayout() {
 
 function IssueWorkspaces() {
   const [issues, setIssues] = useState([]);
-  useEffect(() => { base44.entities.Issue.list('-number', 50).then(setIssues).catch(() => {}); }, []);
+  useEffect(() => { db.entities.Issue.list('-number', 50).then(setIssues).catch(() => {}); }, []);
   return (
     <div className="space-y-0.5">
       {issues.length === 0 && <p className="label-mono text-archive-muted">No issues yet.</p>}

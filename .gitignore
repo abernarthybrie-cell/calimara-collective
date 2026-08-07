@@ -16,7 +16,10 @@ dist-ssr
 # Local credentials - never commit
 .env
 .secrets/
+
+# One-time migration artefacts: the Base44 export and the 162 MB media download
 base44-export/
+media-cache/
 
 # Editor directories and files
 .vscode/*

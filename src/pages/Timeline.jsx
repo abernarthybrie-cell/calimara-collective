@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { base44 } from '@/api/base44Client';
+import { db } from '@/api/client';
 import { formatDate, formatDateShort } from '@/lib/calimara';
 import ScanImage from '@/components/ScanImage';
 import Stamp from '@/components/Stamp';
@@ -17,7 +17,7 @@ export default function Timeline() {
   const [active, setActive] = useState(null);
 
   useEffect(() => {
-    base44.entities.TimelineEvent.list('-date', 200).then((rows) => {
+    db.entities.TimelineEvent.list('-date', 200).then((rows) => {
       setEvents(rows.sort((a,b) => new Date(a.date) - new Date(b.date)));
       setLoading(false);
     }).catch(() => setLoading(false));

@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { base44 } from '@/api/base44Client';
+import { db } from '@/api/client';
 import Stamp from '@/components/Stamp';
 import ContentsFilters from '@/components/ContentsFilters';
 import ArtifactPagePicker from '@/components/ArtifactPagePicker';
@@ -19,16 +19,16 @@ export default function Contents() {
 
   useEffect(() => {
     Promise.all([
-    base44.entities.Story.list('page_number', 500),
-    base44.entities.Rubrica.list('order', 100),
-    base44.entities.Issue.list('number', 100)]
+    db.entities.Story.list('page_number', 500),
+    db.entities.Rubrica.list('order', 100),
+    db.entities.Issue.list('number', 100)]
     ).then(([s, r, i]) => {
       setStories(s);
       setRubrici(r);
       setIssues(i);
       setLoading(false);
     }).catch(() => setLoading(false));
-    base44.auth.isAuthenticated().then((authenticated) => authenticated ? base44.auth.me() : null).
+    db.auth.isAuthenticated().then((authenticated) => authenticated ? db.auth.me() : null).
     then((user) => setIsAdmin(user?.role === 'admin')).catch(() => setIsAdmin(false));
   }, []);
 

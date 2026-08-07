@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useOutletContext } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
-import { base44 } from '@/api/base44Client';
+import { db } from '@/api/client';
 import { useSettings } from '@/lib/calimara';
 import Polaroid from '@/components/Polaroid';
 import Tape from '@/components/Tape';
@@ -24,11 +24,11 @@ export default function Home() {
 
   useEffect(() => {
     Promise.all([
-    base44.entities.Issue.filter({ status: 'published' }, 'number', 100),
-    base44.entities.Person.list(50),
-    base44.entities.Story.list(200),
-    base44.entities.Illustration.list(200),
-    base44.entities.TimelineEvent.list(50)]
+    db.entities.Issue.filter({ status: 'published' }, 'number', 100),
+    db.entities.Person.list(50),
+    db.entities.Story.list(200),
+    db.entities.Illustration.list(200),
+    db.entities.TimelineEvent.list(50)]
     ).then(([issues, ppl, stories, illus, events]) => {
       setStats({ issues: issues.length, people: ppl.length, stories: stories.length, illustrations: illus.length, events: events.length });
       setNewest(issues[issues.length - 1] || issues[0] || null);

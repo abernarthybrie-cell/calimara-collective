@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { installMadeOfScarsGlyphs } from '@/lib/madeOfScarsGlyphs';
 
 export default function MadeOfScarsGlyphs() {

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
-import { base44 } from '@/api/base44Client';
+import { db } from '@/api/client';
 
 /* ----------------------------- Reduced motion ----------------------------- */
 export function useReducedMotion() {
@@ -37,7 +37,7 @@ export function SettingsProvider({ children }) {
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     let alive = true;
-    base44.entities.SiteSettings.list()
+    db.entities.SiteSettings.list()
       .then((rows) => alive && setSettings(rows[0] || null))
       .catch(() => alive && setSettings(null))
       .finally(() => alive && setLoading(false));

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { X, RefreshCw } from 'lucide-react';
-import { base44 } from '@/api/base44Client';
+import { db } from '@/api/client';
 import { useReducedMotion, formatDate } from '@/lib/calimara';
 import ScanImage from './ScanImage';
 
@@ -14,7 +14,7 @@ export default function Drawer({ open, onClose }) {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const rows = await base44.entities.Fragment.list('-created_date', 60);
+      const rows = await db.entities.Fragment.list('-created_date', 60);
       setFragments(rows);
       if (rows.length) setCurrent(rows[Math.floor(Math.random() * rows.length)]);
     } catch { /* ignore */ }

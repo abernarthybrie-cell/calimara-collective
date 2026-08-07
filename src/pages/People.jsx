@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { base44 } from '@/api/base44Client';
+import { db } from '@/api/client';
 import ScanImage from '@/components/ScanImage';
 import Polaroid from '@/components/Polaroid';
 
@@ -10,7 +10,7 @@ export default function People() {
   const [role, setRole] = useState('All');
 
   useEffect(() => {
-    base44.entities.Person.list(200).then(setPeople).finally(() => setLoading(false));
+    db.entities.Person.list(200).then(setPeople).finally(() => setLoading(false));
   }, []);
 
   const allRoles = useMemo(() => {

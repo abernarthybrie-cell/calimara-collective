@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { base44 } from '@/api/base44Client';
+import { db } from '@/api/client';
 import { formatDate } from '@/lib/calimara';
 import { FileText, ArrowUpRight } from 'lucide-react';
 
@@ -16,14 +16,14 @@ export default function IssueWorkspace() {
     let alive = true;
     (async () => {
       try {
-        const issues = await base44.entities.Issue.list('-number', 100);
+        const issues = await db.entities.Issue.list('-number', 100);
         const found = issues.find((i) => i.slug === issueSlug);
         if (!found) { if (alive) setLoading(false); return; }
         setIssue(found);
         const [d, m, n] = await Promise.all([
-          base44.entities.Deadline.list('date', 100),
-          base44.entities.Meeting.list('date', 100),
-          base44.entities.TeamNotice.list('-created_date', 50),
+          db.entities.Deadline.list('date', 100),
+          db.entities.Meeting.list('date', 100),
+          db.entities.TeamNotice.list('-created_date', 50),
         ]);
         if (!alive) return;
         setDeadlines(d.filter((x) => x.issue_number === found.number));

@@ -5,6 +5,7 @@
 // did not have to be rewritten one by one. Table names are derived from entity names, matching
 // scripts/generate-schema.mjs.
 import { createClient } from '@supabase/supabase-js';
+import { tableName, parseListArgs, parseSort, safeKey } from '@/api/entityArgs';
 
 const url = import.meta.env.VITE_SUPABASE_URL;
 const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -20,35 +21,6 @@ if (!isConfigured) {
 export const supabase = createClient(url || 'https://placeholder.supabase.co', anonKey || 'placeholder', {
   auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, flowType: 'pkce' }
 });
-
-// Supabase caps an unbounded select at 1000 rows anyway; be explicit about it.
-const DEFAULT_LIMIT = 1000;
-
-export function tableName(entity) {
-  return entity
-    .replace(/([A-Z]+)([A-Z][a-z])/g, '$1_$2')
-    .replace(/([a-z0-9])([A-Z])/g, '$1_$2')
-    .replace(/[^A-Za-z0-9]+/g, '_')
-    .toLowerCase();
-}
-
-// Base44's signature is list(sort, limit), but plenty of call sites use the list(limit) shorthand.
-export function parseListArgs(first, second) {
-  if (typeof first === 'number') return { sort: null, limit: first };
-  return { sort: first ?? null, limit: typeof second === 'number' ? second : DEFAULT_LIMIT };
-}
-
-export function parseSort(sort) {
-  if (!sort) return null;
-  const descending = sort.startsWith('-');
-  return { column: descending ? sort.slice(1) : sort, ascending: !descending };
-}
-
-// Storage keys are attacker-controlled via the public submission form.
-export function safeKey(filename) {
-  const cleaned = String(filename || 'file').replace(/[^A-Za-z0-9._-]+/g, '-').replace(/^[.-]+/, '').slice(-80);
-  return `${Date.now()}-${cleaned || 'file'}`;
-}
 
 function unwrap({ data, error }) {
   if (error) throw error;
@@ -192,6 +164,20 @@ export const auth = {
   }
 };
 
+export const users = {
+  // Supabase's real invite endpoint needs the service-role key, which must never reach a browser.
+  // A magic link with shouldCreateUser gets the same result from the anon key: the recipient is
+  // emailed, and following the link creates their account and signs them in. Roles stay
+  // server-side — an admin promotes a member in the Supabase dashboard after they join, so the
+  // browser can never grant itself privileges.
+  async inviteUser(email) {
+    return unwrap(await supabase.auth.signInWithOtp({
+      email,
+      options: { shouldCreateUser: true, emailRedirectTo: absolute('/members') }
+    }));
+  }
+};
+
 export const integrations = {
   Core: {
     async UploadFile({ file }) {
@@ -203,4 +189,13 @@ export const integrations = {
   }
 };
 
-export const db = { entities, auth, integrations, supabase, isConfigured };
+export const functions = {
+  async invoke(name, body) {
+    const { data, error } = await supabase.functions.invoke(name, { body });
+    if (error) throw error;
+    if (data?.error) throw new Error(data.error);
+    return data;
+  }
+};
+
+export const db = { entities, auth, users, integrations, functions, supabase, isConfigured };

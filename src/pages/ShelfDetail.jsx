@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowRight, ArrowLeft } from 'lucide-react';
-import { base44 } from '@/api/base44Client';
+import { db } from '@/api/client';
 import Stamp from '@/components/Stamp';
 import ScanImage from '@/components/ScanImage';
 
@@ -15,9 +15,9 @@ export default function ShelfDetail() {
   useEffect(() => {
     setLoading(true);
     Promise.all([
-      base44.entities.CulturalRecommendation.filter({ slug }, 'order', 5),
-      base44.entities.Person.list(300),
-      base44.entities.Story.list(300),
+      db.entities.CulturalRecommendation.filter({ slug }, 'order', 5),
+      db.entities.Person.list(300),
+      db.entities.Story.list(300),
     ]).then(([r, p, s]) => {
       setRec(r[0] || null); setPeople(p); setStories(s); setLoading(false);
     }).catch(() => setLoading(false));

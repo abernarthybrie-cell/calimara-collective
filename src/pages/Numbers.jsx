@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
-import { base44 } from '@/api/base44Client';
+import { db } from '@/api/client';
 import { useSettings } from '@/lib/calimara';
 import Stamp from '@/components/Stamp';
 
@@ -11,12 +11,12 @@ export default function Numbers() {
 
   useEffect(() => {
     Promise.all([
-      base44.entities.Issue.filter({ status: 'published' }, 'number', 200),
-      base44.entities.Person.list(500),
-      base44.entities.Story.list(500),
-      base44.entities.Illustration.list(500),
-      base44.entities.TimelineEvent.list(200),
-      base44.entities.Rubrica.list(200),
+      db.entities.Issue.filter({ status: 'published' }, 'number', 200),
+      db.entities.Person.list(500),
+      db.entities.Story.list(500),
+      db.entities.Illustration.list(500),
+      db.entities.TimelineEvent.list(200),
+      db.entities.Rubrica.list(200),
     ]).then(([issues, people, stories, illus, events, rubrici]) => {
       const pagesPrinted = settings?.manual_pages_printed || issues.reduce((sum, i) => sum + (i.page_count || 0), 0);
       const poems = stories.filter((s) => {

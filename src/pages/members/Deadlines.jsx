@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { base44 } from '@/api/base44Client';
+import { db } from '@/api/client';
 import { formatDate } from '@/lib/calimara';
 import Stamp from '@/components/Stamp';
 
@@ -12,7 +12,7 @@ const STATUS_COLOR = {
 
 export default function Deadlines() {
   const [items, setItems] = useState([]);
-  useEffect(() => { base44.entities.Deadline.list('date', 200).then(setItems).catch(() => {}); }, []);
+  useEffect(() => { db.entities.Deadline.list('date', 200).then(setItems).catch(() => {}); }, []);
   const sorted = [...items].sort((a, b) => new Date(a.date) - new Date(b.date));
 
   return (

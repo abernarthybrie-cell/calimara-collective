@@ -1,11 +1,11 @@
 const SOURCES = {
-  'Î': 'https://media.base44.com/images/public/6a68e00e568a670980669b9d/3f23c7957_1.png',
-  'Â': 'https://media.base44.com/images/public/6a68e00e568a670980669b9d/c9cbf5c9b_2.png',
-  'Ă': 'https://media.base44.com/images/public/6a68e00e568a670980669b9d/f2b644e55_3.png',
-  'Ș': 'https://media.base44.com/images/public/6a68e00e568a670980669b9d/1bdb5b794_4.png',
-  'Ț': 'https://media.base44.com/images/public/6a68e00e568a670980669b9d/2fc3ca249_5.png',
-  'Ş': 'https://media.base44.com/images/public/6a68e00e568a670980669b9d/5db469728_6.png',
-  "'": 'https://media.base44.com/images/public/6a68e00e568a670980669b9d/5c52ccecd_72.png',
+  'Î': 'https://media.calimara.online/images/3f23c7957_1.png',
+  'Â': 'https://media.calimara.online/images/c9cbf5c9b_2.png',
+  'Ă': 'https://media.calimara.online/images/f2b644e55_3.png',
+  'Ș': 'https://media.calimara.online/images/1bdb5b794_4.png',
+  'Ț': 'https://media.calimara.online/images/2fc3ca249_5.png',
+  'Ş': 'https://media.calimara.online/images/5db469728_6.png',
+  "'": 'https://media.calimara.online/images/5c52ccecd_72.png',
 };
 
 const TARGET = /[ÎÂĂȘȚŞ']/;

@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { Link } from 'react-router-dom';
 import { ArrowRight, Mail } from 'lucide-react';
-import { base44 } from '@/api/base44Client';
+import { db } from '@/api/client';
 import { useSettings } from '@/lib/calimara';
 
 export default function QA() {
@@ -10,7 +9,7 @@ export default function QA() {
   const [open, setOpen] = useState(null);
 
   useEffect(() => {
-    base44.entities.FAQItem.list('order', 200)
+    db.entities.FAQItem.list('order', 200)
       .then((r) => setItems(r.filter((x) => x.published !== false)))
       .catch(() => {});
   }, []);

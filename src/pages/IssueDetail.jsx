@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Download } from 'lucide-react';
-import { base44 } from '@/api/base44Client';
+import { db } from '@/api/client';
 import { formatMonthYear } from '@/lib/calimara';
 import ScanImage from '@/components/ScanImage';
 import PageZoom from '@/components/PageZoom';
@@ -46,9 +46,9 @@ export default function IssueDetail() {
     setMobilePage(1);
     setTurn(null);
     Promise.all([
-    base44.entities.Issue.filter({ slug: issueSlug }, 'number', 50),
-    base44.entities.Story.filter({ issue_slug: issueSlug }, 'page_number', 200),
-    base44.entities.Illustration.filter({ issue_slug: issueSlug }, 'page_number', 200)]
+    db.entities.Issue.filter({ slug: issueSlug }, 'number', 50),
+    db.entities.Story.filter({ issue_slug: issueSlug }, 'page_number', 200),
+    db.entities.Illustration.filter({ issue_slug: issueSlug }, 'page_number', 200)]
     ).then(([iss, st, il]) => {
       setIssue(iss[0] || null);
       setStories(st);

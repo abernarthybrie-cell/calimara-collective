@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useOutletContext } from 'react-router-dom';
-import { base44 } from '@/api/base44Client';
+import { db } from '@/api/client';
 import { Send, Trash2 } from 'lucide-react';
 
 export default function Chat() {
@@ -14,10 +14,10 @@ export default function Chat() {
   const name = user?.full_name || (user?.email ? user.email.split('@')[0] : 'member');
 
   useEffect(() => {
-    base44.entities.MemberMessage.list('-created_date', 200)
+    db.entities.MemberMessage.list('-created_date', 200)
       .then((rows) => setMessages([...rows].reverse()))
       .catch(() => {});
-    const unsub = base44.entities.MemberMessage.subscribe((event) => {
+    const unsub = db.entities.MemberMessage.subscribe((event) => {
       if (event.type === 'create') setMessages((prev) => [...prev, event.data].slice(-300));
       if (event.type === 'delete') setMessages((prev) => prev.filter((m) => m.id !== event.data.id));
     });
@@ -31,12 +31,12 @@ export default function Chat() {
     if (!text.trim()) return;
     setSending(true);
     try {
-      await base44.entities.MemberMessage.create({ text: text.trim(), author_name: name, author_id: user?.id });
+      await db.entities.MemberMessage.create({ text: text.trim(), author_name: name, author_id: user?.id });
       setText('');
     } catch {} finally { setSending(false); }
   };
 
-  const remove = async (id) => { try { await base44.entities.MemberMessage.delete(id); } catch {} };
+  const remove = async (id) => { try { await db.entities.MemberMessage.delete(id); } catch {} };
 
   return (
     <div className="flex flex-col h-[calc(100vh-7rem)] space-y-4">

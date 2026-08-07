@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useOutletContext } from 'react-router-dom';
-import { base44 } from '@/api/base44Client';
+import { db } from '@/api/client';
 import { UserPlus, Check } from 'lucide-react';
 
 export default function Directory() {
   const { user } = useOutletContext() || {};
   const [people, setPeople] = useState([]);
   const [email, setEmail] = useState('');
-  const [role, setRole] = useState('user');
   const [done, setDone] = useState('');
   const [err, setErr] = useState('');
 
-  useEffect(() => { base44.entities.Person.list(200).then(setPeople).catch(() => {}); }, []);
+  useEffect(() => { db.entities.Person.list(200).then(setPeople).catch(() => {}); }, []);
 
   const isAdmin = user?.role === 'admin';
   const members = people.filter((p) => p.status !== 'past');
@@ -20,7 +19,7 @@ export default function Directory() {
     e.preventDefault();
     setDone(''); setErr('');
     try {
-      await base44.users.inviteUser(email, role);
+      await db.users.inviteUser(email);
       setDone(`Invitation sent to ${email}.`);
       setEmail('');
     } catch (e2) {
@@ -41,15 +40,11 @@ export default function Directory() {
           <p className="label-mono text-dusty-yellow flex items-center gap-1"><UserPlus size={13}/> INVITE A MEMBER</p>
           <form onSubmit={invite} className="mt-3 flex flex-col sm:flex-row gap-2">
             <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="email@school.ro" className="flex-1 bg-archive-bg border border-archive-line px-3 py-2 text-archive-fg focus-ring" />
-            <select value={role} onChange={(e) => setRole(e.target.value)} className="bg-archive-bg border border-archive-line px-3 py-2 text-archive-fg label-mono focus-ring">
-              <option value="user">MEMBER</option>
-              <option value="admin">ADMIN</option>
-            </select>
             <button type="submit" className="bg-cyanotype text-paper px-4 py-2 label-mono hover:bg-dusty-yellow hover:text-ink focus-ring">SEND INVITE</button>
           </form>
           {done && <p className="label-mono text-forest mt-2 flex items-center gap-1"><Check size={13}/> {done}</p>}
           {err && <p className="label-mono text-faded-red mt-2">{err}</p>}
-          <p className="font-body text-xs text-archive-muted mt-3">Invitations are sent by email. New members cannot self-register — access is approval-based.</p>
+          <p className="font-body text-xs text-archive-muted mt-3">The invitation email contains a sign-in link that creates the account. Everyone joins as a member; admin rights are granted separately in Supabase.</p>
         </section>
       )}
 

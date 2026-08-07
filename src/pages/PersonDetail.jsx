@@ -1,8 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
-import { base44 } from '@/api/base44Client';
-import { formatDate } from '@/lib/calimara';
+import { db } from '@/api/client';
 import ScanImage from '@/components/ScanImage';
 import Polaroid from '@/components/Polaroid';
 import Stamp from '@/components/Stamp';
@@ -19,14 +18,14 @@ export default function PersonDetail() {
   useEffect(() => {
     (async () => {
       try {
-        const all = await base44.entities.Person.list(300);
+        const all = await db.entities.Person.list(300);
         setPeople(all);
         const p = all.find((x) => x.slug === id || x.name === decodeURIComponent(id));
         setPerson(p || null);
         if (p) {
           const [st, il] = await Promise.all([
-            base44.entities.Story.filter({ author_name: p.name }, 'page_number', 200),
-            base44.entities.Illustration.filter({ illustrator_name: p.name }, 'page_number', 200),
+            db.entities.Story.filter({ author_name: p.name }, 'page_number', 200),
+            db.entities.Illustration.filter({ illustrator_name: p.name }, 'page_number', 200),
           ]);
           setStories(st);
           setIllus(il);

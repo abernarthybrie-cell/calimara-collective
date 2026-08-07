@@ -1,77 +1,99 @@
-# Base44 Project
+# Călimara
 
-Use this repository to run and edit the app locally, then publish changes back through Base44.
+The website for Călimara, a magazine made by young people in Bucharest — <https://calimara.online>.
 
-Any change pushed to the repo will also be reflected in the Base44 Builder.
+Originally built on Base44; now fully self-hosted. Nothing in this repo talks to Base44 anymore.
 
-## Prerequisites
+## Architecture
 
-1. Clone the repository using the project's Git URL.
-2. Navigate to the project directory.
-3. Install dependencies: `npm install`.
-4. Install the Base44 CLI: `npm install -g base44@latest`.
+| Concern | Where it lives |
+| --- | --- |
+| Frontend | React 18 + Vite 6, static build on Cloudflare Pages (project `calimara`) |
+| Database | Supabase Postgres, with row-level security |
+| Auth | Supabase Auth (email/password, Google, magic-link invites) |
+| Images & uploads | Cloudflare R2, public at `https://media.calimara.online` |
+| Form uploads | Supabase Storage, bucket `uploads` |
+| DNS & CDN | Cloudflare (domain registered at Namecheap) |
 
-See the [Base44 CLI docs](https://docs.base44.com/developers/references/cli/get-started/overview) if you want to run Base44 commands directly.
+`src/api/client.js` is the single point of contact with the backend. It exposes `db.entities.*`,
+`db.auth.*`, `db.users.*` and `db.integrations.Core.UploadFile`, which is why the ~35 pages that
+consume it read the way they do — the shapes were inherited from the Base44 SDK and kept so the
+migration did not have to touch every page.
 
-## Run Locally
-
-Run the full local development environment from the project root:
-
-```bash
-base44 dev
-```
-
-`base44 dev` starts the local Base44 development backend and, when this app is configured for it, also starts the frontend dev server for you. Use the frontend URL printed by the command.
-
-For example, when the Base44 project config includes a `serveCommand`, `base44 dev` can launch the frontend too:
-
-```json5
-{
-  "site": {
-    "serveCommand": "npm run dev"
-  }
-}
-```
-
-In a Base44 project this lives in `base44/config.jsonc`.
-
-## Run Only The Frontend
-
-If you only want to work on the frontend against the hosted Base44 backend, run:
+## Run locally
 
 ```bash
+npm install
 npm run dev
 ```
 
-Open the local URL printed by Vite.
+This runs the frontend against the live Supabase backend. There is no separate local backend.
 
-## Use The Hosted Backend
-
-For frontend-only development, create or update `.env.local` in the project root:
-
-```bash
-VITE_BASE44_APP_ID=your_app_id
-VITE_BASE44_APP_BASE_URL=https://your-app.base44.app
-```
-
-`VITE_BASE44_APP_ID` identifies the Base44 app.
-
-`VITE_BASE44_APP_BASE_URL` tells the Base44 Vite plugin where to send local `/api` requests. Point it at your deployed Base44 app URL when you want the local frontend to use the hosted backend.
-
-When you use `base44 dev`, the command injects the local Base44 values for you, so `.env.local` is mainly needed for frontend-only workflows.
-
-## Publish Your Changes
-
-After pushing your changes to git, open the Base44 dashboard and publish the app:
+`.env.local` holds the two values the frontend needs (both are safe in a browser bundle; the
+database is protected by row-level security, not by hiding the key):
 
 ```bash
-base44 dashboard open
+VITE_SUPABASE_URL=https://<project-ref>.supabase.co
+VITE_SUPABASE_ANON_KEY=<anon key>
 ```
 
-## Docs & Support
+## Checks
 
-Documentation: [https://docs.base44.com/Integrations/Using-GitHub](https://docs.base44.com/Integrations/Using-GitHub)
+```bash
+npm run lint
+npm run build
+node src/api/entityArgs.check.mjs
+```
 
-Base44 CLI command reference: [https://docs.base44.com/developers/references/cli/commands/introduction](https://docs.base44.com/developers/references/cli/commands/introduction)
+## Deploy
 
-Support: [https://app.base44.com/support](https://app.base44.com/support)
+```bash
+npm run build
+npx wrangler pages deploy dist --project-name=calimara --branch=main
+```
+
+Requires `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` in the environment.
+
+## Database
+
+`supabase/schema.sql` is generated from the entity definitions in `base44/entities/` (kept purely
+as the schema's source of truth) by `scripts/generate-schema.mjs`. `supabase/runtime.sql` is
+hand-written and holds what those definitions cannot express: insert defaults, the storage bucket
+and its limits, and the realtime publication for the members' chat. Both are idempotent.
+
+To change the schema, edit the entity definition, regenerate, and re-apply:
+
+```bash
+node scripts/generate-schema.mjs
+node scripts/import-supabase.mjs --schema-only
+```
+
+## Migration scripts
+
+One-time tools, kept for reference and reproducibility. They read credentials from
+`.secrets/credentials.env`, which is gitignored and must never be committed.
+
+| Script | Purpose |
+| --- | --- |
+| `scripts/export-base44.mjs` | Pulled all 173 records out of the Base44 API |
+| `scripts/media-manifest.mjs` | Inventoried every image URL in the data and the source |
+| `scripts/migrate-media.mjs` | Downloaded the 235 images and uploaded them to R2 |
+| `scripts/generate-schema.mjs` | Turned entity definitions into Postgres DDL + RLS policies |
+| `scripts/import-supabase.mjs` | Applied the schema and loaded the data, rewriting media URLs |
+
+Each has a `--selftest` flag covering its non-obvious logic.
+
+## Story transcription (admin)
+
+`supabase/functions/transcribe-story-pages` is the port of the old Base44 AI function. Admins see a
+**TRANSCRIBE PAGES** button on each story detail page. It needs an OpenAI key (vision model, default
+`gpt-4o`):
+
+```bash
+npx supabase login
+npx supabase link --project-ref hkvrkekzdabjkbwrdesw
+npx supabase secrets set OPENAI_API_KEY=sk-...
+npx supabase functions deploy transcribe-story-pages
+```
+
+Optional: `npx supabase secrets set OPENAI_MODEL=gpt-4o-mini` for a cheaper model.

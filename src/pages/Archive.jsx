@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { base44 } from '@/api/base44Client';
+import { db } from '@/api/client';
 import IssueFolder from '@/components/IssueFolder';
 import Stamp from '@/components/Stamp';
 
@@ -29,9 +29,9 @@ export default function Archive() {
 
   useEffect(() => {
     Promise.all([
-      base44.entities.Issue.filter({ status: 'published' }, 'number', 100),
-      base44.entities.Story.list(400),
-      base44.entities.Illustration.list(400)
+      db.entities.Issue.filter({ status: 'published' }, 'number', 100),
+      db.entities.Story.list(400),
+      db.entities.Illustration.list(400)
     ]).then(([iss, st, il]) => {
       setIssues(iss);
       setStories(st);
