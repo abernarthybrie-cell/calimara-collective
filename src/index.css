@@ -91,6 +91,13 @@
   font-display: swap;
   src: url('./assets/fonts/battgge-f37ac6f8-400-normal.woff2') format('woff2');
 }
+@font-face {
+  font-family: 'BodoniFLF';
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  src: url('./assets/fonts/bodoni-flf-c9da19f7-500-normal.woff2') format('woff2');
+}
 /* base44-workspace-fonts:end */
 
 @tailwind base;
