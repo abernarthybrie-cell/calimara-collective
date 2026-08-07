@@ -20,7 +20,10 @@ Start with `README.md` for setup, architecture, and the deploy workflow.
 - `src/lib/AuthContext.jsx`: session state, backed by Supabase `onAuthStateChange`.
 - `supabase/schema.sql`: generated. Do not hand-edit; change `base44/entities/*.jsonc` and regenerate.
 - `supabase/runtime.sql`: hand-written, for what the entity definitions cannot express.
-- `.secrets/credentials.env` and `.env.local`: gitignored. Never commit or print secrets.
+- `.secrets/credentials.env`: tracked ops file (owner choice). Keep the repo private; never put
+  these keys in frontend code or paste them into chat. `.env.local` stays gitignored (Vite anon
+  key for local `npm run dev`).
+- `npm run deploy` / `scripts/deploy.mjs`: Pages + Edge Functions from any clone.
 
 ## Working Notes
 

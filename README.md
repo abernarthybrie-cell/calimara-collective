@@ -47,12 +47,19 @@ node src/api/entityArgs.check.mjs
 
 ## Deploy
 
+From any machine with this repo and Node:
+
 ```bash
-npm run build
-npx wrangler pages deploy dist --project-name=calimara --branch=main
+npm install
+npm run deploy              # Cloudflare Pages + Edge Functions
+npm run deploy:web          # Pages only
+npm run deploy:functions    # Edge Functions only
 ```
 
-Requires `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` in the environment.
+`scripts/deploy.mjs` loads `.secrets/credentials.env` (tracked in this private repo by owner
+choice). Cloudflare deploy needs `CLOUDFLARE_API_TOKEN` + `R2_ACCOUNT_ID`. Edge Functions also need
+`SUPABASE_ACCESS_TOKEN` (personal token from
+[Account → Access Tokens](https://supabase.com/dashboard/account/tokens) — not the service-role JWT).
 
 ## Database
 
@@ -71,7 +78,7 @@ node scripts/import-supabase.mjs --schema-only
 ## Migration scripts
 
 One-time tools, kept for reference and reproducibility. They read credentials from
-`.secrets/credentials.env`, which is gitignored and must never be committed.
+`.secrets/credentials.env` (tracked; keep the repo private).
 
 | Script | Purpose |
 | --- | --- |
