@@ -3,3 +3,6 @@
 
 [functions.transcribe-story-pages]
 verify_jwt = true
+
+[functions.admin-create-user]
+verify_jwt = true

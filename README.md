@@ -83,6 +83,22 @@ One-time tools, kept for reference and reproducibility. They read credentials fr
 
 Each has a `--selftest` flag covering its non-obvious logic.
 
+## Admin portal
+
+Staff (`admin` or `editor`) open `/admin` after signing in. It covers:
+
+- Submissions inbox (status pipeline, notes, assignment)
+- CRUD for issues, stories, illustrations, fragments, people, roles, rubrici, FAQ, open calls, timeline, shelf, shop, reading room, deadlines, meetings, notices
+- Site settings singleton
+- Users & roles (admins only)
+
+RLS: `supabase/admin-policies.sql` adds `is_staff()` and lets staff write content; only admins update other profiles’ roles.
+
+```bash
+# apply once against the live DB (same credentials as import-supabase)
+# then: npm run build && wrangler pages deploy …
+```
+
 ## Story transcription (admin)
 
 `supabase/functions/transcribe-story-pages` is the port of the old Base44 AI function. Admins see a

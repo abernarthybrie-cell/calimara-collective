@@ -250,6 +250,40 @@
     font-size: 0.6875rem;
   }
 
+  /* Staff shells (admin portal + editorial room): readable UI fonts.
+     Made Of Scars / Punktype stay for the public magazine only. */
+  .admin-portal {
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+    letter-spacing: normal;
+  }
+  .admin-portal .font-heading,
+  .admin-portal .font-body,
+  .admin-portal .font-hand,
+  .admin-portal .font-ui,
+  .admin-portal .font-mono-c,
+  .admin-portal .label-mono,
+  .admin-portal input,
+  .admin-portal textarea,
+  .admin-portal select,
+  .admin-portal button,
+  .admin-portal table {
+    font-family: inherit;
+    letter-spacing: normal;
+    text-transform: none;
+  }
+  .admin-portal .label-mono {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .admin-portal .font-heading {
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
   .nav-link {
     font-family: var(--font-ui);
     text-transform: uppercase;

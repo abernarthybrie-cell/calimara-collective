@@ -38,11 +38,15 @@ drop policy if exists "uploads_read" on storage.objects;
 create policy "uploads_read" on storage.objects
   for select using (bucket_id = 'uploads');
 
--- 3. Bootstrap the first admin.
--- The Base44 export contained exactly one user, an admin. Passwords cannot be exported, so her
--- Supabase account only comes into existence the first time she signs in — which would leave nobody
--- able to reach the admin-only UI. Promoting by email on insert removes that chicken-and-egg step.
--- Everyone else joins as 'user'; grant further admins from the Supabase dashboard.
+-- 3. Roles: allow editor for the future admin portal (writes stay admin-only via is_admin()).
+alter table public.profile drop constraint if exists profile_role_allowed;
+alter table public.profile
+  add constraint profile_role_allowed check (role in ('user', 'editor', 'admin'));
+
+-- 4. Bootstrap known admins.
+-- Passwords cannot be exported from Base44, so the first Supabase account only exists after signup.
+-- Promoting by email on insert removes that chicken-and-egg step.
+-- Further admins/editors: Supabase dashboard or the future admin portal.
 create or replace function public.promote_known_admin()
 returns trigger
 language plpgsql
@@ -50,7 +54,10 @@ security definer
 set search_path = public
 as $$
 begin
-  if new.email = 'abernarthybrie@gmail.com' then
+  if new.email in (
+    'abernarthybrie@gmail.com',
+    'abrenarthybrie@gmail.com'
+  ) then
     new.role := 'admin';
   end if;
   return new;
@@ -62,10 +69,13 @@ create trigger promote_known_admin
   before insert on public.profile
   for each row execute function public.promote_known_admin();
 
--- In case that account already signed in before this ran.
-update public.profile set role = 'admin' where email = 'abernarthybrie@gmail.com';
+update public.profile set role = 'admin'
+where email in (
+  'abernarthybrie@gmail.com',
+  'abrenarthybrie@gmail.com'
+);
 
--- 4. Realtime for the members' chat.
+-- 5. Realtime for the members' chat.
 do $$
 begin
   if not exists (

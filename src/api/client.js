@@ -165,16 +165,18 @@ export const auth = {
 };
 
 export const users = {
-  // Supabase's real invite endpoint needs the service-role key, which must never reach a browser.
-  // A magic link with shouldCreateUser gets the same result from the anon key: the recipient is
-  // emailed, and following the link creates their account and signs them in. Roles stay
-  // server-side — an admin promotes a member in the Supabase dashboard after they join, so the
-  // browser can never grant itself privileges.
+  // Magic-link invite (anon). New accounts start as user until an admin promotes them.
   async inviteUser(email) {
     return unwrap(await supabase.auth.signInWithOtp({
       email,
       options: { shouldCreateUser: true, emailRedirectTo: absolute('/members') }
     }));
+  },
+
+  // Admin-only Edge Function: creates auth.users with a password (hashed by Supabase Auth)
+  // and a profile row with the chosen role. Never put the service-role key in the browser.
+  async createWithPassword({ email, password, role = 'user', full_name = '' }) {
+    return functions.invoke('admin-create-user', { email, password, role, full_name });
   }
 };
 

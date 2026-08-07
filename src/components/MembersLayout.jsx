@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet, Link, NavLink, useLocation } from 'react-router-dom';
-import { LayoutDashboard, CalendarClock, Users, Bell, MessageSquare, BookOpen, LogOut, ExternalLink, Menu, X, ArrowLeft } from 'lucide-react';
+import {
+  LayoutDashboard, CalendarClock, Users, Bell, MessageSquare, BookOpen, LogOut, ExternalLink, Menu, X, ArrowLeft, FileText, Shield, Inbox
+} from 'lucide-react';
 import { db } from '@/api/client';
 
 const NAV = [
   { to: '/members', label: 'Dashboard', icon: LayoutDashboard, end: true },
   { to: '/members/deadlines', label: 'Deadlines', icon: CalendarClock },
+  { to: '/members/submissions', label: 'Submissions', icon: Inbox },
   { to: '/members/meetings', label: 'Meetings', icon: Users },
   { to: '/members/notices', label: 'Team Notices', icon: Bell },
   { to: '/members/directory', label: 'Directory', icon: BookOpen },
   { to: '/members/chat', label: 'Team Chat', icon: MessageSquare },
+  { to: '/members/readme', label: 'Readme', icon: FileText, adminOnly: true },
 ];
 
 export default function MembersLayout() {
@@ -27,9 +31,11 @@ export default function MembersLayout() {
   const logout = () => db.auth.logout('/');
 
   const name = user?.full_name || (user?.email ? user.email.split('@')[0] : 'member');
+  const isAdmin = user?.role === 'admin';
+  const nav = NAV.filter((n) => !n.adminOnly || isAdmin);
 
   return (
-    <div className="min-h-screen bg-archive-bg text-archive-fg">
+    <div className="admin-portal min-h-screen bg-archive-bg text-archive-fg">
       <header className="fixed top-0 inset-x-0 z-40 bg-archive-bg2 border-b border-archive-line h-14 flex items-center justify-between px-4 sm:px-6">
         <div className="flex items-center gap-3">
           <button className="md:hidden focus-ring p-1 -ml-1" onClick={() => setOpen((v) => !v)} aria-label="Menu">
@@ -41,7 +47,14 @@ export default function MembersLayout() {
           </div>
         </div>
         <div className="flex items-center gap-3 sm:gap-4">
-          <span className="label-mono text-archive-muted hidden sm:block">SIGNED IN · {name}</span>
+          <span className="label-mono text-archive-muted hidden sm:block">
+            SIGNED IN · {name}{user?.role ? ` · ${String(user.role).toUpperCase()}` : ''}
+          </span>
+          {isAdmin && (
+            <Link to="/admin" className="label-mono text-dusty-yellow hover:text-cyanotype flex items-center gap-1 focus-ring">
+              <Shield size={12} /> ADMIN
+            </Link>
+          )}
           <Link to="/" className="label-mono text-archive-fg hover:text-dusty-yellow flex items-center gap-1 focus-ring">
             <ArrowLeft size={12}/> PUBLIC
           </Link>
@@ -53,7 +66,7 @@ export default function MembersLayout() {
 
       <aside className="hidden md:flex flex-col fixed left-0 top-14 bottom-0 w-60 border-r border-archive-line bg-archive-bg2 py-6 px-4 z-30 overflow-y-auto">
         <nav className="flex flex-col gap-0.5">
-          {NAV.map((n) => (
+          {nav.map((n) => (
             <NavLink key={n.to} to={n.to} end={n.end}
               className={({ isActive }) => `flex items-center gap-3 px-3 py-2.5 label-mono focus-ring transition-colors border-l-2 ${isActive ? 'bg-archive-bg text-dusty-yellow border-dusty-yellow' : 'text-archive-fg/70 hover:text-dusty-yellow border-transparent'}`}>
               <n.icon size={15}/> {n.label.toUpperCase()}
@@ -65,6 +78,11 @@ export default function MembersLayout() {
           <IssueWorkspaces />
         </div>
         <div className="mt-auto pt-6 space-y-2">
+          {isAdmin && (
+            <Link to="/admin" className="flex items-center gap-2 px-3 py-2.5 label-mono text-dusty-yellow hover:text-cyanotype focus-ring">
+              <Shield size={13}/> ADMIN PORTAL
+            </Link>
+          )}
           {notion && (
             <a href={notion} target="_blank" rel="noreferrer" className="flex items-center gap-2 px-3 py-2.5 label-mono text-cyanotype hover:text-dusty-yellow focus-ring">
               <ExternalLink size={13}/> OPEN NOTION
@@ -76,7 +94,7 @@ export default function MembersLayout() {
       {open && (
         <div className="md:hidden fixed inset-0 top-14 bg-archive-bg2 z-30 overflow-y-auto">
           <nav className="flex flex-col px-4 py-6 gap-0.5">
-            {NAV.map((n) => (
+            {nav.map((n) => (
               <NavLink key={n.to} to={n.to} end={n.end}
                 className={({ isActive }) => `flex items-center gap-3 px-3 py-3 label-mono ${isActive ? 'text-dusty-yellow' : 'text-archive-fg/70'}`}>
                 <n.icon size={16}/> {n.label.toUpperCase()}

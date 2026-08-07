@@ -34,6 +34,15 @@ import Notices from '@/pages/members/Notices';
 import Directory from '@/pages/members/Directory';
 import Chat from '@/pages/members/Chat';
 import IssueWorkspace from '@/pages/members/IssueWorkspace';
+import AdminOnlyReadme from '@/pages/members/AdminOnlyReadme';
+import AdminRoute from '@/components/AdminRoute';
+import AdminLayout from '@/pages/admin/AdminLayout';
+import AdminHome from '@/pages/admin/AdminHome';
+import ResourcePage from '@/pages/admin/ResourcePage';
+import Submissions from '@/pages/admin/Submissions';
+import Users from '@/pages/admin/Users';
+import Settings from '@/pages/admin/Settings';
+import { RESOURCES } from '@/pages/admin/resources';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth } = useAuth();
@@ -75,11 +84,25 @@ const AuthenticatedApp = () => {
         <Route element={<MembersLayout />}>
           <Route path="/members" element={<Dashboard />} />
           <Route path="/members/deadlines" element={<Deadlines />} />
+          <Route path="/members/submissions" element={<Submissions />} />
           <Route path="/members/meetings" element={<Meetings />} />
           <Route path="/members/notices" element={<Notices />} />
           <Route path="/members/directory" element={<Directory />} />
           <Route path="/members/chat" element={<Chat />} />
+          <Route path="/members/readme" element={<AdminOnlyReadme />} />
           <Route path="/members/issue/:issueSlug" element={<IssueWorkspace />} />
+        </Route>
+      </Route>
+
+      <Route element={<AdminRoute />}>
+        <Route element={<AdminLayout />}>
+          <Route path="/admin" element={<AdminHome />} />
+          <Route path="/admin/submissions" element={<Navigate to="/members/submissions" replace />} />
+          <Route path="/admin/settings" element={<Settings />} />
+          <Route path="/admin/users" element={<Users />} />
+          {Object.keys(RESOURCES).map((key) => (
+            <Route key={key} path={`/admin/${key}`} element={<ResourcePage resourceKey={key} />} />
+          ))}
         </Route>
       </Route>
 
