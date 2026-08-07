@@ -113,7 +113,7 @@ export default function Home() {
         <div className="absolute -left-10 top-10 w-72 h-72 bg-paper rotate-6 opacity-60 pointer-events-none" aria-hidden />
         <Reveal className="relative mx-auto max-w-3xl px-6">
           <p className="label-mono text-burgundy mb-4">— WHAT IS CĂLIMARA? —</p>
-          <p className="font-heading text-2xl md:text-3xl leading-relaxed text-ink">
+          <p className="text-2xl md:text-3xl leading-relaxed text-ink [font-family:'BodoniFLF',_sans-serif] font-medium">
             {settings?.about_text || 'Călimara is a student-created creative magazine where literature, visual art, photography, cinema, and the strange little things that make us human meet on paper.'}
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-4">
