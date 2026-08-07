@@ -90,17 +90,17 @@ export default function Home() {
 
         {/* LAYER 3 — central content */}
         <div className="relative z-10 mx-auto max-w-[1400px] px-6 lg:px-10 py-20 md:py-28 text-center min-h-[calc(100vh-4rem)] flex flex-col items-center justify-center">
-          <p className="label-mono text-burgundy mb-5 animate-fade-in">INDEPENDENT STUDENT MAGAZINE · BUCHAREST</p>
-          <h1 className="leading-[0.82] tracking-tight animate-rise-in font-normal [font-family:'HawtFriend',_sans-serif] text-[185px] md:text-[185px]">Calimara collective</h1>
-          <p className="italic text-2xl md:text-3xl text-ink-soft mt-6 max-w-2xl mx-auto animate-fade-in font-normal [font-family:'Made_Of_Scars',_sans-serif]">
+          <p className="label-mono text-burgundy mb-5 animate-fade-in text-9xl">INDEPENDENT STUDENT MAGAZINE · BUCHAREST</p>
+          <h1 className="leading-[0.82] tracking-tight animate-rise-in text-[185px] md:text-[185px] [font-family:'HawtFriend',_'EB_Garamond',_Georgia,_serif] font-normal">Calimara collective</h1>
+          <p className="text-2xl md:text-3xl text-ink-soft mt-6 max-w-2xl mx-auto animate-fade-in [font-family:'BodoniFLF',_sans-serif] font-medium not-italic hidden">
             {settings?.tagline || 'A magazine made by young people who have something to say.'}
           </p>
           <div className="flex flex-col sm:flex-row items-center gap-4 mt-10">
-            <Link to="/archive" className="group bg-ink text-paper px-7 py-3.5 hover:bg-burgundy transition-colors focus-ring inline-flex items-center gap-2">
+            <Link to="/archive" className="group bg-ink text-paper px-7 py-3.5 hover:bg-burgundy transition-colors focus-ring inline-flex items-center gap-2 hidden">
               <span className="label-mono [font-family:'Punktype',_sans-serif] font-normal">ENTER THE ARCHIVE</span>
               <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
             </Link>
-            <button onClick={openDrawer} className="label-mono text-ink hover:text-burgundy focus-ring underline underline-offset-4">
+            <button onClick={openDrawer} className="label-mono text-ink hover:text-burgundy focus-ring underline underline-offset-4 hidden">
               SHOW ME SOMETHING RANDOM →
             </button>
           </div>
@@ -113,13 +113,13 @@ export default function Home() {
         <div className="absolute -left-10 top-10 w-72 h-72 bg-paper rotate-6 opacity-60 pointer-events-none" aria-hidden />
         <Reveal className="relative mx-auto max-w-3xl px-6">
           <p className="label-mono text-burgundy mb-4">— WHAT IS CĂLIMARA? —</p>
-          <p className="font-heading text-2xl md:text-3xl leading-relaxed text-ink">
+          <p className="text-2xl md:text-3xl leading-relaxed text-ink [font-family:'EB_Garamond',_serif] font-normal">
             {settings?.about_text || 'Călimara is a student-created creative magazine where literature, visual art, photography, cinema, and the strange little things that make us human meet on paper.'}
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-4">
             <Stamp className="text-cyanotype">EST. {settings?.founded_year || '2024'}</Stamp>
             <button onClick={() => setAboutOpen(true)} className="label-mono text-burgundy hover:text-ink focus-ring underline underline-offset-4">read the full note →</button>
-            <span className="font-mono-c text-xs text-ink-soft">{settings?.city || 'Bucharest'} · printed in small runs · stapled by hand</span>
+            <span className="font-mono-c text-xs text-ink-soft hidden">{settings?.city || 'Bucharest'} · printed in small runs · stapled by hand</span>
           </div>
         </Reveal>
       </section>
@@ -128,7 +128,7 @@ export default function Home() {
       <section className="py-20 md:py-24 grain text-[hsl(var(--forest))] bg-[hsl(var(--paper-deep))]">
         <div className="mx-auto max-w-[1400px] px-6 lg:px-10">
           <Reveal className="flex items-baseline justify-between mb-10">
-            <h2 className="font-heading text-4xl md:text-5xl text-[hsl(var(--mauve))]">Călimara, currently</h2>
+            <h2 className="text-4xl md:text-5xl text-[hsl(var(--mauve))] font-normal [font-family:'Made_Of_Scars',_Georgia,_serif]">Călimara, currently</h2>
             <span className="label-mono text-archive-muted">UPDATED FROM THE DATABASE</span>
           </Reveal>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-px bg-archive-line">
