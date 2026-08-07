@@ -91,7 +91,7 @@ export default function Home() {
         {/* LAYER 3 — central content */}
         <div className="relative z-10 mx-auto max-w-[1400px] px-6 lg:px-10 py-20 md:py-28 text-center min-h-[calc(100vh-4rem)] flex flex-col items-center justify-center">
           <p className="label-mono text-burgundy mb-5 animate-fade-in">INDEPENDENT STUDENT MAGAZINE · BUCHAREST</p>
-          <h1 className="leading-[0.82] tracking-tight animate-rise-in text-[185px] md:text-[185px] [font-family:'Concetta_Kalvani',_sans-serif] font-[250]">Calimara collective</h1>
+          <h1 className="leading-[0.82] tracking-tight animate-rise-in text-[185px] md:text-[185px] [font-family:'HawtFriend',_'EB_Garamond',_Georgia,_serif] font-normal">Calimara collective</h1>
           <p className="text-2xl md:text-3xl text-ink-soft mt-6 max-w-2xl mx-auto animate-fade-in [font-family:'BodoniFLF',_sans-serif] font-medium not-italic">
             {settings?.tagline || 'A magazine made by young people who have something to say.'}
           </p>
@@ -128,7 +128,7 @@ export default function Home() {
       <section className="py-20 md:py-24 grain text-[hsl(var(--forest))] bg-[hsl(var(--paper-deep))]">
         <div className="mx-auto max-w-[1400px] px-6 lg:px-10">
           <Reveal className="flex items-baseline justify-between mb-10">
-            <h2 className="text-4xl md:text-5xl text-[hsl(var(--mauve))] font-normal [font-family:'Bacon_Kingdom',_sans-serif]">Călimara, currently</h2>
+            <h2 className="text-4xl md:text-5xl text-[hsl(var(--mauve))] font-normal [font-family:'Jellyka_-_le_Grand_Saut_Textual',_sans-serif]">Călimara, currently</h2>
             <span className="label-mono text-archive-muted">UPDATED FROM THE DATABASE</span>
           </Reveal>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-px bg-archive-line">
