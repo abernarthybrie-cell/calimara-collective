@@ -92,11 +92,11 @@
   src: url('./assets/fonts/battgge-f37ac6f8-400-normal.woff2') format('woff2');
 }
 @font-face {
-  font-family: 'Yore script';
+  font-family: 'Radifan';
   font-weight: 400;
   font-style: normal;
   font-display: swap;
-  src: url('./assets/fonts/yore-script-71e20ade-400-normal.woff2') format('woff2');
+  src: url('./assets/fonts/radifan-afab28b4-400-normal.woff2') format('woff2');
 }
 /* base44-workspace-fonts:end */
 
