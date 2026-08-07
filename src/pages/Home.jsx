@@ -91,7 +91,7 @@ export default function Home() {
         {/* LAYER 3 — central content */}
         <div className="relative z-10 mx-auto max-w-[1400px] px-6 lg:px-10 py-20 md:py-28 text-center min-h-[calc(100vh-4rem)] flex flex-col items-center justify-center">
           <p className="label-mono text-burgundy mb-5 animate-fade-in">INDEPENDENT STUDENT MAGAZINE · BUCHAREST</p>
-          <h1 className="leading-[0.82] tracking-tight animate-rise-in text-[185px] md:text-[185px] font-normal [font-family:'Tafelschrift',_sans-serif]">Calimara collective</h1>
+          <h1 className="leading-[0.82] tracking-tight animate-rise-in text-[185px] md:text-[185px] font-normal [font-family:'Jennifer_Lynne',_sans-serif]">Calimara collective</h1>
           <p className="italic text-2xl md:text-3xl text-ink-soft mt-6 max-w-2xl mx-auto animate-fade-in font-normal [font-family:'Made_Of_Scars',_sans-serif]">
             {settings?.tagline || 'A magazine made by young people who have something to say.'}
           </p>
