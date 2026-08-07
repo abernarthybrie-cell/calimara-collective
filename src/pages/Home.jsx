@@ -90,17 +90,17 @@ export default function Home() {
 
         {/* LAYER 3 — central content */}
         <div className="relative z-10 mx-auto max-w-[1400px] px-6 lg:px-10 py-20 md:py-28 text-center min-h-[calc(100vh-4rem)] flex flex-col items-center justify-center">
-          <p className="label-mono text-burgundy mb-5 animate-fade-in">INDEPENDENT STUDENT MAGAZINE · BUCHAREST</p>
+          <p className="label-mono text-burgundy mb-5 animate-fade-in text-9xl">INDEPENDENT STUDENT MAGAZINE · BUCHAREST</p>
           <h1 className="leading-[0.82] tracking-tight animate-rise-in text-[185px] md:text-[185px] [font-family:'HawtFriend',_'EB_Garamond',_Georgia,_serif] font-normal">Calimara collective</h1>
           <p className="text-2xl md:text-3xl text-ink-soft mt-6 max-w-2xl mx-auto animate-fade-in [font-family:'BodoniFLF',_sans-serif] font-medium not-italic hidden">
             {settings?.tagline || 'A magazine made by young people who have something to say.'}
           </p>
           <div className="flex flex-col sm:flex-row items-center gap-4 mt-10">
-            <Link to="/archive" className="group bg-ink text-paper px-7 py-3.5 hover:bg-burgundy transition-colors focus-ring inline-flex items-center gap-2">
+            <Link to="/archive" className="group bg-ink text-paper px-7 py-3.5 hover:bg-burgundy transition-colors focus-ring inline-flex items-center gap-2 hidden">
               <span className="label-mono [font-family:'Punktype',_sans-serif] font-normal">ENTER THE ARCHIVE</span>
               <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
             </Link>
-            <button onClick={openDrawer} className="label-mono text-ink hover:text-burgundy focus-ring underline underline-offset-4">
+            <button onClick={openDrawer} className="label-mono text-ink hover:text-burgundy focus-ring underline underline-offset-4 hidden">
               SHOW ME SOMETHING RANDOM →
             </button>
           </div>
